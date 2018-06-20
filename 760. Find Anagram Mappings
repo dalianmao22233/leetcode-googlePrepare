@@ -1,0 +1,30 @@
+// 省时省力，解决了duplicate number问题
+public int[] anagramMappings(int[] A, int[] B) {
+    int[] result = new int [A.length];
+    Map<Integer, List<Integer>> map = new HashMap<>();
+    for(int i = 0; i < B.length; i++) {
+        map.computeIfAbsent(B[i], k -> new ArrayList<>()).add(i);
+    }
+    for(int i = 0; i < A.length; i++) {
+        result[i] = map.get(A[i]).remove(map.get(A[i]).size()-1);
+    }
+    return result;
+}
+
+// 我的暴力破解
+class Solution {
+    public int[] anagramMappings(int[] A, int[] B) {
+        if (A.length == 0 || B.length == 0) return new int[]{};
+        if (A.length != B.length) return new int[]{};
+        int[] res = new int[A.length];  // 注意初始化数组长度
+        for (int i = 0; i < A.length; i++) { //注意for循环条件
+            for (int j = 0; j < B.length; j++) {
+                if (A[i] == B[j]) {
+                    res[i] = j;
+                    continue;
+                }
+            }
+        }
+        return (res.length == A.length) ? res : new int[]{};
+    }
+}
