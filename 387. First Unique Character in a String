@@ -1,0 +1,22 @@
+// It takes O(n) and goes through the string twice:
+// 1. Get the frequency of each character.
+// 2. Get the first character that has a frequency of one.
+
+class Solution {
+    public int firstUniqChar(String s) {
+        if (s == null || s.length() == 0) {
+            return -1;
+        }
+        int freq [] = new int[256]; // store all kinds of characters, not only letters.
+        for (int i = 0; i < s.length(); i++) {
+            freq [s.charAt(i) - 'a'] ++;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            if (freq [s.charAt(i) - 'a'] == 1) {
+                return i;
+            }
+        }     
+        return -1;
+        
+    }
+}
