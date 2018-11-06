@@ -10,11 +10,11 @@ class Solution {
                 if (nums[i] == target - nums[j]) {
                     result[0] = i;
                     result[1] = j;
-                    break;
+                    return result;
                 }
             }
         }
-        return result;
+        throw new IllegalArgumentException("No two sum solution");
     }
 }
 
@@ -34,8 +34,30 @@ class Solution {
             if (map.containsKey(another) && map.get(another) != j) {
                 result[0] = map.get(another);
                 result[1] = j;
+                return result;
             }
         }
-        return result;
+        throw new IllegalArgumentException("No two sum solution");
+    }
+}
+
+3. 1 for loop with 1 hashmap:
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        int[] result = new int[2];
+        if (nums == null || nums.length == 0) {
+            return result;
+        }
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (!map.containsKey(target-nums[i])) {
+                map.put(nums[i], i);
+            } else {
+                result[0] = map.get(target-nums[i]);
+                result[1] = i;
+                return result;
+            }
+        }
+        throw new IllegalArgumentException("No two sum solution");
     }
 }
