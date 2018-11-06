@@ -1,0 +1,49 @@
+//not 0 based returned array.
+1. normal thinking, using same method as two sum: Time: O(n), Space: O(n)
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int[] result = new int[2];
+        if (numbers == null || numbers.length == 0) {
+            return result;
+        }
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < numbers.length; i++) {
+            if (!map.containsKey(target-numbers[i])) {
+                map.put(numbers[i], i);
+            } else {
+                if (i > map.get(target-numbers[i])) {
+                    result[0] = map.get(target-numbers[i])+1;
+                    result[1] = i+1;
+                } else {
+                    result[0] = i+1;
+                    result[1] = map.get(numbers[i])+1;
+                }
+                return result;
+            }
+        }
+        throw new IllegalArgumentException("No two sum solution!");
+    }
+}
+2. two pointer: Time: O(n), Space: O(1), better!
+class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int[] result = new int[2];
+        if (numbers == null || numbers.length == 0) {
+            return result;
+        }
+        int low = 0, high = numbers.length-1;
+        while (low < high) {
+            int sum = numbers[low] + numbers[high];
+            if (sum == target) {
+                result[0] = low+1;
+                result[1] = high+1;
+                return result;
+            } else if (sum < target) {
+                low++;
+            } else {
+                high--;
+            }
+        }
+        throw new IllegalArgumentException("No two sum solution!");
+    }
+}
