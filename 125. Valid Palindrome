@@ -1,0 +1,20 @@
+my solution:
+// Time: O(n), Space: O(1);
+class Solution {
+    public boolean isPalindrome(String s) {
+        if (s == null || s.length() == 0 || s.length() == 1) {
+            return true;
+        }
+        s = s.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+        int low = 0, high = s.length()-1;
+        while(low <= high) {
+            if (s.charAt(low) == s.charAt(high)) {
+                low++;
+                high--;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+}
