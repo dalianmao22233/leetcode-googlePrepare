@@ -1,0 +1,50 @@
+1. // time exceed: Time: O(n^2), Space: O(n)
+class Solution {
+    public boolean isPalindrome(String s) {  // use leetcode valid palindrome answer
+        for (int i = 0; i < s.length()/2; i++) {
+           if (s.charAt(i) != s.charAt(s.length()-1-i)) {
+               return false;
+           } 
+        }
+        return true;
+        
+    }
+    public boolean validPalindrome(String s) {
+        StringBuilder sb = new StringBuilder(s);
+        for (int i = 0; i < s.length(); i++) {
+            char c = sb.charAt(i);
+            sb.deleteCharAt(i);
+            if (isPalindrome(sb.toString())) {
+                return true;
+            }
+            sb.insert(i, c);
+        }
+        return isPalindrome(s);
+    }
+}
+
+2. Greedy
+// 首尾之间两个指针 0...i...j...END 
+// 如果s[i] == s[j], continue
+// 如果s[i+1] == s[j] || s[i] == s[j-1], continue, else return false; 贪心的本质是总有一个是满足的。
+// i >= j，finish。
+// Time: O(n) ? Space: O(1)
+class Solution {
+    public boolean validPalindrome(String s) {
+        for (int i = 0; i < s.length()/2; i++) {
+            if (s.charAt(i) != s.charAt(s.length()-1-i)) {
+                int j = s.length()-1-i;  // 与i指针对应的末尾的指针
+                return isPalindromeRange(s, i+1, j) || isPalindromeRange(s, i, j-1);
+            }
+        }
+        return true;
+    }
+    public boolean isPalindromeRange(String s, int i, int j) {
+        for (int k = i; k <= (j-i)/2 + i; k++) {  // why has =? 举例，s="abc"，for(int k=1;k<1,k++), 进不去for.
+            if (s.charAt(k) != s.charAt(j-(k-i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
