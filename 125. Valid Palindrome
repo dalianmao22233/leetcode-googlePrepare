@@ -18,3 +18,21 @@ class Solution {
         return true;
     }
 }
+
+
+my another solution:
+
+class Solution {
+    public boolean isPalindrome(String s) {
+        if (s == null || s.length() == 0 || s.length() == 1) {
+            return true;
+        }
+        s = s.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+        for (int i = 0; i < s.length()/2; i++) {   // cannot use i<=, 因为如果处理之后s="", 会index out of range.
+            if (s.charAt(i) != s.charAt(s.length()-1-i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
