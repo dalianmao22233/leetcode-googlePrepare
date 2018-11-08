@@ -1,0 +1,29 @@
+// use substring to compare.
+class Solution {
+    public int strStr(String haystack, String needle) {
+        if (haystack.length() == 0 && needle.length() == 0) {
+            return 0;
+        }
+        if (haystack.length() == 0) {
+            return -1;
+        }
+        if (needle.length() == 0) {
+            return 0;
+        }
+        if (haystack.length() < needle.length()) {
+            return -1;
+        }
+        int l1 = haystack.length();
+        int l2 = needle.length();
+        
+        int i = 0;
+        boolean isMatched = true;
+        while (i <= l1-l2) {
+            if (haystack.substring(i, i + l2).equals(needle)) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+}
