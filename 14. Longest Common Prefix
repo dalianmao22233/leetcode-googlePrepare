@@ -1,3 +1,4 @@
+// binary search, etc: https://leetcode.com/problems/longest-common-prefix/solution/
 //  good solution, 100%. Time: O(n), Space: O(1), using string build-in method: indexOf()
 class Solution {
      public String longestCommonPrefix(String[] strs) {
