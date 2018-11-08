@@ -42,3 +42,27 @@ class Solution {
         }
     }
 }
+
+// another solution:
+public boolean buddyStrings(String A, String B) {
+        // two case: 1.A == B and A has duplicate 2. A != B only one different pair i and j
+        if (A.length() != B.length()) return false;
+        char[] sA = A.toCharArray();
+        char[] sB = B.toCharArray();
+        int[] dictA = new int[26];
+        int[] dictB = new int[26];
+        int len = sA.length;
+        int diff = 0;
+        for (int i = 0; i < len; i++) {
+            dictA[sA[i] - 'a'] ++;
+            dictB[sB[i] - 'a'] ++;
+            if (sA[i] != sB[i]) diff++;
+            
+        }
+        boolean hasDup = false;
+        for (int i = 0; i < 26; i++) {
+            if (dictA[i] != dictB[i]) return false;
+            if (dictA[i] >= 2) hasDup = true;
+        }
+        return diff == 2 || (diff == 0 && hasDup);
+    }
