@@ -1,0 +1,29 @@
+// my solution, slow: 
+class Solution {
+    public int lengthOfLastWord(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        // check whether all character is white space.
+        boolean isSpace = true;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != ' ') {
+                isSpace = false;
+            }
+        }
+        if (isSpace) {
+            return 0;
+        }
+        // if not all character is white space, then do following.
+        String[] str = s.split(" "); // case: "a  ", after split, str=["a"]. 
+        return str[str.length-1].length();
+    }
+}
+
+最简单：
+class Solution {
+    public int lengthOfLastWord(String s) {
+        return s.trim().length()-s.trim().lastIndexOf(" ")-1;
+        // trim(): remove all space head and tail white space.
+    }
+}
