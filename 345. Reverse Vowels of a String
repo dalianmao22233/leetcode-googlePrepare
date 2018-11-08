@@ -26,3 +26,7 @@ class Solution {
         return String.valueOf(s_char);
     }
 }
+
+// another solution:
+因为我用的string.contains()方法，Java处理的慢，更快的:string.indexOf(s.charAt(i)) != -1, 意思是如果string含有这个字符
+或者用set， set中有元音字母，set.contains(xx),逻辑不变
