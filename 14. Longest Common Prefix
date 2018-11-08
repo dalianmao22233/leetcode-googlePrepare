@@ -1,0 +1,70 @@
+//  good solution, 100%. Time: O(n), Space: O(1), using string build-in method: indexOf()
+class Solution {
+     public String longestCommonPrefix(String[] strs) {
+        if (strs.length == 0) return "";
+        String prefix = strs[0];
+        for (int i = 1; i < strs.length; i++) {
+            while (strs[i].indexOf(prefix) != 0) { // return -1 or return > 0, means no such result or not prefix.
+                prefix = prefix.substring(0, prefix.length() - 1);
+                if (prefix.isEmpty()) return "";
+            }        
+        }
+        return prefix;
+    }
+}
+
+// use str.compareTo(string) to sort string order
+public String longestCommonPrefix(String[] strs) {
+        if (strs == null)       return null;
+        if (strs.length == 0)   return "";
+        
+        String first = strs[0], last = strs[0];
+        
+        for (String str : strs) {
+            if (str.compareTo(first) < 0)
+                first = str;
+            if (str.compareTo(last) > 0)
+                last = str;
+        }
+        
+        int i = 0, len = Math.min(first.length(), last.length());
+        
+        while (i < len && first.charAt(i) == last.charAt(i))
+            i++;
+        
+        return first.substring(0, i);
+    
+    }
+    
+// my solution, slow. Brute force
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+        if (strs == null || strs.length == 0) {
+            return "";
+        }
+        int minLen = Integer.MAX_VALUE;
+        
+        // find shortest string first, then make round number as length.
+        for (String s : strs) {
+            minLen = Math.min(minLen, s.length());
+            if (s.equals("")) {  // remember to check here. otherwise will go below.
+                return "";
+            }
+        }
+        // get prefix
+        String prefix = "";
+        int index = 0;
+        for (int i = 0; i < minLen; i++) {
+            prefix += String.valueOf(strs[0].charAt(index));
+            for (String s : strs) {
+                for (int j = 0; j < prefix.length(); j++) {
+                    if (s.charAt(j) != prefix.charAt(j)) {
+                        return prefix.substring(0, j);
+                    }
+                }
+            }
+            index++;
+        }
+        return prefix;
+    }
+}
