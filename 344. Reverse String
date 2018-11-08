@@ -1,4 +1,4 @@
-// my solution, Time: O(n), Space: O(n), 1-time AC!
+1. // my solution, Time: O(n), Space: O(n), 1-time AC!
 class Solution {
     public String reverseString(String s) {
         if (s == null || s.length() == 0) {
@@ -16,3 +16,38 @@ class Solution {
         return String.valueOf(s_char);
     }
 }
+
+
+2. Note that this assume that the input string is encoded using ASCII format. 
+This will not work with Unicode value where one character may be more than 1 byte.
+
+public class Solution {
+    public String reverseString(String s) {
+        return new StringBuilder(s).reverse().toString();
+    }
+}
+
+Time Complexity: `O(n)` (Average Case) and `O(n)` (Worst Case) where `n` is the total number character in the input string. Depending on the implementation. However, it is not possible to reverse string in less than `O(n)`.
+
+Auxiliary Space: `O(n)` space is used where `n` is the total number character in the input string. Space is needed to transform immutable string into character buffer in StringBuilder.
+
+
+Java's library is probably slower that direct implementation due to extra overhead in check various edge cases such as surrogate pairs.
+
+3. Divide and Conquer (Recursive): good!
+public class Solution {
+    public String reverseString(String s) {
+        int length = s.length();
+        if (length <= 1) return s;
+        String leftStr = s.substring(0, length / 2);
+        String rightStr = s.substring(length / 2, length);
+        return reverseString(rightStr) + reverseString(leftStr);
+    }
+}
+Complexity Analysis
+Time Complexity: `O(n log(n))` (Average Case) and `O(n * log(n))` (Worst Case) where `n` is the total number character in the input string. The recurrence equation is `T(n) = 2 * T(n/2) + O(n)`. `O(n)` is due to the fact that concatenation function takes linear time. The recurrence equation can be solved to get `O(n * log(n))`.
+
+Auxiliary Space: `O(h)` space is used where `h` is the depth of recursion tree generated which is `log(n)`. Space is needed for activation stack during recursion calls.
+The string is split into half. Each substring will be further divided. This process continues until the string can no longer be divided (length `
+
+
