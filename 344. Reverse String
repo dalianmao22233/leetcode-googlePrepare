@@ -1,0 +1,18 @@
+// my solution, Time: O(n), Space: O(n), 1-time AC!
+class Solution {
+    public String reverseString(String s) {
+        if (s == null || s.length() == 0) {
+            return s;
+        }
+        int low = 0, high = s.length()-1;
+        char[] s_char = s.toCharArray();
+        while (low < high) {
+            char tmp = s_char[low];
+            s_char[low] = s_char[high];
+            s_char[high] = tmp;
+            low++;
+            high--;
+        }
+        return String.valueOf(s_char);
+    }
+}
