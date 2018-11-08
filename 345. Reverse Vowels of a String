@@ -1,25 +1,28 @@
-public String reverseVowels(String s) {
-    if(s == null || s.length()==0) return s;
-    String vowels = "aeiouAEIOU";
-    char[] chars = s.toCharArray();
-    int start = 0;
-    int end = s.length()-1;
-    while(start<end){
-        
-        while(start<end && !vowels.contains(String.valueOf(chars[start]))){
-            start++;
+// my solucion, AC!
+class Solution {
+    public String reverseVowels(String s) {
+        if (s == null || s.length() == 0) {
+            return s;
         }
-        
-        while(start<end && !vowels.contains(String.valueOf(chars[end]))){
-            end--;
+        int low = 0, high = s.length()-1;
+        char[] s_char = s.toCharArray();
+        while (low < high) {
+            if ("aeiouAEIOU".contains(String.valueOf(s.charAt(low)))) {
+                if ("aeiouAEIOU".contains(String.valueOf(s.charAt(high)))) {
+                    char tmp = s_char[low];
+                    s_char[low] = s_char[high];
+                    s_char[high] = tmp;
+                    low++;
+                    high--;
+                } else {
+                    // wait high pointer find vowel
+                    high--;
+                }
+            } else {
+                // wait low pointer find vowel
+                low++;
+            }
         }
-        
-        char temp = chars[start];
-        chars[start] = chars[end];
-        chars[end] = temp;
-        
-        start++;
-        end--;
+        return String.valueOf(s_char);
     }
-    return new String(chars);
 }
