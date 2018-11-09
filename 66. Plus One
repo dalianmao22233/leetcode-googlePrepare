@@ -1,3 +1,34 @@
+// my solution:  AC, 100%
+class Solution {
+    public int[] plusOne(int[] digits) {
+        if (digits == null || digits.length == 0) {
+            return digits;
+        }
+        int carry = 1;
+        int len = digits.length;
+    
+        for (int i = len-1; i >= 0; i--) {
+            int tmp = digits[i] + carry;
+            if (tmp/10 == 1) {
+                digits[i] = tmp%10;
+                carry = 1;
+            } else {
+                digits[i] = tmp;
+                carry = 0;
+            }
+        }
+        if (carry == 1) {
+            int[] result = new int[len+1];
+            result[0] = carry;
+            for (int i = 1; i < len; i++) {
+                result[i] = digits[i];
+            }
+            return result;
+        }
+        return digits;
+    }
+}
+// another solution.
 class Solution {
     public int[] plusOne(int[] digits) {
         if (digits == null || digits.length == 0) {
