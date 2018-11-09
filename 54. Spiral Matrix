@@ -11,9 +11,11 @@ class Solution {
         int left = 0, right = matrix[0].length-1; //last column
         int top = 0, bottom = matrix.length - 1; //last row
         while (total > 0) {
-            for (int i = left; i <= right; i++) {
-                result.add(matrix[top][i]);
-                total--;
+            if (total > 0) {
+                for (int i = left; i <= right; i++) {
+                    result.add(matrix[top][i]);
+                    total--;
+                }
             }
             top++;
             if (total > 0) {
