@@ -1,0 +1,56 @@
+// beat 98%: hashset+stringbuilder
+class Solution {
+    public int numUniqueEmails(String[] emails) {
+        Set<String> set = new HashSet<>();
+        for (String email : emails) {
+            String[] names = email.split("@");
+            String local = names[0];
+            String domain = names[1];
+            local = local.substring(0, local.indexOf('+'));
+            StringBuilder sb = new StringBuilder(domain);
+            for (char c : local.toCharArray()) {
+                if (c != '.') sb.append(c);
+            }
+            local = sb.toString();
+            set.add(local);
+        }
+        return set.size();
+    }
+}
+
+// hashset
+public int numUniqueEmails(String[] emails) {
+        Set<String> normalized = new HashSet<>();
+        for (String email : emails) {
+            String[] parts = email.split("@"); // split into local and domain parts.
+            String[] local = parts[0].split("\\+"); // split local by '+'.
+            normalized.add(local[0].replace(".", "") + "@" + parts[1]); // remove all '.', and concatenate '@' and domain.        
+        }
+        return normalized.size();
+}
+
+// my solution: 40%+ 我用的hashtable, hashset更快
+class Solution {
+    public int numUniqueEmails(String[] emails) {
+        // if have '.', then remove it and combine all chars
+        // if have '+', then remove all chars after it.
+        if (emails == null || emails.length == 0) {
+            return 0;
+        }
+        HashMap<String, Integer> map = new HashMap<>();
+        for (String email: emails) {
+            String[] splitStr = email.split("@");
+            splitStr[0] = splitStr[0].replaceAll(".", "");
+            if (splitStr[0].indexOf("+") != -1) {
+                splitStr[0] = splitStr[0].split("+")[0];
+            }
+            email = splitStr[0] + splitStr[1];
+            if (map.containsKey(email)) {
+                map.put(email, map.get(email)+1);
+            } else {
+                map.put(email, 1);
+            }
+        }
+        return map.values().size();
+    }
+}
