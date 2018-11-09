@@ -1,0 +1,31 @@
+// my solution  : beat 40%+
+class Solution {
+    public int[][] flipAndInvertImage(int[][] A) {
+        if (A == null || A[0].length == 0) {
+            return A;
+        }
+        
+        // horizontally
+        for (int i = 0; i < A.length; i++) {
+             A[i] = horizontalImage(A[i]);
+        }
+        // invert
+        for (int i = 0; i < A.length; i++) {
+            for (int j = 0; j < A[0].length; j++) {
+                A[i][j] =  A[i][j] == 0? 1: 0;
+            }
+        }
+        return A;
+    }
+    private int[] horizontalImage(int[]A) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < A.length; i++) {
+            stack.push(A[i]);
+        }
+        int[] result = new int[A.length];
+        for (int i = 0; i < A.length; i++) {
+            result[i] = stack.pop();
+        }
+        return result;
+    }
+}
