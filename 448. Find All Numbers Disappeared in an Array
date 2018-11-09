@@ -4,6 +4,10 @@
 // In the second iteration, if a value is not marked as negative, it implies we have never seen that index before, 
 // so just add it to the return list.
 // 题：1-n的内容，有重复数字，数组长度为n。
+// [4,3,2,7,8,2,3,1],output: 5,6
+// 缺失的index 为4，5， 对应的数字内容应该是5，6， 因为index本来就从0开始。
+// 如果按顺序，本来是[1,2,3,4,5,6,7,etc], nums[0] = 1, nums[1] = 2....., 所以可以用这个特性来排除到底少了谁
+// nums[nums[i]-1] = -nums[nums[i]-1];
 class Solution {
     public List<Integer> findDisappearedNumbers(int[] nums) {
         List<Integer> result = new ArrayList<>();
