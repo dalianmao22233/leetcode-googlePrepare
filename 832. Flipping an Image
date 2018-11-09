@@ -1,3 +1,27 @@
+// The idea is simple. For each row, use two pointers. One is going forward and the other is going backward.
+// (1). If the two elements are the same, then make a slight change like this 0 -> 1 or 1 -> 0.
+// (2). If the two elements are different, DON'T do anything. Just let it go. 水平+相反 翻转结合相当于没变
+
+// Only scan the whole matrix once. binary search
+
+class Solution {
+    public int[][] flipAndInvertImage(int[][] A) {
+        for (int i = 0; i < A.length; i++) {
+            int lo = 0, hi = A[0].length - 1;
+            while (lo <= hi) {
+                if (A[i][lo] == A[i][hi]) {
+                    A[i][lo] = 1 - A[i][lo];
+                    A[i][hi] = A[i][lo];
+                }
+                lo++;
+                hi--;
+            }
+        }
+        
+        return A;
+    }
+}
+
 // my solution  : beat 40%+
 class Solution {
     public int[][] flipAndInvertImage(int[][] A) {
