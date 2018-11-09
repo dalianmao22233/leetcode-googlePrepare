@@ -11,9 +11,9 @@ public class Solution {
         int maxlen = 0;
         String result = "";
         for(int i = 0; i < 2 * s.length() - 1; i++) {
-            int left = i/2;   //???
+            int left = i/2; 
             int right = i/2;
-            if(i%2 == 1) right++;// i > 1 的奇数
+            if(i%2 == 1) right++;// 奇数
             String str = expandAroundCenter(s, left, right);
             if(maxlen < str.length()) {
                 maxlen = str.length();
