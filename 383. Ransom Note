@@ -1,0 +1,21 @@
+class Solution {
+    public boolean canConstruct(String ransomNote, String magazine) {
+        if (magazine.length() == 0 && ransomNote.length() != 0) {
+            return false;
+        } else if (magazine.length() == 0){
+            return true;
+        }
+        int[] arr = new int[26];
+        for (int i = 0; i < magazine.length(); i++) {
+            arr[magazine.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < ransomNote.length(); i++) {
+            arr[ransomNote.charAt(i) - 'a']--;
+            if (arr[ransomNote.charAt(i) - 'a'] < 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+// 判断勒索信里的字母是否能通过杂志的字母组合而成，杂志字母只能用一次。
