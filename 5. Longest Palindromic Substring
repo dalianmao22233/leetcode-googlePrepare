@@ -69,3 +69,6 @@ public class Solution {
         return s.substring(resultLeft, resultRight+1);
     }
 }
+
+// 马拉车解法： https://articles.leetcode.com/longest-palindromic-substring-part-ii/， 太复杂了我没看
+http://www.cnblogs.com/TenosDoIt/p/3675788.html
