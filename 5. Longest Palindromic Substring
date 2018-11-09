@@ -34,34 +34,38 @@ public class Solution {
     }
 }
 
-而第二种方法是用动态规划，思路比较复杂一些，但是实现代码会比较简短。基本思路是外层循环i从后往前扫，内层循环j从i当前字符扫到结尾处。
-过程中使用的历史信息是从i+1到n之间的任意子串是否是回文已经被记录下来，所以不用重新判断，只需要比较一下头尾字符即可。这种方法使用两层循环，
-时间复杂度是O(n^2)。而空间上因为需要记录任意子串是否为回文，需要O(n^2)的空间，代码如下：
-
-[java] view plain copy 在CODE上查看代码片派生到我的代码片
-public String longestPalindrome(String s) {  
-    if(s == null || s.length()==0)  
-        return "";  
-    boolean[][] palin = new boolean[s.length()][s.length()];  
-    String res = "";  
-    int maxLen = 0;  
-    for(int i=s.length()-1;i>=0;i--)  
-    {  
-        for(int j=i;j<s.length();j++)  
-        {  
-            if(s.charAt(i)==s.charAt(j) && (j-i<=2 || palin[i+1][j-1]))  
-            {  
-                palin[i][j] = true;  
-                if(maxLen<j-i+1)  
-                {  
-                    maxLen=j-i+1;  
-                    res = s.substring(i,j+1);  
-                }  
-            }  
-        }  
-    }  
-    return res;  
-}  
-综上所述，两种方法的时间复杂度都是O(n^2)。而空间上来看第一种方法是常量的，比第二种方法优。这个题目中假设最长回文子串只有一个，
-实际面试中一般不做这种假设，如果要返回所有最长回文串，只需要稍做变化就可以，维护一个集合，如果等于当前最大的，即加入集合，否则，
-如果更长，则清空集合，加入当前这个。实际面试会有各种变体，感觉平常还是要多想才行。
+//DP:时间复杂度O（n^2）,空间O（n^2）,动态规划方程如下：
+//dp[i][j] 表示子串s[i…j]是否是回文
+//初始化：dp[i][i] = true (0 <= i <= n-1);  dp[i][i-1] = true (1 <= i <= n-1); 其余的初始化为false
+//dp[i][j] = (s[i] == s[j] && dp[i+1][j-1] == true)
+//在动态规划中保存最长回文的长度及起点即可
+public class Solution {
+    public String longestPalindrome(String s) {
+        if(s == null || s.length() == 0) {
+            return "";
+        }
+        int len = s.length();
+        if (len < 1) {
+            return s;
+        }
+        boolean[][] dp = new boolean[len][len];
+        int resultLeft = 0, resultRight = 0;
+        dp[0][0] = true;
+        for (int i = 1; i < len; i++) {
+            dp[i][i] = true;
+            dp[i][i-1] = true;  //这个初始化容易忽略，当k=2时要用到
+        }
+        for (int k = 2; k <= len; k++) {   //枚举子串长度
+            for (int i = 0; i <= len-k; i++) {  //枚举子串起始位置
+                if (s.charAt(i) == s.charAt(i+k-1) && dp[i+1][i+k-2]) {
+                    dp[i][i+k-1] = true;
+                    if (resultRight-resultLeft+1 < k) {
+                        resultLeft = i;
+                        resultRight = i+k-1;
+                    }
+                }
+            }
+        }
+        return s.substring(resultLeft, resultRight+1);
+    }
+}
