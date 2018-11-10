@@ -1,0 +1,13 @@
+class Solution {
+    public int missingNumber(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+        int result = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            result = result ^ nums[i] ^ i;
+        }
+        return result;
+    }
+}
+// bit operation: [0,.. n], 利用特性：异或相同数字结果为0， Time :O(n), Space: O(1)
