@@ -15,3 +15,4 @@ class Solution {
         return true;
     }
 }
+// Time: O(log3(n)), Space: O(1)
