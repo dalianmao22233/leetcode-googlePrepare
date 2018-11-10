@@ -79,16 +79,21 @@ We have (2^30 % j*(2^k)) == (2^(30-k) % j) != 0.
 return n>0 && (1073741824 % n == 0);
 Time complexity = O(1)
 
-最笨的：
+// my solution :
 class Solution {
     public boolean isPowerOfTwo(int n) {
-        if (n < 1) return false;
-        while (n % 2 == 0) {
-            n = n / 2;
+        if (n <=0) {
+            return false;
         }
         if (n == 1) {
             return true;
         }
-        return false;
+        while (n > 1) {
+            if (n % 2 != 0) {
+                return false;
+            }
+            n = n/2;
+        }
+        return true;
     }
 }
