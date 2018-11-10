@@ -1,3 +1,19 @@
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] res = new boolean[s.length()+1];
+        res[0] = true;
+        for(int i = 1; i <= s.length(); i++) {//这里注意i 的取值。可以去到最后一位，因为最后一位是）而不是]。
+            for(int j = 0; j < i; j++) {
+                if(res[j] && wordDict.indexOf(s.substring(j, i)) != -1) {
+                    res[i] = true;
+                    break;
+                }
+            }
+        }
+        return res[s.length()];
+
+    }
+}
 第二次：
 这道题目其实没有说清楚的是，wordDict中的元素是否可以被重复使用。测试了几次以后发现是可以的。比如S = "aa"，wordDict = ["a"]，结果为true。
 面试的时候一定要注意问清楚面试官的意思，一点一点clarify问题。 
