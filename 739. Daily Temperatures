@@ -1,0 +1,51 @@
+Time: O(N)
+Space: O(N)
+
+Method 1. Stack (54 ms)  真的好，记住！
+
+public int[] dailyTemperatures(int[] temperatures) {
+    Stack<Integer> stack = new Stack<>();
+    int[] ret = new int[temperatures.length];
+    for(int i = 0; i < temperatures.length; i++) {
+        while(!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {  //因为只有可能进来一次，所以视为O(1)
+            int idx = stack.pop();
+            ret[idx] = i - idx;
+        }
+        stack.push(i);
+    }
+    return ret;
+}
+Method 2. Array (10 ms)  最快
+
+public int[] dailyTemperatures(int[] temperatures) {
+    int[] stack = new int[temperatures.length];
+    int top = -1;
+    int[] ret = new int[temperatures.length];
+    for(int i = 0; i < temperatures.length; i++) {
+        while(top > -1 && temperatures[i] > temperatures[stack[top]]) {
+            int idx = stack[top--];
+            ret[idx] = i - idx;
+        }
+        stack[++top] = i;
+    }
+    return ret;
+}
+
+// my solutin: brute force, very slow.
+class Solution {
+    public int[] dailyTemperatures(int[] T) {
+        if (T == null || T.length == 0) {
+            return T;
+        }
+        int[] res = new int[T.length];
+        for (int i = 0; i < T.length; i++ ) {
+            for (int k = i + 1; k < T.length; k++) {
+                if (T[i] < T[k]) {
+                    res[i] = k-i;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+}
