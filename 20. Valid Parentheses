@@ -6,7 +6,7 @@ class Solution {
         Stack<Character> stack = new Stack<>();
         
         for (Character c : s.toCharArray()) {
-            if ("{[(".contains(String.valueOf(c))) {
+            if ("{[(".contains(String.valueOf(c))) { // string.valueOf  来转化char sequence到string,不然报错
                 stack.push(c);
             } else if (!stack.isEmpty() && isValidCombination(stack.peek(), c)){
                 stack.pop();
