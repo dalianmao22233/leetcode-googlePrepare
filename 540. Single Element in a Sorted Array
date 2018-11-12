@@ -1,3 +1,26 @@
+// best: binary search O(logn)
+// 当mid为奇数，看前面的数，当mid为偶数，看后面的数
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int low = 0, high = nums.length-1;
+        while (low < high) {
+            int mid = low + (high-low)/2;
+            if (nums[mid] != nums[mid+1] && nums[mid] != nums[mid-1]) {
+                return nums[mid];
+            } else if (nums[mid] == nums[mid+1] && mid % 2 == 0) { // mid is 偶数
+                low = mid+1;
+            } else if (nums[mid] == nums[mid-1] && mid % 2 == 1) { // mid is 奇数
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return nums[low];
+    }
+}
 
 // my solution: beat 44%
 class Solution {
