@@ -90,9 +90,11 @@ class Solution {
   }
 }
 
-3. union find (aka Disjoint Set)
+3. union find (aka Disjoint Set) : https://leetcode.com/articles/redundant-connection/
 Traverse the 2d grid map and union adjacent lands horizontally or vertically, 
 at the end, return the number of connected components maintained in the UnionFind data structure.
+Time: O(m*n), Space: O(m*n), required by UnionFind data structure.
+Attention!: Union operation takes essentially constant time when UnionFind is implemented with both path compression and union by rank.
 
 class Solution {
   class UnionFind {
