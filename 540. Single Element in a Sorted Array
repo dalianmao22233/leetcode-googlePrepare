@@ -1,0 +1,14 @@
+
+// my solution: beat 44%
+class Solution {
+    public int singleNonDuplicate(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int result = 0;
+        for (Integer num: nums) {
+            result = result^num;
+        }
+        return result;
+    }
+}
