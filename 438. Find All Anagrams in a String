@@ -1,0 +1,32 @@
+
+// my solution, very slow...
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> result = new ArrayList<>();
+        if (s == null || p == null || s.length() < p.length()) {
+            return result;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            if (i+p.length() <= s.length() && isAnagram(s.substring(i, i+p.length()), p)) {
+                result.add(i);
+            }
+        }
+        return result;
+    }
+    private boolean isAnagram(String s, String target) {
+        if (s == null || target == null || s.length() != target.length()) {
+            return false;
+        }
+        int[] counter = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            counter[s.charAt(i) - 'a']++;
+            counter[target.charAt(i) - 'a']--;
+        }
+        for (Integer count: counter) {
+            if (count != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
