@@ -1,0 +1,39 @@
+1. Iterative:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) { // null or only 1 node doesn't need to reverse.
+            return head;
+        }
+        ListNode prev = null;
+        ListNode cur = head;
+        ListNode next = null;
+        while (cur != null) {
+            next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+}
+
+2. Recursive: 画图就懂了。。
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode new_head = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+        return new_head;
+    }
+}
