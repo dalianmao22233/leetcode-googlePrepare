@@ -1,0 +1,27 @@
+这道题说如果是偶数个点，会有两个中点，返回第二个中点
+常规的是返回第一个中点
+做法有一点点不一样
+
+常规：
+public ListNode middleNode(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) { // fast走到倒数第二个，举例 1->2->3->4, fast==3
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+ }
+ 
+ 这道题做法: 让fast走到最后
+ public ListNode middleNode(ListNode head) {
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+ }
