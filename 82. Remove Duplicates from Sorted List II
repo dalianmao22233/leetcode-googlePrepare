@@ -1,0 +1,50 @@
+1. 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        //use two pointers, slow - track the node before the dup nodes, 
+	    // fast - to find the last node of dups.
+        ListNode dummyNode = new ListNode(0);
+        ListNode slow = dummyNode, fast = head;
+        slow.next = fast;
+        while (fast != null) {
+            while (fast.next != null && fast.val == fast.next.val) {
+                fast = fast.next;  //while loop to find the last node of the dups.
+            }
+            if (slow.next != fast) {  //duplicates detected. Because initial is slow.next = fast, if dup exists, then changed.
+                slow.next = fast.next;  //remove the dups.
+                fast = slow.next;   //reposition the fast pointer. slow.next --> fast again.
+            } else {  
+                //no dup, move down both pointer.
+                slow = slow.next;
+                fast = fast.next;
+            }
+        }
+        return dummyNode.next;
+    }
+}
+
+2. recursive:
+public ListNode deleteDuplicates(ListNode head) {
+    if (head == null) return null;
+    
+    if (head.next != null && head.val == head.next.val) {
+        while (head.next != null && head.val == head.next.val) {
+            head = head.next;
+        }
+        return deleteDuplicates(head.next);
+    } else {
+        head.next = deleteDuplicates(head.next);
+    }
+    return head;
+}
