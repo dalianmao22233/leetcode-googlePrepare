@@ -1,3 +1,4 @@
+delete a node (except the tail) 注意是除去了尾部节点，和83. Remove Duplicates from Sorted List区分。
 Thoughts:因为不能拿到前一个node，不能删除given node, 于是将下一个node拷贝给given node, 删除下一个节点。
 1. Only have this node, make it look like its next
 2. remove next
