@@ -1,0 +1,28 @@
+不能用delete list node的方法，因为那道题是不考虑tail节点的做法，否则会Null pointer,因为用了node.next.next.
+设置dummyNode, 
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode dummyNode = new ListNode(0);
+        dummyNode.next = head;
+        
+        while (head != null && head.next != null) {
+            if (head.val == head.next.val) { //这步避免了尾部节点被漏掉比较的问题  （我之前用的是保存val值，就一直到不了最后一个点）
+                head.next = head.next.next;
+            } else {
+                head = head.next;
+            }
+        }
+        return dummyNode.next;
+    }
+}
