@@ -1,0 +1,20 @@
+Thoughts:因为不能拿到前一个node，不能删除given node, 于是将下一个node拷贝给given node, 删除下一个节点。
+1. Only have this node, make it look like its next
+2. remove next
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public void deleteNode(ListNode node) {
+        if (node == null) {
+            return;
+        }
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+}
