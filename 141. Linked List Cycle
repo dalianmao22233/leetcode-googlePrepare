@@ -20,7 +20,7 @@ public class Solution {
         while (fast.next != null && fast.next.next != null) {
             slow = slow.next;
             fast = fast.next.next;
-            if (slow == fast || fast == null) {   // 主要判断条件
+            if (slow == fast) {   // 主要判断条件
                 return true;
             }
         }
