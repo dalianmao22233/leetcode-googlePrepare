@@ -1,0 +1,54 @@
+1. 2D dp
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return 0;
+        }
+        int row = matrix.length;
+        int column = matrix[0].length;
+        // M[i][j]: max size of square
+        // 1. base case: M[0][0] = 0
+        // 2. induction rule: 
+        // M[i][j] = 0, if matrix[i][j] = 0
+        // M[i][j] = 1 + min(M[i-1][j-1], M[i-1][j], M[i][j-1]), if matrix[i][j] = 1
+        int[][] M = new int[row+1][column+1];
+        M[0][0] = 0;
+        int max = 0;
+        for (int i = 1; i <= row; i++) {
+            for (int j = 1; j <= column; j++) {
+                if (matrix[i-1][j-1] == '1') {
+                    M[i][j] = 1 + Math.min(M[i-1][j-1], Math.min(M[i-1][j], M[i][j-1]));
+                    max = Math.max(max, M[i][j]);
+                } else {
+                    M[i][j] = 0;
+                }
+            }
+        }
+        return max*max;
+        
+    }
+}
+
+Time: O(n^2), Space: O(n^2)
+2. 1D dp
+public class Solution {
+    public int maximalSquare(char[][] matrix) {
+        int rows = matrix.length, cols = rows > 0 ? matrix[0].length : 0;
+        int[] dp = new int[cols + 1];
+        int maxsqlen = 0, prev = 0;
+        for (int i = 1; i <= rows; i++) {
+            for (int j = 1; j <= cols; j++) {
+                int temp = dp[j];
+                if (matrix[i - 1][j - 1] == '1') {
+                    dp[j] = Math.min(Math.min(dp[j - 1], prev), dp[j]) + 1;
+                    maxsqlen = Math.max(maxsqlen, dp[j]);
+                } else {
+                    dp[j] = 0;
+                }
+                prev = temp;  // prev is old dp[j-1]
+            }
+        }
+        return maxsqlen * maxsqlen;
+    }
+}
+Space: O(n)
