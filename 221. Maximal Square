@@ -6,7 +6,7 @@ class Solution {
         }
         int row = matrix.length;
         int column = matrix[0].length;
-        // M[i][j]: max size of square
+        // M[i][j]: max length of square
         // 1. base case: M[0][0] = 0
         // 2. induction rule: 
         // M[i][j] = 0, if matrix[i][j] = 0
