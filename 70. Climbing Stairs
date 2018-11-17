@@ -1,0 +1,19 @@
+// 1D dp.在最右端向左看，比如0-1-2-3 stairs, 需要知道从0-2 和 0-1 有几种方式，1-3 和 2-3 只有一种方式 （走一步还是走两步）。 是斐波那契
+class Solution {
+    public int climbStairs(int n) {
+        if (n == 0 || n == 1) {
+            return n;
+        }
+        int[] M = new int[n+1];
+        if (n == 2) {
+            return 2;
+        }
+        M[0] = 0;
+        M[1] = 1;
+        M[2] = 2;
+        for (int i = 3; i <= n; i++) {
+            M[i] = M[i-1] + M[i-2];
+        }
+        return M[n];
+    }
+}
