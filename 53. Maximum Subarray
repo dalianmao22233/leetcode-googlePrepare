@@ -1,0 +1,20 @@
+// my solution: 1D dp
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int[] M = new int[nums.length];
+        int max = nums[0];
+        M[0] = nums[0]; // base case
+        for (int i = 1; i < nums.length; i++) {
+            if (M[i-1] >= 0) {
+                M[i] = M[i-1] + nums[i];  // induction rule
+            } else {
+                M[i] = nums[i];
+            }
+            max = Math.max(max, M[i]);
+        }
+        return max;
+    }
+}
