@@ -1,0 +1,23 @@
+// from discussion, use DP, 每一行都是一个房子的3种颜色cost 
+class Solution {
+    public int minCost(int[][] costs) {
+        if (costs == null || costs.length == 0) {
+            return 0;
+        }
+        int lastR = costs[0][0];
+        int lastG = costs[0][1];
+        int lastB = costs[0][2];
+        int curR = 0; 
+        int curG = 0; 
+        int curB = 0;
+        for (int i = 1; i < costs.length; i++) {
+            curR = Math.min(lastG, lastB) + costs[i][0];
+            curG = Math.min(lastR, lastB) + costs[i][1];
+            curB = Math.min(lastR, lastG) + costs[i][2];
+            lastR = curR; // sum of all houses cost, if first one using R
+            lastG = curG; // sum of all houses cost, if first one using G
+            lastB = curB; // sum of all houses cost, if first one using B
+        }
+        return Math.min(Math.min(lastR, lastG), lastB);
+    }
+}
