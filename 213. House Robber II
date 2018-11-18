@@ -1,0 +1,22 @@
+// using solution in House Robber, 另外，如果抢了第一家，就不能抢最后一家，如果抢了最后一家，就不能抢第一家。
+class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        return Math.max(rob(nums, 0, nums.length-2), rob(nums, 1, nums.length-1));
+    }
+    //solution in House Robber 
+    private int rob(int[] nums, int low, int high) {
+        int prevMax = 0, curMax = 0;
+        for (int i = low; i <= high; i++) {
+            int temp = curMax;
+            curMax = Math.max(curMax, prevMax+nums[i]);
+            prevMax = temp;
+        }
+        return curMax;
+    }
+}
