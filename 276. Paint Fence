@@ -1,0 +1,21 @@
+// 容易理解的DP， 有更快的，先学好这个吧
+class Solution {
+    public int numWays(int n, int k) {
+        if (n == 0) {
+            return 0;
+        }
+        if (n == 1) {
+            return k;
+        }
+        // N[i]：第i根栅栏包括之前所有的可能颜色搭配
+        int[] N = new int[n+1];
+        N[0] = 0;
+        N[1] = k;
+        // 第一个篱笆和第二个篱笆：different color ways + same color ways = k(k-1)+k = k^2;
+        N[2] = k*(k-1) + k;
+        for (int i = 3; i <= n; i++) {
+            N[i] = (k-1)*(N[i-2] + N[i-1]);
+        }
+        return N[n];
+    }
+}
