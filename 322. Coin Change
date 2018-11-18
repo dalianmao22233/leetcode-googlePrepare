@@ -1,0 +1,22 @@
+// DP, good solution.
+// 维护一个一维动态数组dp，其中dp[i]表示钱数为i时的最小硬币数的找零
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        if (coins == null || coins.length == 0 || amount <=0 ) {
+            return 0;
+        }
+        int max = amount+1;
+        int[] M = new int[amount+1];
+        Arrays.fill(M, max);
+        M[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            for (int j = 0; j < coins.length; j++) {
+                if (coins[j] <= i) {
+                    M[i] = Math.min(M[i], M[i-coins[j]] + 1); 
+                    // 为什么+1：M[i-coins[j]]是M[3],算M[5]，如何从M[3]到M[5],用了一种coin...所以肯定要加1 啊笨！
+                }
+            }
+        } 
+        return M[amount] > amount? -1: M[amount];
+    }
+}
