@@ -1,0 +1,33 @@
+// DP
+class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        if (nums.length == 1) {
+            return nums[0];
+        }
+        //M: when rob at ith house, max money
+        int[] M = new int[nums.length+1];
+        int max = Integer.MIN_VALUE;
+        M[0] = nums[0];
+        M[1] = Math.max(M[0], nums[1]);
+        for (int i = 2; i < nums.length; i++) {
+            M[i] = Math.max(M[i-2] + nums[i], M[i-1]);
+        }
+
+        return M[nums.length-1];
+    }
+}
+
+// space: O(1)
+public int rob(int[] num) {
+    int prevMax = 0;  // = M[i-2]
+    int currMax = 0;  // = M[i-1]
+    for (int x : num) {
+        int temp = currMax;
+        currMax = Math.max(prevMax + x, currMax);
+        prevMax = temp;
+    }
+    return currMax;
+}
