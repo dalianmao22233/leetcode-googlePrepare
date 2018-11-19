@@ -14,6 +14,9 @@ class Solution {
         // 第一个篱笆和第二个篱笆：different color ways + same color ways = k(k-1)+k = k^2;
         N[2] = k*(k-1) + k;
         for (int i = 3; i <= n; i++) {
+        // 2 conditions:
+        // 1) different from last 1st fence, have k-1 choice
+        // 2) different from last 2nd fence, have k-1 choice (because no more than 2 can have same color.)
             N[i] = (k-1)*(N[i-2] + N[i-1]);
         }
         return N[n];
