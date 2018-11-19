@@ -1,0 +1,35 @@
+// check magic matrix中心是不是5，如果是5，那么可能是magic matrix,要进行loop check，otherwise绝对不是。
+class Solution {
+    public int numMagicSquaresInside(int[][] grid) {
+        if(grid == null || grid.length < 3 || grid[0] == null || grid[0].length < 3) return 0;
+        int m = grid.length;
+        int n = grid[0].length;
+        int cnt = 0;
+        for(int i = 0; i < m - 2; i++) {
+            for(int j = 0; j < n -2; j++) {
+                if(isMagicSquare(grid, i, j)){
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+
+    private boolean isMagicSquare(int[][] grid, int i, int j) {
+        if(grid[i + 1][j + 1] != 5) return false;
+        if(grid[i][j] + grid[i + 2][j + 2] != 10) return false;
+        if(grid[i][j + 2] + grid[i + 2][j] != 10) return false;
+        for(int m = 0; m < 3; m++) {
+            int sum1 = 0;
+            int sum2 = 0;
+            for(int n = 0; n < 3; n++) {
+                if(grid[i + m][j + n] > 9 || grid[i + n][j + m] > 9 || grid[i + n][j + m] == 0 || grid[i + m][j + n] == 0) return false;
+                sum1 += grid[i + m][j + n];
+                sum2 += grid[i + n][j + m];
+            }
+            if(sum1 != 15) return false;
+            if(sum2 != 15) return false;
+        }
+        return true;
+    }
+}
