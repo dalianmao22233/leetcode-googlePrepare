@@ -1,0 +1,54 @@
+// DP:
+class Solution {
+    public int countSubstrings(String s) {
+        if (s.isEmpty()) {
+            return 0;
+        }
+        int len = s.length();
+        int result = 0;
+        boolean[][] M = new boolean[len+1][len+1];
+        for (int i = len-1; i >= 0; i--) {
+            for (int j = i; j < len; j++) {
+                M[i][j] = s.charAt(i) == s.charAt(j) && (j-i<3 || M[i+1][j-1]);
+                // M[i+1][j-1]: 里面一圈是回文，s[i] == s[j], 那i-j肯定也是回文
+                // j-i < 3:
+                //    1) i==j, true 
+                //    2) i,j相邻, s[i] == s[j], true 
+                //    3) i,j中间隔一个，true，AXA, A is matched with A（s.charAt(i) == s.charAt(j）。
+                        
+               
+                if (M[i][j]) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+}
+
+// string 做法，以每个字符为中心，找回文字符串。
+class Solution {
+    public int countSubstrings(String s) {
+        if (s.isEmpty()) {
+            return 0;
+        }
+        int len = s.length();
+        int result = 0;
+        for (int i = 0; i < len; i++) {  // expand from center
+            result = checkPalindrome(s, i, i, result);  // even
+            result = checkPalindrome(s, i, i+1, result); // odd
+        }
+        return result;
+    }
+    private int checkPalindrome(String s, int i, int j, int result) {
+        if (s.isEmpty()) {
+            return 0;
+        }
+        while (i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)) {
+            i--;
+            j++;
+            result++;
+        }
+        return result;
+    }
+}
