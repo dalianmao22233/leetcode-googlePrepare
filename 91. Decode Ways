@@ -15,7 +15,7 @@ public class Solution {
         int[]  dp = new int[s.length()+1];
         dp[0] = 1;//初始化注意这里是1，不能解析（没有数字）
         dp[1] = s.charAt(0) != '0'? 1:0;
-        for(int i = 2; i < dp.length; i++){
+        for(int i = 2; i <= s.length(); i++){
             int first = Integer.valueOf(s.substring(i-1, i));
             int second = Integer.valueOf(s.substring(i-2, i));
             if(first >= 1 && first <= 9) {
