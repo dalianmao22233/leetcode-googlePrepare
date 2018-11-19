@@ -1,0 +1,30 @@
+// DP, 只要第一位是0就不能decode了。结果即为0
+设置动态数组dp[n+1]。dp[i]表示从1~i的decode ways的个数。
+
+一看到这题就想到了爬楼梯climb stairs，典型的一维DP。下面就用一维DP来做。先建立数组dp = new int[s.length() + 1]， 
+初始化一个数字的情况dp[0] = 1， 两个数字组成一个两位数字的情况dp[1] = 1。接下来写出循环体，先算一个数字的情况，
+当s.charAt(i - 1)不为0的时候，dp[i] = dp[i - 1]， 否则dp[i] = 0。 接下来考虑两位数字，当由i-2和i-1这两位组成的数字大于等于10，
+小于等于26时，dp[i] += dp[i - 2]， 否则忽略此种情况。
+举个简单的例子：123 一共3种, dp[3]=dp[2]+dp[1],”12“情况数目+”1“情况数目（此时可以判断”23“是valid）
+ 
+Time Complexity - O(n)， Space Complexity - O(n)。
+
+public class Solution {
+    public int numDecodings(String s) {
+        if(s == null || s.length() == 0) return 0;
+        int[]  dp = new int[s.length()+1];
+        dp[0] = 1;//初始化注意这里是1，不能解析（没有数字）
+        dp[1] = s.charAt(0) != '0'? 1:0;
+        for(int i = 2; i < dp.length; i++){
+            int first = Integer.valueOf(s.substring(i-1, i));
+            int second = Integer.valueOf(s.substring(i-2, i));
+            if(first >= 1 && first <= 9) {
+                dp[i] += dp[i-1]; //前一位的情况如果是符合条件的一位数，就加上这么多的情况。
+            }
+            if(second >= 10 && second <= 26) {//注意这里是>=10不是0
+                dp[i] += dp[i-2];//前两位的情况如何是符合条件的二位数，就加上这么多的情况。
+            }
+        }
+        return dp[s.length()];
+    }
+}
