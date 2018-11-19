@@ -2,18 +2,17 @@ my solution:
 // Time: O(n), Space: O(1);
 class Solution {
     public boolean isPalindrome(String s) {
-        if (s == null || s.length() == 0 || s.length() == 1) {
+        if (s.isEmpty()) {
             return true;
         }
-        s = s.replaceAll("[^A-Za-z0-9]", "").toLowerCase();
-        int low = 0, high = s.length()-1;
-        while(low <= high) {
-            if (s.charAt(low) == s.charAt(high)) {
-                low++;
-                high--;
-            } else {
+        s = s.replaceAll("[^A-Za-z0-9]", "").toLowerCase();  // replaceAll!!!
+        int low = 0, high = s.length()-1; // if only have 1 letter, will directly return true; pass while.
+        while(low < high) {   // low == high is also ok. 
+            if (s.charAt(low) != s.charAt(high)) {
                 return false;
-            }
+            } 
+            low++;
+            high--;
         }
         return true;
     }
