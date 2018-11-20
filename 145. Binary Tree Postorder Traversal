@@ -25,7 +25,31 @@ class Solution {
     }
 }
 
-2. iterative: BFS 不太懂。
+2. iterative: BFS 。
+// use linkedlist, pollLast, addFirst. 这个我懂， Time: O(n), space: O(n)
+class Solution {
+  public List<Integer> postorderTraversal(TreeNode root) {
+    LinkedList<TreeNode> stack = new LinkedList<>();
+    LinkedList<Integer> output = new LinkedList<>();
+    if (root == null) {
+      return output;
+    }
+
+    stack.add(root);
+    while (!stack.isEmpty()) {
+      TreeNode node = stack.pollLast();
+      output.addFirst(node.val);
+      if (node.left != null) {
+        stack.add(node.left);
+      }
+      if (node.right != null) {
+        stack.add(node.right);
+      }
+    }
+    return output;
+  }
+}
+
 public ArrayList<Integer> postorderTraversal(TreeNode root) {
         ArrayList<Integer> result = new ArrayList<Integer>();
         if (root == null) return result;
