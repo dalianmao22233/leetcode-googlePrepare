@@ -1,0 +1,52 @@
+1. recursive: DFS
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public List<Node> children;
+
+    public Node() {}
+
+    public Node(int _val,List<Node> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+*/
+class Solution {
+    public List<Integer> preorder(Node root) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null) {
+            return res;
+        }
+        res.add(root.val);
+        for (Node node : root.children) {
+            res.addAll(preorder(node));
+        }
+        return res;
+    }
+}
+
+2. iterative: BFS， same as preorder in binary tree. Just have one more for 反loop for all children. 
+In binary tree is right child first and then left child.
+class Solution {
+    public List<Integer> preorder(Node root) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null) {
+            return res;
+        }
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+        
+        while (!stack.isEmpty()) {
+            Node cur = stack.pop();
+            res.add(cur.val);
+            for (int i = cur.children.size()-1; i >= 0; i--) {
+                if (cur.children.get(i) != null) {
+                    stack.push(cur.children.get(i));
+                }
+            }
+        }
+        return res;
+    }
+}
