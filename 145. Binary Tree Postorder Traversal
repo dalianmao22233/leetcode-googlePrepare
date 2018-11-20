@@ -1,0 +1,61 @@
+1. recursive: DFS
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null) {
+            return res;
+        }
+        if(root.left != null) {
+            res.addAll(postorderTraversal(root.left));
+        }
+        if(root.right != null) {
+            res.addAll(postorderTraversal(root.right));
+        }
+        res.add(root.val);
+        return res;
+    }
+}
+
+2. iterative: BFS 不太懂。
+//Iterative
+public ArrayList<Integer> postorderTraversal(TreeNode root) {
+    ArrayList<Integer> result = new ArrayList<Integer>();
+    Stack<TreeNode> stack = new Stack<TreeNode>();
+    TreeNode prev = null; // previously traversed node
+    TreeNode curr = root;
+
+    if (root == null) {
+        return result;
+    }
+
+    stack.push(root);
+    while (!stack.empty()) {
+        curr = stack.peek();
+        if (prev == null || prev.left == curr || prev.right == curr) { // traverse down the tree
+            if (curr.left != null) {
+                stack.push(curr.left);
+            } else if (curr.right != null) {
+                stack.push(curr.right);
+            }
+        } else if (curr.left == prev) { // traverse up the tree from the left
+            if (curr.right != null) {
+                stack.push(curr.right);
+            }
+        } else { // traverse up the tree from the right
+            result.add(curr.val);
+            stack.pop();
+        }
+        prev = curr;
+    }
+
+    return result;
+}
