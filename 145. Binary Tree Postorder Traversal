@@ -26,6 +26,24 @@ class Solution {
 }
 
 2. iterative: BFS 不太懂。
+public ArrayList<Integer> postorderTraversal(TreeNode root) {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        if (root == null) return result;
+
+        Deque<TreeNode> stack = new ArrayDeque<TreeNode>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            result.add(node.val);
+            if (node.left != null) stack.push(node.left);
+            if (node.right != null) stack.push(node.right);
+        }
+        Collections.reverse(result);
+
+        return result;
+}
+     
+
 //Iterative
 public ArrayList<Integer> postorderTraversal(TreeNode root) {
     ArrayList<Integer> result = new ArrayList<Integer>();
