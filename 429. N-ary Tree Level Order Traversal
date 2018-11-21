@@ -1,3 +1,4 @@
+1. BFS:
 same as level order in binary tree
 /*
 // Definition for a Node.
@@ -36,5 +37,26 @@ class Solution {
             res.add(level);
         }
         return res;
+    }
+}
+2. DFS:
+class Solution {
+    public List<List<Integer>> levelOrder(Node root) {
+        return levelOrder(root, 0, new ArrayList<>());
+    }
+    
+    private List<List<Integer>> levelOrder(Node node, int level, List<List<Integer>> order){
+        if (node == null){
+            return order;
+        }
+        List<Integer> list = order.size() > level ?  order.get(level) : new ArrayList<>();
+        list.add(node.val);
+        if (order.size() <= level){
+            order.add(list);
+        }
+        for (Node n : node.children){
+            levelOrder(n, level + 1, order);
+        }
+        return order;
     }
 }
