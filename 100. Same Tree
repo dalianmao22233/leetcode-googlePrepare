@@ -1,3 +1,4 @@
+```
 // 1- time AC!
 /**
  * Definition for a binary tree node.
@@ -22,3 +23,4 @@ class Solution {
         return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
 }
+```
