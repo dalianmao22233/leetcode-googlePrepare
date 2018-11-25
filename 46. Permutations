@@ -1,0 +1,54 @@
+1. // 通常做法：
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        helper(nums, res, new ArrayList<Integer>());
+        return res;
+    }
+    private void helper(final int[] nums, List<List<Integer>> res, List<Integer> answer) {
+        if (answer.size() == nums.length) {
+            res.add(new ArrayList(answer));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (answer.contains(nums[i])) {
+                continue;
+            }
+            answer.add(nums[i]);
+            helper(nums, res, answer);
+            answer.remove(answer.size()-1);
+        }
+    }
+}
+2. inplace-- laioffer: 固定index, [1,2,3]，固定1不动，swap 2和3  看笔记
+class Solution {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        helper(nums, res, new ArrayList<Integer>(), 0);
+        return res;
+    }
+    private void helper(final int[] nums, List<List<Integer>> res, List<Integer> answer, int index) {
+        if (answer.size() == nums.length) {
+            res.add(new ArrayList(answer));
+            return;
+        }
+        for (int i = index; i < nums.length; i++) {
+            answer.add(nums[i]);
+            swap(nums, index, i);
+            helper(nums, res, answer, index+1);
+            swap(nums, i, index);
+            answer.remove(answer.size()-1);
+        }
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
