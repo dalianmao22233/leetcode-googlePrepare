@@ -1,0 +1,95 @@
+1. same as permutation 1, add a check: if (i > 0 && nums[i] == nums[i-1] && visited[i-1])
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        boolean[] visited = new boolean[nums.length];
+        dfs(nums, res, new ArrayList<Integer>(), visited);
+        return res;
+    }
+    private void dfs(int[] nums, List<List<Integer>> res, List<Integer> answer, boolean[] visited) {
+        if (answer.size() == nums.length) {
+            if (!res.contains(answer)) {
+                res.add(new ArrayList<>(answer));
+                return;
+            }
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i] == false) {
+                if (i > 0 && nums[i] == nums[i-1] && visited[i-1]) {
+                    return;
+                }
+                answer.add(nums[i]);
+                visited[i] = true;
+                dfs(nums, res, answer, visited);
+                visited[i] = false;
+                answer.remove(answer.size()-1);
+            }
+        }
+    }
+}
+2. totally same as laioffer solution for permuation 1
+public class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (nums==null || nums.length==0) { return ans; }
+        permute(ans, nums, 0);
+        return ans;
+    }
+    
+    private void permute(List<List<Integer>> ans, int[] nums, int index) {
+        if (index == nums.length) { 
+            List<Integer> temp = new ArrayList<>();
+            for (int num: nums) { temp.add(num); }
+            ans.add(temp);
+            return;
+        }
+        Set<Integer> appeared = new HashSet<>();
+        for (int i=index; i<nums.length; ++i) {
+            if (appeared.add(nums[i])) {
+                swap(nums, index, i);
+                permute(ans, nums, index+1);
+                swap(nums, index, i);
+            }
+        }
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int save = nums[i];
+        nums[i] = nums[j];
+        nums[j] = save;
+    }
+}
+
+3. my solution, same as permutation 1, 要check重复solution， 加了一步res.contains,但是很慢。。
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        boolean[] visited = new boolean[nums.length];
+        dfs(nums, res, new ArrayList<Integer>(), visited);
+        return res;
+    }
+    private void dfs(int[] nums, List<List<Integer>> res, List<Integer> answer, boolean[] visited) {
+        if (answer.size() == nums.length) {
+            if (!res.contains(answer)) {
+                res.add(new ArrayList<>(answer));
+                return;
+            }
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i] == false) {
+                answer.add(nums[i]);
+                visited[i] = true;
+                dfs(nums, res, answer, visited);
+                visited[i] = false;
+                answer.remove(answer.size()-1);
+            }
+        }
+    }
+}
+
