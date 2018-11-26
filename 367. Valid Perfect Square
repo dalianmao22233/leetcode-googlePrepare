@@ -20,7 +20,15 @@ class Solution {
         return false;
     }
 }
-2.brute force: mine.... so slow
+2. newton method:
+public boolean isPerfectSquare(int num) {
+        long x = num;
+        while (x * x > num) {
+            x = (x + num / x) >> 1;
+        }
+        return x * x == num;
+    }
+3.brute force: mine.... so slow
 class Solution {
     public boolean isPerfectSquare(int num) {
         if (num == 1) {
