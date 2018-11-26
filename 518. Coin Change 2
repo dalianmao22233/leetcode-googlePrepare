@@ -1,0 +1,36 @@
+DP:有一个case: 
+input: 0, [], 返回1. 这就是为什么dp[0]=1，并且我没设置边界check。
+class Solution {
+    public static int change(int amount, int[] coins) {
+      int[] dp = new int[amount+1];
+          dp[0] = 1;
+          for (int j = 0; j < coins.length; j++) {
+              for (int i = coins[j]; i <= amount; i++) { // dp[i-coins[j]] requires: start from i-coins[j] = 0.(dp[0])
+                  dp[i] += dp[i-coins[j]];
+              }
+          }
+          return dp[amount];
+    }
+}
+
+explaination:   https://www.youtube.com/watch?time_continue=579&v=jaNZ83Q3QGc has good explanation!!!
+If outer loop is amount, you are considering every coin at every stage.
+Let's start with amount 2: it can be made from 2 and 1 + 1, so 2 combinations. 
+For amount 3 you would consider every coin again, which would mean that you're trying dp[amount - 1] and dp[amount - 2], 
+which is: 2 (as there are 2 combinations for amount 2) and 1 (1 combination for amount 1).
+So in this case you have 3 combinations for amount 3:
+1 + 2 - taken from dp[amount - 2]
+2 + 1, 1 + 1 + 1 - taken from dp[amount - 1]
+You can see is one duplicate: 1 + 2 and 2 + 1
+If outer loop is coins, you are NOT considering every coing at every stage
+Let's assume you've already calculated all dps for coin with value 1. So for every amount there is just one combination, 
+dp array looks like that: [1, 1, 1, 1, 1...]
+Now we are doing all calculations with value 2. We are at amount 2, so again, amount 2 has 2 combinations: 1 + 1 and 2. 
+Makes sense, no duplicates.
+For amount 3 you are NOT considering every coin again - you are just considering ending every combination with 2, 
+so ONLY dp[amount - 2].
+That would make only two combinations for amount 3:
+1 + 1 + 1 - taken as previous value of dp[3], calculated for coin value 1
+1 + 2 - taken from dp[amount - 2]
+Hopefully it shows why we don't have duplicates - all combinations are started with lowest coins, 
+there is no way to have lowest coin at the end. You can think that you have all SORTED combinations.
