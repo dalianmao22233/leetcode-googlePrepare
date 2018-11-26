@@ -1,0 +1,62 @@
+1. 注意利用回文的特性，肯定有2倍重复字母。。奇数：set内剩1个，偶数：0个
+class Solution {
+    public boolean canPermutePalindrome(String s) {
+        if (s.isEmpty()) {
+			return true;
+		}
+        Set<Character> set = new HashSet<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (!set.add(s.charAt(i))) {
+                set.remove(s.charAt(i));
+            }
+        }
+		return set.size() <= 1;
+	}
+}
+
+// my solution: based on permutation + palindrome but TLE:
+class Solution {
+    public boolean canPermutePalindrome(String s) {
+        if (s.isEmpty()) {
+			return true;
+		}
+		List<String> res = new ArrayList<>();
+		boolean[] visited = new boolean[s.length()];
+		helper(s, res, "", visited);
+		for (String str : res) {
+			if (isPalindrome(str)) {
+				return true;
+			}
+		}
+		return false;
+    }
+    private static void helper(String s, List<String> res, String answer, boolean[] visited) {
+		if (answer.length() == s.length()) {
+			res.add(answer);
+			return;
+		}
+		for (int i = 0; i < s.length(); i++) {
+			if (!visited[i]) {
+				visited[i] = true;
+				answer = answer + s.charAt(i);
+				helper(s, res, answer, visited);
+				visited[i] = false;
+				answer = answer.substring(0, answer.length()-1);
+			}
+		}
+	}
+	private static boolean isPalindrome(String s) {
+		if (s.isEmpty()) {
+			return true;
+		}
+		int low = 0, high = s.length()-1;
+		while (low < high) {
+			if (s.charAt(low) != s.charAt(high)) {
+				return false;
+			}
+			low++;
+			high--;
+		}
+		return true;
+	}
+}
