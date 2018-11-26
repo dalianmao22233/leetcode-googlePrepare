@@ -1,0 +1,36 @@
+1. why use long: 
+in test cases like 808201, when we calculate mid value , it comes out to be 404101. 
+So, when we do mid*mid, it goes completely out of int range.
+class Solution {
+    public boolean isPerfectSquare(int num) {
+        if (num == 1) {
+            return true;
+        }
+        long low = 0, high = num/2;
+        while (low <= high) {
+            long mid = low + (high-low)/2;
+            if (mid * mid == num) {
+                return true;
+            } else if (mid * mid < num) {
+                low = mid+1;
+            } else {
+                high = mid-1;
+            }
+        }
+        return false;
+    }
+}
+2.brute force: mine.... so slow
+class Solution {
+    public boolean isPerfectSquare(int num) {
+        if (num == 1) {
+            return true;
+        }
+        for (int i = 0; i <= num/2; i++) {
+            if (i*i == num) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
