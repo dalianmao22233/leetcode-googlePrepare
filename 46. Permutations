@@ -107,9 +107,9 @@ public class Solution {
             ans.add(temp);
             return;
         }
-        Set<Integer> appeared = new HashSet<>();
+        // 这句可以没有，在permutation II 里是必须的 Set<Integer> appeared = new HashSet<>();
         for (int i=index; i<nums.length; ++i) {
-            if (appeared.add(nums[i])) {
+           // 同上 if (appeared.add(nums[i])) {
                 swap(nums, index, i);
                 permute(ans, nums, index+1);
                 swap(nums, index, i);
