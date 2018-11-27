@@ -1,3 +1,28 @@
+4. from laioffer: 
+class Solution {
+    public static String reverseString(String s) {
+		if (s.isEmpty()) {
+			return s;
+		}
+		char[] arr = s.toCharArray();
+		helper(arr, 0, s.length()-1);
+		return String.valueOf(String.valueOf(arr));
+	}
+	private static void helper(char[] arr, int left, int right) {
+		if (left >= right) {
+			return;
+		}
+		swap(arr, left, right);
+		helper(arr, left+1, right-1);
+	}
+	private static void swap(char[] arr, int left, int right) {
+		char temp = arr[left];
+		arr[left] = arr[right];
+		arr[right] = temp;
+	}
+}
+
+
 1. // my solution, Time: O(n), Space: O(n), 1-time AC!
 class Solution {
     public String reverseString(String s) {
