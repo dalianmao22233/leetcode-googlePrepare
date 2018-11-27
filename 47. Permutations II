@@ -13,7 +13,7 @@ class Solution {
         if (answer.size() == nums.length) {
             if (!res.contains(answer)) {
                 res.add(new ArrayList<>(answer));
-                return;
+                return; // continue也行的
             }
         }
         for (int i = 0; i < nums.length; i++) {
