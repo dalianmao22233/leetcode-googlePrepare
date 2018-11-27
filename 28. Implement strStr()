@@ -1,3 +1,31 @@
+
+// use 2 pointer: from laioffer
+class Solution {
+    public int strStr(String haystack, String needle) {
+        if (haystack.length() < needle.length()) {
+            return -1;
+        }
+        if (haystack.isEmpty() || needle.isEmpty()) {
+            return 0;
+        }
+        
+        int nlen = needle.length();
+        int hlen = haystack.length();
+        int i = 0, j = 0;
+        for (i = 0; i <= hlen-nlen; i++) {
+            for (j = 0; j < nlen; j++) {
+                if (haystack.charAt(i+j) != needle.charAt(j)) {
+                    break;
+                }
+            }
+            if (j == nlen) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
 // use substring to compare.
 class Solution {
     public int strStr(String haystack, String needle) {
