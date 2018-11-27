@@ -1,8 +1,9 @@
 class Solution {
     public int removeDuplicates(int[] nums) {
-        if (nums == null || nums.length == 0) {
-            return 0;
+        if (nums.length < 2) { // if [1], directly return;
+            return nums.length;
         }
+        
         int s = 0, f = 1;  
         // slow pointer左边的都是要返回的答案，不含slow pointer.
         // fast pointer右边的是还没排好的
