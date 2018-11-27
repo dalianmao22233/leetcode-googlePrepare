@@ -11,6 +11,13 @@ class Solution {
     private void helper(final int[] nums, List<List<Integer>> res, List<Integer> answer) {
         if (answer.size() == nums.length) {
             res.add(new ArrayList(answer));
+            /**
+            Writing new ArrayList<>(list) creates a new list, containing all the elements in list. 
+            This is required, since at the end of the function you are calling list.remove(list.size()-1);, 
+            you are thus modifying the list variable.
+
+            If you were to add list directly in res, the remove call would also modify res
+            */
             return;
         }
         for (int i = 0; i < nums.length; i++) {
