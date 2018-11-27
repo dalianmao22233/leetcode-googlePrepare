@@ -1,0 +1,21 @@
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int s = 0, f = 1;  
+        // slow pointer左边的都是要返回的答案，不含slow pointer.
+        // fast pointer右边的是还没排好的
+        
+        while (f < nums.length) {
+            if (nums[s] != nums[f]) {
+                s++; // slow pointer move forward
+                nums[s] = nums[f];  // copy fast pointer content to s
+                f++; // fast pointer move forward 
+            } else {
+                f++; // fast pointer move forward to skip duplicate
+            }
+        }
+        return s+1;  // s从0开始，算长度需要+1
+    }
+}
