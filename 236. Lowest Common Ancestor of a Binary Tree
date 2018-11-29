@@ -1,0 +1,29 @@
+from laioffer:
+1. recursion
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root.val == p.val || root.val == q.val) {
+            return root;
+        }
+        // step 1: ask for left child and right child
+        TreeNode leftnode = lowestCommonAncestor(root.left, p, q);
+        TreeNode rightnode = lowestCommonAncestor(root.right, p, q);
+        // step 2: do something in current level and report to parent.
+        if (leftnode != null && rightnode != null) {
+            return root;
+        } 
+        return leftnode == null ? rightnode : leftnode;      
+    }
+}
+
+2. iteration:
+preorder traverse tree, until find node p and q. Find first union node, this is the LCA.
