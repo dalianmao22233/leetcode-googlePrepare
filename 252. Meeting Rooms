@@ -1,5 +1,6 @@
 1. sorting: sort the meetings by starting time, 
 go through the meetings one by one and make sure that each meeting ends before the next one starts.
+Time: O(nlogn+n) = O(nlogn), space: O(1)
 
 public boolean canAttendMeetings(Interval[] intervals) {
     Arrays.sort(intervals, new Comparator<Interval>() {
@@ -13,7 +14,11 @@ public boolean canAttendMeetings(Interval[] intervals) {
     return true;
 }
 
-2. brute force
+2. brute force: Time: O(n^2), space: O(1)
+compare every two meetings in the array, and see if they conflict with each other (i.e. if they overlap). 
+Two meetings overlap if one of them starts while the other is still taking place.
+
+
 /**
  * Definition for an interval.
  * public class Interval {
