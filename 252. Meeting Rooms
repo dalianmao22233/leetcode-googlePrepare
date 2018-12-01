@@ -1,0 +1,46 @@
+1. sorting: sort the meetings by starting time, 
+go through the meetings one by one and make sure that each meeting ends before the next one starts.
+
+public boolean canAttendMeetings(Interval[] intervals) {
+    Arrays.sort(intervals, new Comparator<Interval>() {
+        public int compare(Interval i1, Interval i2) {
+            return i1.start - i2.start;
+        }        
+    });
+    for (int i = 0; i < intervals.length - 1; i++) {
+        if (intervals[i].end > intervals[i + 1].start) return false;
+    }
+    return true;
+}
+
+2. brute force
+/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+class Solution {
+    public boolean canAttendMeetings(Interval[] intervals) {
+        if (intervals == null || intervals.length == 0) {
+            return true;
+        }
+        int len = intervals.length;
+        for (int i = 0; i < len; i++) {
+            for (int j = i+1; j < len; j++) {
+                if (overlap(intervals[i], intervals[j])) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    private boolean overlap(Interval i1, Interval i2) {
+        return (i1.start >= i2.start && i1.start < i2.end) ||  
+            //[[13,15],[1,13]]  i1.start <= i2.end will return overlap is true;
+            (i2.start >= i1.start && i2.start < i1.end);
+    }
+}
