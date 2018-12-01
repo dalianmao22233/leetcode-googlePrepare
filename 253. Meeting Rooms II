@@ -151,3 +151,54 @@ class Solution {
     return usedRooms;
   }
 }
+
+or from discussion:
+public class Solution {
+    public int minMeetingRooms(Interval[] intervals) {
+        int[] starts = new int[intervals.length];
+        int[] ends = new int[intervals.length];
+        for(int i=0; i<intervals.length; i++) {
+            starts[i] = intervals[i].start;
+            ends[i] = intervals[i].end;
+        }
+        Arrays.sort(starts);
+        Arrays.sort(ends);
+        int rooms = 0;
+        int endsItr = 0;
+        for(int i=0; i<starts.length; i++) {
+            if(starts[i]<ends[endsItr])
+                rooms++;
+            else
+                endsItr++;
+        }
+        return rooms;
+    }
+}
+
+or 扫描线
+public int minMeetingRooms(Interval[] intervals) {
+    List<int[]> list = new ArrayList<>();
+
+    //put points in a a list. arr[1] is a tag
+    for(Interval interval: intervals)
+    {
+        list.add(new int[]{interval.start, 1});
+        list.add(new int[]{interval.end, 0});
+    }
+    // if start!=end, we order it with time, else we want end to happen first, 
+    // and because end is 0 and we want it to be put in front of 1, it is a[1] - b[1]
+    Collections.sort(list, (a,b)->(a[0]!=b[0]?Integer.compare(a[0], b[0]):Integer.compare(a[1], b[1])));
+    
+    int max_count = 0;
+    int count = 0;
+    for(int[] point:list)
+    {
+        //when we see a start, +1, otherwise -1
+        if(point[1]==1)
+            count++;
+        else
+            count--;
+        max_count = Math.max(max_count, count);            
+    }
+    return max_count;        
+}
