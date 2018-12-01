@@ -1,0 +1,153 @@
+1. min heap:
+Time: O(nlogn), space: O(n)
+
+steps:
+1.Sort the given meetings by their start time.
+2.Initialize a new min-heap and add the first meeting's ending time to the heap. 
+  We simply need to keep track of the ending times as that tells us when a meeting room will get free.
+3.For every meeting room check if the minimum element of the heap i.e. the room at the top of the heap is free or not.
+4.If the room is free, then we extract the topmost element and 
+  add it back with the ending time of the current meeting we are processing.
+5.If not, then we allocate a new room and add it to the heap.
+6.After processing all the meetings, the size of the heap will tell us the number of rooms allocated. 
+  This will be the minimum number of rooms needed to accommodate all the meetings.
+
+
+
+/**
+ * Definition for an interval. public class Interval { int start; int end; Interval() { start = 0;
+ * end = 0; } Interval(int s, int e) { start = s; end = e; } }
+ */
+class Solution {
+
+  public int minMeetingRooms(Interval[] intervals) {
+
+    // Check for the base case. If there are no intervals, return 0
+    if (intervals.length == 0) {
+      return 0;
+    }
+
+    // Min heap
+    PriorityQueue<Integer> allocator =
+        new PriorityQueue<Integer>(
+            intervals.length,
+            new Comparator<Integer>() {
+              public int compare(Integer a, Integer b) {
+                return a - b;
+              }
+            });
+
+    // Sort the intervals by start time
+    Arrays.sort(
+        intervals,
+        new Comparator<Interval>() {
+          public int compare(Interval a, Interval b) {
+            return a.start - b.start;
+          }
+        });
+
+    // Add the first meeting
+    allocator.add(intervals[0].end);
+
+    // Iterate over remaining intervals
+    for (int i = 1; i < intervals.length; i++) {
+
+      // If the room due to free up the earliest is free, assign that room to this meeting.
+      if (intervals[i].start >= allocator.peek()) {
+        allocator.poll();
+      }
+
+      // If a new room is to be assigned, then also we add to the heap,
+      // If an old room is allocated, then also we have to add to the heap with updated end time.
+      allocator.add(intervals[i].end);
+    }
+
+    // The size of the heap tells us the minimum rooms required for all the meetings.
+    return allocator.size();
+  }
+}
+
+
+2. Chronological Ordering
+Time: O(nlogn), space: O(n)
+
+1.Separate out the start times and the end times in their separate arrays.
+2.Sort the start times and the end times separately. 
+  Note that this will mess up the original correspondence of start times and end times. 
+  They will be treated individually now.
+3.We consider two pointers: s_ptr and e_ptr which refer to start pointer and end pointer. 
+  The start pointer simply iterates over all the meetings 
+  and the end pointer helps us track if a meeting has ended 
+  and if we can reuse a room.
+4.When considering a specific meeting pointed to by s_ptr, 
+  we check if this start timing is greater than the meeting pointed to by e_ptr. 
+  If this is the case then that would mean some meeting has ended by the time the meeting at s_ptr had to start. 
+  So we can reuse one of the rooms. Otherwise, we have to allocate a new room.
+5.If a meeting has indeed ended i.e. if start[s_ptr] >= end[e_ptr], then we increment e_ptr.
+6.Repeat this process until s_ptr processes all of the meetings.
+
+/**
+ * Definition for an interval. public class Interval { int start; int end; Interval() { start = 0;
+ * end = 0; } Interval(int s, int e) { start = s; end = e; } }
+ */
+class Solution {
+
+  public int minMeetingRooms(Interval[] intervals) {
+
+    // Check for the base case. If there are no intervals, return 0
+    if (intervals.length == 0) {
+      return 0;
+    }
+
+    Integer[] start = new Integer[intervals.length];
+    Integer[] end = new Integer[intervals.length];
+
+    for (int i = 0; i < intervals.length; i++) {
+      start[i] = intervals[i].start;
+      end[i] = intervals[i].end;
+    }
+
+    // Sort the intervals by end time
+    Arrays.sort(
+        end,
+        new Comparator<Integer>() {
+          public int compare(Integer a, Integer b) {
+            return a - b;
+          }
+        });
+
+    // Sort the intervals by start time
+    Arrays.sort(
+        start,
+        new Comparator<Integer>() {
+          public int compare(Integer a, Integer b) {
+            return a - b;
+          }
+        });
+
+    // The two pointers in the algorithm: e_ptr and s_ptr.
+    int startPointer = 0, endPointer = 0;
+
+    // Variables to keep track of maximum number of rooms used.
+    int usedRooms = 0;
+
+    // Iterate over intervals.
+    while (startPointer < intervals.length) {
+
+      // If there is a meeting that has ended by the time the meeting at `start_pointer` starts
+      if (start[startPointer] >= end[endPointer]) {
+        usedRooms -= 1;
+        endPointer += 1;
+      }
+
+      // We do this irrespective of whether a room frees up or not.
+      // If a room got free, then this used_rooms += 1 wouldn't have any effect. used_rooms would
+      // remain the same in that case. If no room was free, then this would increase used_rooms
+      usedRooms += 1;
+      startPointer += 1;
+
+    }
+
+    return usedRooms;
+  }
+}
