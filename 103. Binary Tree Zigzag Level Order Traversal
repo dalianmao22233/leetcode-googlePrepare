@@ -37,38 +37,38 @@ class Solution {
     }
 }
 
-2. BFS: use queue, addFirst
+2. BFS: use queue, addFirst,好记
 public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        List<List<Integer>> list = new ArrayList<>();
-        if(root == null)
-            return list;
-        Queue<TreeNode> q = new LinkedList<>();
-        q.offer(root);
-        boolean normalorder = false;
-        while(!q.isEmpty()){
-            int size = q.size();            
-            LinkedList<Integer> levelValues = new LinkedList<>();  
-            normalorder = !normalorder;
-            while(size > 0){
-                size--;       
-                TreeNode cur = q.poll();  
-                if(normalorder)
-                    levelValues.add(cur.val); 
-                else
-                    levelValues.addFirst(cur.val);
-                
-                if(cur.left != null)
-                    q.offer(cur.left);
-                if(cur.right != null)
-                    q.offer(cur.right);      
-                                     
-            }
-            //System.out.println("Level values are "+levelValues);
-            list.add(levelValues);
-        }
-        return list;
+    List<List<Integer>> res = new ArrayList<List<Integer>>();
+    if (root == null) { 
+        return res;
     }
-    
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    boolean goright = true;
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        List<Integer> answer = new ArrayList<>();
+
+        for (int i = 0; i < size; i++) {
+            TreeNode cur = queue.poll();
+            if (goright) {
+                answer.add(cur.val);
+            } else {
+                answer.add(0, cur.val);
+            }
+            if (cur.left != null) {
+                queue.offer(cur.left);
+            }
+            if (cur.right != null) {
+                queue.offer(cur.right);
+            }
+        }
+        goright = !goright;
+        res.add(answer);
+    }
+    return res;
+} 
     
 Dequeue:
 class Solution {
@@ -82,20 +82,20 @@ class Solution {
         while (!deque.isEmpty ()) {
             int size = deque.size ();
             List<Integer> ls = new ArrayList<> ();
-            Deque<TreeNode> next_deque = new ArrayDeque<> ();
+            Deque<TreeNode> answerQ = new ArrayDeque<> ();
             boolean go_right = level++ % 2 == 0;
             for (int i = 0; i < size; i++) {
                 TreeNode cur = go_right ? deque.pollFirst () : deque.pollLast ();
                 ls.add (cur.val);
                 if (go_right) {
-                    if (cur.left != null) next_deque.offer (cur.left);
-                    if (cur.right != null) next_deque.offer (cur.right);
+                    if (cur.left != null) answerQ.offer (cur.left);
+                    if (cur.right != null) answerQ.offer (cur.right);
                 } else {
-                    if (cur.right != null) next_deque.offerFirst (cur.right);
-                    if (cur.left != null) next_deque.offerFirst (cur.left);
+                    if (cur.right != null) answerQ.offerFirst (cur.right);
+                    if (cur.left != null) answerQ.offerFirst (cur.left);
                 }
             }
-            deque = next_deque;
+            deque = answerQ;
             res_lss.add (ls);
         }
         return res_lss;
