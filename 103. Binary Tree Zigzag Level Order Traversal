@@ -1,0 +1,103 @@
+
+1.DFS:
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (root == null) { 
+            return res;
+        }
+        travel(root, res, 0);
+        return res;
+    }
+    private void travel(TreeNode root, List<List<Integer>> res, int level) {
+        if (root == null) {
+            return;
+        }
+        if (res.size() <= level) {
+            res.add(new ArrayList<>());
+        }
+        List<Integer> cur = res.get(level);
+        if (level % 2 == 0) {
+            cur.add(root.val);
+        } else {
+            cur.add(0, root.val);
+        }
+        
+        travel(root.left, res, level+1);
+        travel(root.right, res, level+1);
+    }
+}
+
+2. BFS: use queue, addFirst
+public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> list = new ArrayList<>();
+        if(root == null)
+            return list;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+        boolean normalorder = false;
+        while(!q.isEmpty()){
+            int size = q.size();            
+            LinkedList<Integer> levelValues = new LinkedList<>();  
+            normalorder = !normalorder;
+            while(size > 0){
+                size--;       
+                TreeNode cur = q.poll();  
+                if(normalorder)
+                    levelValues.add(cur.val); 
+                else
+                    levelValues.addFirst(cur.val);
+                
+                if(cur.left != null)
+                    q.offer(cur.left);
+                if(cur.right != null)
+                    q.offer(cur.right);      
+                                     
+            }
+            //System.out.println("Level values are "+levelValues);
+            list.add(levelValues);
+        }
+        return list;
+    }
+    
+    
+Dequeue:
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res_lss = new ArrayList<> ();
+        if (root == null)
+            return res_lss;
+        Deque<TreeNode> deque = new ArrayDeque<> ();
+        deque.offer (root);
+        int level = 0;
+        while (!deque.isEmpty ()) {
+            int size = deque.size ();
+            List<Integer> ls = new ArrayList<> ();
+            Deque<TreeNode> next_deque = new ArrayDeque<> ();
+            boolean go_right = level++ % 2 == 0;
+            for (int i = 0; i < size; i++) {
+                TreeNode cur = go_right ? deque.pollFirst () : deque.pollLast ();
+                ls.add (cur.val);
+                if (go_right) {
+                    if (cur.left != null) next_deque.offer (cur.left);
+                    if (cur.right != null) next_deque.offer (cur.right);
+                } else {
+                    if (cur.right != null) next_deque.offerFirst (cur.right);
+                    if (cur.left != null) next_deque.offerFirst (cur.left);
+                }
+            }
+            deque = next_deque;
+            res_lss.add (ls);
+        }
+        return res_lss;
+    }
+}
