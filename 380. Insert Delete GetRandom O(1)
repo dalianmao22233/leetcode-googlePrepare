@@ -45,6 +45,10 @@ class RandomizedSet {
         int min = 0;
         int ind = (int)(Math.random() * (max-min) + min);
         return list.get(ind);
+        =======================
+        or:
+        Random random = new Random();
+        return list.get( random.nextInt(list.size()) );
     }
 }
 
