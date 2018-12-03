@@ -1,0 +1,21 @@
+class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (n < k) {
+            return res;
+        }
+        dfs(res, new ArrayList<Integer>(), n, k, 1);
+        return res;
+    }
+    private void dfs(List<List<Integer>> res, List<Integer> answer, int n, int k, int index) {
+        if (answer.size() == k) {
+            res.add(new ArrayList<>(answer));
+            return;
+        }
+        for (int i = index; i <= n; i++) {  // start from index, avoid dup set, never look back previous element
+            answer.add(i);
+            dfs(res, answer, n, k, i+1);  
+            answer.remove(answer.size()-1);           
+        }
+    }
+}
