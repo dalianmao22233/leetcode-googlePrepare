@@ -1,0 +1,40 @@
+from laioffer:
+sort first!!!
+
+import java.util.*;
+public class threeSum {
+	public static List<List<Integer>> fourSum(int[] nums, int target) {
+		List<List<Integer>> res = new ArrayList<>();
+		if (nums == null || nums.length == 0) {
+			return res;
+		}
+		Arrays.sort(nums);
+		HashMap<Integer, Pair> map = new HashMap<>(); // key: 2sum result, value: pair of 2 sum index i and j
+		for (int j = 1; j < nums.length; j++) {
+			for (int i = 0; i < j; i++) {
+				int pairSum = nums[i] + nums[j];
+				if (map.containsKey(target-pairSum) && map.get(target-pairSum).right < i) {
+					res.add(Arrays.asList(map.get(target-pairSum).left, map.get(target-pairSum).right, i, j));
+					return res;
+				}
+				if (!map.containsKey(pairSum)) {
+					map.put(pairSum, new Pair(i, j));
+				}
+			}
+		}
+		return res;
+	}
+
+	public static void main(String[] args) {
+		int[] nums = new int[]{1,2,3,4,5};
+		System.out.println(fourSum(nums, 10));
+	}
+}
+class Pair {
+	public int left;
+	public int right;
+	Pair(int left, int right) {
+		this.left = left;
+		this.right = right;
+	}
+}
