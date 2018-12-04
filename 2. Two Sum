@@ -61,3 +61,27 @@ class Solution {
         throw new IllegalArgumentException("No two sum solution");
     }
 }
+
+4. 如果不考虑返回的index,返回为哪两个数之和==target,可以用2个pointer的方法得到结果
+public static int[] twoSum(int[] nums, int target) {
+		int[] res = new int[2];
+		if (nums == null || nums.length == 0) {
+			return res;
+		}
+		HashMap<Integer, Integer> map = new HashMap<>(); // key: nums[i], value: index i
+		int low = 0;
+		int high = nums.length-1;
+
+		while (low < high) {
+			if (nums[low] + nums[high] == target) {
+				res[0] = nums[low]; 
+				res[1] = nums[high];
+				return res;
+			} else if (nums[low] + nums[high] < target) {
+				low++;
+			} else {
+				high--;
+			}
+		}
+		return res;
+	}
