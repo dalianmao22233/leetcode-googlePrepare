@@ -1,0 +1,39 @@
+1. sort + 2 pointer： O(n^2)
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        HashSet<List<Integer>> set = new HashSet<>();
+        
+        Arrays.sort(nums); // 先排序
+        for (int i = 0; i < nums.length-2; i++) {
+            //为了保证不加入重复的 list,因为是有序的，所以如果和前一个元素相同，只需要继续后移就可以
+            if (i == 0 || (i > 0 && num[i] != num[i-1])) {
+              int low = i+1;
+              int high = nums.length-1;
+              while (low < high) {
+                  if (nums[i] + nums[low] + nums[high] == 0) {
+                      ArrayList<Integer> answer = new ArrayList<>();
+                      // 可以优化： res.add(Arrays.asList(nums[i],nums[low],nums[high]));
+                      answer.add(nums[i]);
+                      answer.add(nums[low]);
+                      answer.add(nums[high]);
+                      set.add(answer);
+                      low++;
+                      high--;
+                  } else if (nums[i] + nums[low] + nums[high] < 0){
+                      low++;
+                  } else {
+                      high--;
+                  }
+              }
+            }
+        }
+        res.addAll(set);
+        return res;
+    }
+}
+
+2. 暴力解法 3个for
