@@ -10,7 +10,7 @@ public class NonRepeatingChar {
 		}
 		int[] frequent = new int[26];
 		for (int i = 0; i < s.length(); i++) {
-			if (s.charAt(i) >= 'a') {
+			if (s.charAt(i) >= 'a') { // 注意这个条件，"       "为输入时，s.charAt(i) = 0; 不然会报出界
 				frequent[s.charAt(i) - 'a']++;
 			}
 		}
