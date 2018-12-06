@@ -9,7 +9,7 @@ public class trappingRainWater {
 		System.out.println(trap2(height));
 	}
 
-	// O(n) time, O(1) space
+	// O(n) time, O(1) space, 2 pointers
 	public static int trap(int[] height) {
 		if (height == null || height.length == 0) {
 			return 0;
@@ -37,6 +37,8 @@ public class trappingRainWater {
 		}
 		return res;
 	}
+	
+	// O(n) time, O(n) space, DP twice.
 	public static int trap2(int[] height) {
 		if (height == null || height.length == 0) {
 			return 0;
