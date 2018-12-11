@@ -1,3 +1,4 @@
+from laioffer:
 class Solution {
     public List<Integer> findClosestElements(int[] arr, int k, int x) {
         List<Integer> res = new ArrayList<>();
@@ -36,13 +37,11 @@ class Solution {
                 high = mid;
             }
         }
-        // for low == high-1,如果满足<=target，返回这个index (sorted array, high肯定比low离target更近)
-        if (arr[high] <= target) {
+        // for low == high-1,返回这个index
+        if (Math.abs(target-arr[low]) <= Math.abs(target-arr[high])) {
+            return low;
+        } else {
             return high;
         }
-        if (arr[low] <= target) {
-            return low;
-        }
-        return -1;
     }
 }
