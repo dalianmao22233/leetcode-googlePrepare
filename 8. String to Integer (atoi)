@@ -1,0 +1,37 @@
+class Solution {
+    public int myAtoi(String str) {
+        if (str == null || str.length() == 0) {
+            return 0;
+        }
+        int index = 0, sign = 1;
+        while (index < str.length() && str.charAt(index) == ' ') {
+            index++;
+        }
+        if (index < str.length() && (str.charAt(index) == '+' || str.charAt(index) == '-')) {
+            sign = str.charAt(index) == '+' ? 1 : -1;
+            index++;
+        }
+        if (index < str.length() && !Character.isDigit(str.charAt(index))) {
+            return 0;
+        }
+        int res = 0;
+        while (index < str.length()) {
+            if (!Character.isDigit(str.charAt(index))) {
+                break;
+            }
+            char cur = str.charAt(index);
+            index++;
+            int previous = res;
+            res *= 10;
+            // 越界
+            if (previous != res / 10) {
+                return sign == -1 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            }
+            res += (cur - '0');
+            if (res < 0) {
+                return sign == -1 ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            }
+        }
+        return res * sign;
+    }
+}
