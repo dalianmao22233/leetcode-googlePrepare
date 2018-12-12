@@ -1,0 +1,20 @@
+// I love yahoo 变种， reverse
+public static void rotatedArray(int[] arr, int k) {
+		if (arr == null || arr.length == 0) {
+			return;
+		}
+		k = k % arr.length;
+		reverse(arr, 0, arr.length-k-1);
+		reverse(arr, arr.length-k, arr.length-1);
+		reverse(arr, 0, arr.length-1);
+}
+private static void reverse(int[] arr, int i, int j) {
+  int temp = 0;
+  while (i < j) {
+    temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+    i++;
+    j--;
+  }
+}
