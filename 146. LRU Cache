@@ -1,0 +1,107 @@
+// 用 hashmap 跟踪 the keys and its values in the double linked list. 
+// double linked list 特点：the node can remove itself without other reference. 
+// 而且 it takes O(1) to add and remove nodes from the head or tail.
+
+// create a pseudo head and tail to mark the boundary, 
+// so that we don't need to check the NULL node during the update. 
+
+class LRUCache {
+    class DLinkedNode{
+        int key;
+        int value;
+        DLinkedNode prev;
+        DLinkedNode next;
+    }
+    
+    // add new node after head, head(N1) <-> node <-> N2
+    private void addNode(DLinkedNode node) {
+        node.prev = head;
+        node.next = head.next;
+        head.next.prev = node;
+        head.next = node;
+    }
+    
+    // remove node from linkedlist 
+    private void removeNode(DLinkedNode node) {
+        DLinkedNode prev = node.prev;
+        DLinkedNode next = node.next;
+        prev.next = next;
+        next.prev = prev;
+    }
+    
+    // move certain node in between to head
+    private void moveToHead(DLinkedNode node) {
+        this.removeNode(node);
+        this.addNode(node);
+    }
+    
+    // pop the current tail
+    private DLinkedNode popTail() {
+        DLinkedNode res = tail.prev;
+        this.removeNode(res);
+        return res;
+    }
+    
+    private HashMap<Integer, DLinkedNode> cache = new HashMap<>();
+    private int count;
+    private int capacity;
+    private DLinkedNode head, tail;
+    
+    
+    public LRUCache(int capacity) {
+        this.count = 0;
+        this.capacity = capacity;
+        
+        head = new DLinkedNode();
+        head.prev = null;
+        
+        tail = new DLinkedNode();
+        tail.next = null;
+        
+        head.next = tail;
+        tail.prev = head;
+    }
+    
+    public int get(int key) {
+        DLinkedNode node = cache.get(key);
+        if (node == null) {
+            return -1; // raise exception here
+        }
+        // move accessed node to head;
+        this.moveToHead(node);
+        return node.value;
+    }
+    
+    public void put(int key, int value) {
+        DLinkedNode node = cache.get(key);
+        
+        if (node == null) {
+            DLinkedNode newNode = new DLinkedNode();
+            newNode.key = key;
+            newNode.value = value;
+            
+            this.cache.put(key, newNode);
+            this.addNode(newNode);
+            
+            count++;
+            if (count > capacity) {
+                // pop the tail
+                DLinkedNode tail = this.popTail();
+                this.cache.remove(tail.key);
+                count--;
+            }
+        } else {
+            // update the value
+            node.value = value;
+            // put after head
+            this.moveToHead(node);
+        }
+    }
+}
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
