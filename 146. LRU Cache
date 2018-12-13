@@ -5,6 +5,8 @@
 // create a pseudo head and tail to mark the boundary, 
 // so that we don't need to check the NULL node during the update. 
 
+// if the size of k is relatively large, a singly linked list is more practical due to a lower rate on memory overhead
+// (删除的时候麻烦，不知道node 之前的是谁，没法断开连接。)
 class LRUCache {
     class DLinkedNode{
         int key;
