@@ -1,0 +1,27 @@
+// from laioffer
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        if (n <= 0) {
+            return res;
+        }
+        dfs(n, res, 0, 0, new StringBuilder());
+        return res;
+    }
+    private void dfs(int n, List<String> res, int l, int r, StringBuilder sb) {
+        if (l + r == n*2) {
+            res.add(sb.toString());
+            return;
+        }
+        if (l < n) {
+            sb.append('(');
+            dfs(n, res, l+1, r, sb);
+            sb.deleteCharAt(sb.length()-1);
+        }
+        if (l > r) {
+            sb.append(')');
+            dfs(n, res, l, r+1, sb);
+            sb.deleteCharAt(sb.length()-1);
+        }
+    }
+}
