@@ -56,6 +56,16 @@ class Solution {
      
 
 //Iterative: from laioffer推荐
+// better:
+// 问题是我们要先遍历左右子树，再从stack中消灭root,所以需要知道什么时候才能完成对左右子树的遍历。
+// Maintain a previous node!!!!
+// 来记录之前visited node on traversing path. 这样我们能知道当前的direction以及后面应该去的direction.
+
+// root = stack.top
+// if previous == null, 这是根节点。go down (left subtree has priority)
+// if previous == current's parent, go down (left subtree has priority)
+// if previous == current.left, left subtree finished, go current.right
+// if previous == current.right, right subtree finished, pop current, go up!
 
 class Solution {
     public List<Integer> postorderTraversal(TreeNode root) {
