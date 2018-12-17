@@ -24,6 +24,35 @@ class Solution {
 
 2. iterative: BFS : https://leetcode.com/problems/binary-tree-inorder-traversal/solution/  图很好
 Time: O(n), space: O(n)
+// laioffer
+	// 1. when helper node (cur) != null, we should traverse 所有子树,
+	// 	  push cur node and go left.
+	// 2. when cur node == null, 证明已经到左边的底了，遍历右子树
+	public List<Integer> inOrder(TreeNode root) {
+		List<Integer> res = new ArrayList<>();
+		if (root == null) {
+			return res;
+		}
+		// we need a stack and a helper node
+		Deque<TreeNode> stack = new LinkedList<>();
+		TreeNode cur = root;
+
+		while (cur != null || !stack.isEmpty()) {
+			// stack 为空，还能继续while，此时只是代表左子树遍历完了，右子树还没开始。如果不加cur!=null会漏掉
+			if (cur != null) {
+				stack.offerFirst(cur);
+				cur = cur.left;
+			} else {
+				cur = stack.pollFirst();
+				res.add(cur.val);
+				cur = cur.right;
+			}
+		}
+		return res;
+	}
+    
+    
+// leetcode discussion
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
