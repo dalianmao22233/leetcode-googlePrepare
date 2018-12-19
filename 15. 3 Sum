@@ -36,7 +36,44 @@ class Solution {
     }
 }
 
-2. 暴力解法 3个for
+2. 建立一个two sum function,本质和1是一样的，但是可以重用，很好！
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length < 3){
+            return res;
+        }
+        Arrays.sort(nums); // 先排序
+        HashSet<List<Integer>> set = new HashSet<>();
+        for(int i = 0; i < nums.length - 2; i++){
+            if(i == 0 || (i > 0 && nums[i] != nums[i - 1])){
+                twoSum(set, nums, i);
+            }
+        }
+        res.addAll(set);
+        return res;
+    }
+    
+    private void twoSum(HashSet<List<Integer>> set, int[] nums, int i){
+        int left = i + 1;
+        int right = nums.length - 1;
+        int sum = 0;
+        while (left < right) {
+            sum = nums[i] + nums[left] + nums[right];
+            if (sum < 0) {
+                left++;
+            } else if (sum > 0) {
+                right--;
+            } else if (sum == 0) {
+                set.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                left++;
+                right--;
+            }
+        }
+    }
+}
+
+3. 暴力解法 3个for
 错误！我不知道怎么去重。。结果：
 [[-1,-1,2],[0,-1,1],[1,-1,0],[2,-1,-1],[2,-4,2],[-4,2,2],[-1,2,-1],[2,2,-4],[-1,1,0],[0,1,-1],[-1,0,1],[0,0,0],[1,0,-1]]
 没有很好的办法。
