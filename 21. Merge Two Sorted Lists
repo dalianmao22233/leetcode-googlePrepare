@@ -10,7 +10,7 @@
 class Solution {
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode dummyNode = new ListNode(0);
-        ListNode head = dummyNode;
+        ListNode head = dummyNode;  // 记住这里不是dummyNode.next,因为此时还没有Next， 会导致null pointer exception.
 
         while (l1 != null && l2 != null) {
             if (l1.val <= l2.val) {
