@@ -5,7 +5,7 @@ class Solution {
         }
         
         int s = 0, f = 1;  
-        // slow pointer左边的都是要返回的答案，不含slow pointer.
+        // slow pointer左边的都是要返回的答案，含slow pointer.
         // fast pointer右边的是还没排好的
         
         while (f < nums.length) {
@@ -18,5 +18,33 @@ class Solution {
             }
         }
         return s+1;  // s从0开始，算长度需要+1
+    }
+}
+
+
+
+第二次：
+class Solution {
+    public int removeDuplicates(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int s = 0; // s左边，包括s，都是不重复的
+        int f = 1;
+        while (s <= nums.length-1 && f <= nums.length-1) {
+            if (nums[s] == nums[f]) {
+                f++;
+            } else {
+                // swap(nums, ++s, f);
+                nums[++s] = nums[f];
+                f++;
+            }
+        }
+        return s+1;
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
