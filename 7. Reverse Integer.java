@@ -1,5 +1,6 @@
 
-We are using 7 and -8 because the 32 bit INT_MAX and INT_MIN last digit is 7 & -8 respectively; so if the rev is already equal to INT_MAX/10 and pop is . greater than 7 (or less than -8) then it'll be overflow.
+// We are using 7 and -8 because the 32 bit INT_MAX and INT_MIN last digit is 7 & -8 respectively; 
+// so if the rev is already equal to INT_MAX/10 and pop is . greater than 7 (or less than -8) then it'll be overflow.
 
 class Solution {
     public int reverse(int x) {
