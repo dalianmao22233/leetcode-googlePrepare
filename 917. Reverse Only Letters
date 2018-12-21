@@ -1,0 +1,26 @@
+my solution:
+
+
+class Solution {
+    public String reverseOnlyLetters(String S) {
+        if (S == null || S.length() == 0) {
+            return S;
+        }
+        int low = 0, high = S.length()-1;
+        char[] arr = S.toCharArray();
+        while (low < high) {
+            if (Character.isLetter(S.charAt(low)) && Character.isLetter(S.charAt(high))) {
+                char temp = arr[low];
+                arr[low] = arr[high];
+                arr[high] = temp;
+                low++;
+                high--;
+            } else if (!Character.isLetter(S.charAt(low))){
+                low++;
+            } else if (!Character.isLetter(S.charAt(high))) {
+                high--;
+            }
+        }
+        return new String(arr);
+    }
+}
