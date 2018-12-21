@@ -38,7 +38,7 @@ class Solution {
             low++;
             high--;
         }
-        return String.valueOf(s_char);
+        return String.valueOf(s_char); // or new String(s_char),直接用string连接会TLE
     }
 }
 
