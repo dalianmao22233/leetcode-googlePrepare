@@ -12,4 +12,18 @@ public class Solution {
         return sb.append(str[0]).toString();
     }
 }
+
+
+// or:
+public static String reverseWords(String s) {
+		if (s == null || s.length() == 0) {
+			return s;
+		}
+        String[] words = s.trim().split(" +");
+        Collections.reverse(Arrays.asList(words));
+        return String.join(" ", words);
+    }
+    
+    
+    
 // 2. laioffer: reverse each word, reverse sentence.
