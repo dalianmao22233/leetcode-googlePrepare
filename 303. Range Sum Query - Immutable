@@ -1,25 +1,13 @@
-// 这道题是先求出来和，然后相减。 M[i]是从0-ith 元素（包含ith）的和
 class NumArray {
-    int[] M;
-    int[] nums;
+    private int[] sum;
     public NumArray(int[] nums) {
-        this.nums = nums;
-        M = new int[nums.length];
-        if (nums != null && nums.length != 0) {
-            M[0] = nums[0];
-            for (int k = 1; k < nums.length; k++) {
-                M[k] = M[k-1] + nums[k];
-            }
+        sum = new int[nums.length+1];
+        for (int i = 0; i < nums.length; i++) {
+            sum[i+1] = sum[i] + nums[i];
         }
     }
     
     public int sumRange(int i, int j) {
-        return M[j]-M[i]+nums[i]; 
+        return sum[j+1] - sum[i];
     }
 }
-
-/**
- * Your NumArray object will be instantiated and called as such:
- * NumArray obj = new NumArray(nums);
- * int param_1 = obj.sumRange(i,j);
- */
