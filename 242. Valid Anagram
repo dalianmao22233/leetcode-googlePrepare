@@ -32,3 +32,29 @@ public boolean isAnagram(String s, String t) {
     Arrays.sort(str2);
     return Arrays.equals(str1, str2);
 }
+
+
+3. my solution:
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if (s == null && t == null) {
+            return true;
+        }
+        if (s == null || t == null || s.length() != t.length()) {
+            return false;
+        }
+        int[] map = new int[26];
+        for (int i = 0; i < s.length(); i++) {
+            map[s.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < t.length(); i++) {
+            map[t.charAt(i) - 'a']--;
+        }
+        for (int i = 0; i < map.length; i++) {
+            if (map[i] != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
