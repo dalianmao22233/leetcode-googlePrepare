@@ -4,6 +4,8 @@ DP: 以ObstacleGrid为存储结果（ways）的数组
 3.遍历第一列：如果cell==1,则为障碍物，直接set为0；否则set为前一个cell的值，继续往后走。
 4.对于每一行每一列，如果cell==1，则为障碍物，直接set为0；否则=左边+上边的ways.
 
+
+// 没用空间，就是多了两次循环，不够快。好想。
 class Solution {
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
         if (obstacleGrid == null || obstacleGrid.length == 0) {
@@ -47,5 +49,25 @@ class Solution {
             }
         }
         return obstacleGrid[m-1][n-1];
+    }
+}
+
+
+// 用了一维DP数组，占用空间，比上面的快：
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int col = obstacleGrid[0].length;
+        int[] dp = new int[col];
+        dp[0] = 1;
+        for (int[] row: obstacleGrid) {
+            for (int j = 0; j < col; j++) {
+                if (row[j] == 1) {
+                    dp[j] = 0;
+                } else if (j > 0) {
+                    dp[j] += dp[j-1];
+                }
+            }
+        }
+        return dp[width-1];
     }
 }
