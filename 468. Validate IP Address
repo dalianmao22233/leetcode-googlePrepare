@@ -1,0 +1,125 @@
+class Solution {
+    public String validIPAddress(String IP) {
+        if(IP.indexOf(':')==-1 && isIPV4(IP)) return "IPv4";
+        if(IP.indexOf('.')==-1 && isIPV6(IP)) return "IPv6";
+        return "Neither";
+    }
+    
+    private boolean isIPV4(String IP){
+        int idx1 = IP.indexOf('.');
+        int idx2 = IP.indexOf('.',idx1+1);
+        int idx3 = IP.indexOf('.',idx2+1);
+        int idx4 = IP.indexOf('.',idx3+1);
+        
+        if(idx1==-1 || idx2==-1 || idx3==-1) return false;
+        
+        if(idx4!=-1) return false;
+        
+        if(notValid(IP,0,idx1) || notValid(IP,idx1+1,idx2) || notValid(IP,idx2+1,idx3) || notValid(IP,idx3+1,IP.length())) return false;
+        return true;
+    }
+    
+    private boolean notValid(String IP, int st, int en){
+        if(st==en || en-st>3) return true;
+        int num=0;
+        for(int i=st ; i<en ; i++) {
+            char c = IP.charAt(i);
+            if(c<'0' || c>'9') return true;
+            num = num*10 + c-'0';
+            if(num==0 && st+1!=en) return true;
+            if(num>=256) return true;
+        }
+        return num>=256;
+    }
+    
+    private boolean isIPV6(String IP){
+        int[] idx = new int[8];
+        int begin=-1;
+        for(int i=0 ; i<8 ; i++) {
+            idx[i] = IP.indexOf(':',begin+1);
+            if(idx[i] == -1 && i!=7) return false;
+            if(i==7 && idx[i]!=-1) return false;
+            if(notValidV6(IP,begin+1,idx[i])) return false;
+            begin = idx[i];
+        }
+        return true;
+    }
+    
+    private boolean notValidV6(String IP, int st, int en){
+        if(en==-1) en = IP.length();
+        if(st==en || en-st>4) return true;
+        int num=0;
+        for(int i=st ; i<en ; i++) {
+            char c = IP.charAt(i);
+            if((c<'0' || c>'9') && (c<'A' || c>'F') && (c<'a' || c>'f')) return true;
+        }
+        return false;
+    }
+    
+}
+
+
+投票最多的：
+class Solution {
+    public String validIPAddress(String IP) {
+        if(isValidIPv4(IP)) return "IPv4";
+        else if(isValidIPv6(IP)) return "IPv6";
+        else return "Neither";
+    }
+
+    public boolean isValidIPv4(String ip) {
+        if(ip.length() < 7) return false;
+        if(ip.charAt(0)=='.') return false;
+        if(ip.charAt(ip.length()-1)=='.') return false;
+        String[] tokens = ip.split("\\.");
+        if(tokens.length!=4) return false;
+        for(String token:tokens) {
+            if(!isValidIPv4Token(token)) return false;
+        }
+        return true;
+    }
+    public boolean isValidIPv4Token(String token) {
+        if(token.startsWith("0") && token.length()>1) return false;
+        try {
+            int parsedInt = Integer.parseInt(token);
+            if(parsedInt<0 || parsedInt>255) return false;
+            if(parsedInt==0 && token.charAt(0)!='0') return false;
+        } catch(NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isValidIPv6(String ip) {
+        if(ip.length()<15) return false;
+        if(ip.charAt(0)==':') return false;
+        if(ip.charAt(ip.length()-1)==':') return false;
+        String[] tokens = ip.split(":");
+        if(tokens.length!=8) return false;
+        for(String token: tokens) {
+            if(!isValidIPv6Token(token)) return false;
+        }
+        return true;
+    }
+    public boolean isValidIPv6Token(String token) {
+        if(token.length()>4 || token.length()==0) return false;
+        char[] chars = token.toCharArray();
+        for(char c:chars) {
+            boolean isDigit = c>=48 && c<=57;
+            boolean isUppercaseAF = c>=65 && c<=70;
+            boolean isLowerCaseAF = c>=97 && c<=102;
+            if(!(isDigit || isUppercaseAF || isLowerCaseAF)) 
+                return false;
+        }
+        return true;
+    }
+}
+
+正则：
+public class Solution {
+    public String validIPAddress(String IP) {
+        if(IP.matches("(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])"))return "IPv4";
+        if(IP.matches("(([0-9a-fA-F]{1,4}):){7}([0-9a-fA-F]{1,4})"))return "IPv6";
+        return "Neither";
+    }
+}
