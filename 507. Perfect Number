@@ -1,14 +1,36 @@
+优化：
 public static boolean checkPerfectNumber(int num) {
-		if (num == 1) return false;
+	if (num == 1) return false;
 
-		int sum = 0;
-		for (int i = 2; i <= Math.sqrt(num); i++) {
-			if (num % i == 0) {
-				System.out.println(i);
-				sum += i + num / i;
-			}
+	int sum = 0;
+	// 首先循环次数减少，在Num/i的过程中，已经得到了接近num/2大小的数。举例：num=28.
+	for (int i = 2; i <= Math.sqrt(num); i++) {
+		if (num % i == 0) {
+			// sum += 2+14.
+			sum += i + num / i;
 		}
-		sum++;
-
-		return sum == num;
 	}
+	sum++;
+
+	return sum == num;
+}
+
+
+
+我的暴力：
+class Solution {
+    public boolean checkPerfectNumber(int num) {
+        if (num <= 0) {
+            return false;
+        }
+        int divisor = 1;
+        int sum = num;
+        while (divisor < num) {
+            if (num % divisor == 0) {
+                sum = sum-divisor;
+            }
+            divisor++;
+        }
+        return sum == 0;
+    }
+}
