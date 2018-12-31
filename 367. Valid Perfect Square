@@ -1,4 +1,5 @@
-1. why use long: 
+1. why use long: 用long type来避免overflow.
+// time: O(logn)
 in test cases like 808201, when we calculate mid value , it comes out to be 404101. 
 So, when we do mid*mid, it goes completely out of int range.
 class Solution {
@@ -21,6 +22,18 @@ class Solution {
     }
 }
 2. newton method:
+更快。但是我不懂： https://blog.csdn.net/newfelen/article/details/23359629  这里有原理推导
+经过(xi, f(xi))这个点的切线方程为f(x) = f(xi) + f’(xi)(x - xi)，其中f'(x)为f(x)的导数，本题中为2x。
+令切线方程等于0，即可求出xi+1=xi - f(xi) / f'(xi)。
+
+继续化简，xi+1=xi - (xi2 - n) / (2xi) = xi - xi / 2 + n / (2xi) = xi / 2 + n / 2xi = (xi + n/xi) / 2。
+迭代公式xi+1= (xi + n/xi) / 2
+
+    long r = x;
+    while (r*r > x)
+        r = (r + x/r) / 2;
+    return r*r == x;
+    
 public boolean isPerfectSquare(int num) {
         long x = num;
         while (x * x > num) {
@@ -28,6 +41,8 @@ public boolean isPerfectSquare(int num) {
         }
         return x * x == num;
     }
+    
+    
 3.brute force: mine.... so slow
 class Solution {
     public boolean isPerfectSquare(int num) {
@@ -40,5 +55,22 @@ class Solution {
             }
         }
         return false;
+    }
+}
+
+我的暴力:
+class Solution {
+    public boolean isPerfectSquare(int num) {
+        if (num < 0) {
+            return false;
+        }
+        if (num <= 1) {
+            return true;
+        }
+        long i = 0; // 注意这里是long,不然过不了max integer
+        while (i*i < num) {
+            i++;
+        }
+        return i*i == num;
     }
 }
