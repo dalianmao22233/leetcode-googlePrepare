@@ -1,0 +1,89 @@
+1. 利用BST的inOrder性质，转化为two sum. Time: O(n),need to traverse all nodes for inorder, space: O(n)
+class Solution {
+    public boolean findTarget(TreeNode root, int k) {
+        if (root == null) {
+            return false;
+        }
+        List<Integer> res = new ArrayList<>();
+        inorder(root, res);
+        int low = 0;
+        int high = res.size()-1;
+        while (low < high) {
+            if (res.get(low) + res.get(high) == k) {
+                return true;
+            } else if (res.get(low) + res.get(high) < k) {
+                low++;
+            } else {
+                high--;
+            }
+        }
+        return false;
+    }
+    public void inorder(TreeNode root, List<Integer> res) {
+        if (root == null) {
+            return;
+        }
+        inorder(root.left, res);
+        res.add(root.val);
+        inorder(root.right, res);
+    }
+}
+
+2. 遍历树，当做普通的二叉树， time: O(n), space: O(n)
+class Solution {
+    public boolean findTarget(TreeNode root, int k) {
+        if (root == null) {
+            return false;
+        }
+        Set<Integer> set = new HashSet<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            if (queue.peek() != null) {
+                TreeNode node = queue.poll();
+                if (set.contains(k-node.val)) {
+                    return true;
+                }
+                set.add(node.val);
+                queue.add(node.left);
+                queue.add(node.right);
+                
+            } else {
+                queue.poll();
+            }
+        }
+        return false;
+    }
+}
+
+3. hashset, dfs, time: O(n), space: O(n)
+public class Solution {
+    public boolean findTarget(TreeNode root, int k) {
+        Set < Integer > set = new HashSet();
+        return find(root, k, set);
+    }
+    public boolean find(TreeNode root, int k, Set < Integer > set) {
+        if (root == null)
+            return false;
+        if (set.contains(k - root.val))
+            return true;
+        set.add(root.val);
+        return find(root.left, k, set) || find(root.right, k, set);
+    }
+}
+4. faster
+// 用BST的性质，对每个点往下找存不存在另一个点
+    //O(nh), O(h)
+    public boolean findTarget(TreeNode root, int k) {
+        return helper(root, root, k);
+    }
+    private boolean helper(TreeNode root, TreeNode cur, int k) { //find the root 
+        if (root == null) return false;
+        return search(root, cur, k - root.val) || helper(root.left, cur, k) || helper(root.right, cur, k);
+    }
+    private boolean search(TreeNode root, TreeNode cur, int k) { //after the root is set, find the right cur is existed or not 
+        if (cur == null) return false;
+        if (root != cur && k == cur.val) return true;
+        if (cur.val > k) return search(root, cur.left, k);
+        else return search(root, cur.right, k);
+    }
