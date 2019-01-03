@@ -1,27 +1,31 @@
-1. my brute force:
-class Solution {
-    public int[] intersection(int[] nums1, int[] nums2) {
-        if (nums1 == null || nums1.length == 0 || nums2 == null || nums2.length == 0) {
-            return new int[0];
-        }
-        HashSet<Integer> set = new HashSet<>();
-        for (int i = 0; i < nums1.length; i++) {
-            for (int j = 0; j < nums2.length; j++) {
-                if (nums1[i] == nums2[j]) {
-                    set.add(nums1[i]);
-                }
-            }
-        }
-        int[] res = new int[set.size()];
-        int index = 0;
-        for (Integer i : set) {
-            res[index++] = i;
-        }
-        
-        return res;
-    }
-}
-2. 2 pointers: O(nlogn)
+1. 2 sets
+public static int[] intersection(int[] nums1, int[] nums2) {
+		if (nums1 == null || nums1.length == 0 || nums2 == null || nums2.length == 0) {
+			return new int[0];
+		}
+
+		Set<Integer> set1 = new HashSet<>();
+		Set<Integer> set2 = new HashSet<>();
+
+		for (int i = 0; i < nums1.length; i++) {
+			set1.add(nums1[i]);
+		}
+		System.out.println(set1);
+		for (int i = 0; i < nums2.length; i++) {
+			if (set1.contains(nums2[i])) {
+				set2.add(nums2[i]);
+			}
+		}
+
+		int[] res  = new int[set2.size()];
+		int k = 0;
+		for (Integer item : set2) {
+			res[k++] = item;
+		}
+		return res;
+	}
+
+2. set, 2 pointers: O(nlogn)
 
 public class Solution {
     public int[] intersection(int[] nums1, int[] nums2) {
@@ -51,27 +55,36 @@ public class Solution {
 }
 
 
-3. Use two hash sets
+//3. binary search  time:O(nlogn)
+	public int[] intersection3(int[] nums1, int[] nums2) {
+		Set<Integer> set = new HashSet<>();
+		Arrays.sort(nums2);
+		for (Integer num : nums1) {
+			if (binarySearch(nums2, num)) {
+				set.add(num);
+			}
+		}
+		int i = 0;
+		int[] result = new int[set.size()];
+		for (Integer num : set) {
+			result[i++] = num;
+		}
+		return result;
+	}
 
-Time complexity: O(n)
-
-public class Solution {
-    public int[] intersection(int[] nums1, int[] nums2) {
-        Set<Integer> set = new HashSet<>();
-        Set<Integer> intersect = new HashSet<>();
-        for (int i = 0; i < nums1.length; i++) {
-            set.add(nums1[i]);
-        }
-        for (int i = 0; i < nums2.length; i++) {
-            if (set.contains(nums2[i])) {
-                intersect.add(nums2[i]);
-            }
-        }
-        int[] result = new int[intersect.size()];
-        int i = 0;
-        for (Integer num : intersect) {
-            result[i++] = num;
-        }
-        return result;
-    }
-}
+	public boolean binarySearch(int[] nums, int target) {
+		int low = 0;
+		int high = nums.length - 1;
+		while (low <= high) {
+			int mid = low + (high - low) / 2;
+			if (nums[mid] == target) {
+				return true;
+			}
+			if (nums[mid] > target) {
+				high = mid - 1;
+			} else {
+				low = mid + 1;
+			}
+		}
+		return false;
+	}
