@@ -28,20 +28,32 @@ class Solution {
 // 如果s[i] == s[j], continue
 // 如果s[i+1] == s[j] || s[i] == s[j-1], continue, else return false; 贪心的本质是总有一个是满足的。
 // i >= j，finish。
-// Time: O(n) ? Space: O(1)
+// Time: O(n) (看本质分析) Space: O(1)
 class Solution {
     public boolean validPalindrome(String s) {
-        for (int i = 0; i < s.length()/2; i++) {
-            if (s.charAt(i) != s.charAt(s.length()-1-i)) {
-                int j = s.length()-1-i;  // 与i指针对应的末尾的指针
-                return isPalindromeRange(s, i+1, j) || isPalindromeRange(s, i, j-1);
+        if (s == null || s.length() == 0) {
+            return true;
+        }
+        for (int i = 0; i < s.length(); i++) {
+            int j = s.length()-1-i;
+            if (s.charAt(i) == s.charAt(j)) {
+                continue;
+            } else {
+                return isValid(s, i+1, j) || isValid(s, i, j-1);
             }
         }
         return true;
     }
-    public boolean isPalindromeRange(String s, int i, int j) {
-        for (int k = i; k <= (j-i)/2 + i; k++) {  // why has =? 举例，s="abc"，for(int k=1;k<1,k++), 进不去for.
-            if (s.charAt(k) != s.charAt(j-(k-i))) {
+    
+    public boolean isValid(String s, int i, int j) {
+        if (s == null || s.length() == 0) {
+            return true;
+        }
+        while (i < j) {
+            if (s.charAt(i) == s.charAt(j)) {
+                i++;
+                j--;
+            } else {
                 return false;
             }
         }
