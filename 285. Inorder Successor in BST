@@ -1,0 +1,44 @@
+
+	// iterative:
+	// 1. root.val > p.val, root 可能为answer,先存储root.val为res， 然而并不知道root.left是否有比p.val更大的，所以向root.left走
+	// 2. root.val <= p.val, root 不可能是answer, 需要在root.right中查找比p.val小的
+
+	// Only in a balanced BST O(h) = O(log n). In the worst case h can be as large as n
+
+	public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+		TreeNode res = null;
+		while (root != null) {
+			if (root.val > p.val) {
+				res = root;
+				root = root.left;
+			} else {
+				root = root.right;
+			}
+		}
+		return res;
+	}
+	// recursive
+	public TreeNode inorderSuccessor2(TreeNode root, TreeNode p) {
+		if (root == null || p == null)
+			return null;
+
+		if (root.val > p.val) {
+			TreeNode res = inorderSuccessor(root.left, p);
+			return res == null ? root : res;
+		} else
+			return inorderSuccessor(root.right, p);
+
+		// return null;
+	}
+	// predecessor:
+	public TreeNode predecessor(TreeNode root, TreeNode p) {
+		if (root == null)
+			return null;
+
+		if (root.val >= p.val) {
+			return predecessor(root.left, p);
+		} else {
+			TreeNode right = predecessor(root.right, p);
+			return (right != null) ? right : root;
+		}
+	}
