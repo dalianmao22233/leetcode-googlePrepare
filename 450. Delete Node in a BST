@@ -1,0 +1,104 @@
+1. recursive
+public TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) {
+            return null;
+        }
+        // 1. target is leaf node
+        // 2. target only has left
+        // 3. target only has right
+        // 4. target has both left and right, 用right replace target node. 
+        // 首先在右子树找最小的，然后把这个值赋给root，在右子树中删除这个最小值节点（这样就没有dup了）。
+        
+        if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else if (root.val < key) {
+            root.right =  deleteNode(root.right, key);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+            
+            TreeNode minNode = findMin(root.right); // 首先在右子树找最小的
+            root.val = minNode.val; // 把这个值赋给root
+            root.right = deleteNode(root.right, root.val);  // 在右子树中删除这个最小值节点（这样就没有dup了）
+        }
+        return root;
+    }
+    private TreeNode findMin(TreeNode node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+    
+    
+    // 2. iterative : O(h) time, O(1) space
+// delete in BST:
+	// 1. find node to be delete ----> search
+	// 2. delete it!
+	// case 1: 单身狗结点！没有children的结点。直接删除
+	// case 2: 只有一个子女，no left/no right.  看做单链表中删除结点
+	// case 3: 有2个子女, left & right. 需要move some nodes from left/right subtree to replace it.
+	// 		   可以从左子树中找最大，或者右子树中找最小， 来替代被删除的结点，此时不会改变BST的结构。
+	// case 3.1: node.right has no left, 说明此时node.right就是右子树里最小的，直接把node.right往上移。
+	// 			 root.right.left == null ===>  root.right.left = root.left;
+	// case 3.2: node.right has left, 此时需要找到最小的node, 往上移。
+	// 			 while(node.left != null) 可以找到最小，这个最小的结点一定没有左子树。
+
+	public TreeNode delete(TreeNode root, int target) {
+		if (root == null) {
+			return null;
+		}
+		// find target node
+		if (root.val > target) {
+			root.left = delete(root.left, target);
+			return root;
+		} else if (root.val < target) {
+			root.right = delete(root.right, target);
+			return root;
+		}
+
+		// 保证root != null && root.val == target
+		if (root.left == null) {
+			return root.right; // case 1, 2(no left)
+		} else if (root.right == null) { // case 2(no right)
+			return root.left;
+		}
+
+		// 保证root.left != null && root.right != null
+		// 3.1
+    
+		if (root.right.left == null) {
+			root.right.left = root.left;
+			return root.right;
+		}
+    
+		// 3.2
+		// 1. find and delete smallest node in root.right
+    
+		TreeNode smallest = deleteSmallest(root.right);
+    
+		// 2. connect the smallest node with root.left and root.right, 直接用smallest来替换root
+    
+		smallest.left = root.left;
+		smallest.right = root.right;
+    
+		// 3. return the smallest node
+    
+		return smallest;
+	}
+	// 找到最小结点，删除这个结点 --->有可能是电面面试题！！！
+	private TreeNode deleteSmallest(TreeNode cur) {
+		TreeNode prev = cur;
+		cur = cur.left;
+		while (cur.left != null) {
+			prev = cur;
+			cur = cur.left;
+		}
+		// cur is the smallest one, and prev is its parent
+		// Invariance： cur(prev.left) doesn't have left child
+		prev.left = prev.left.right;  // cur = cur.right是错的！没和之前的点连起来，这样的话cur就没了
+		return cur;
+	}
