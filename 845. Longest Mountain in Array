@@ -1,0 +1,91 @@
+1. 用两个数组 Increase/decrease来保存升序/降序子数组的长度， 最后走一遍循环，求和+1(peak).
+Time: O(n)
+public int longestMountain(int[] A) {
+        if (A.length < 3) {
+            return 0;
+        }
+        int len = A.length;
+        int[] increase = new int[len];
+        int[] decrease = new int[len];
+        Arrays.fill(increase, 1);
+        Arrays.fill(decrease, 1);
+        for (int i = 1; i < len; i++) {
+            if (A[i] > A[i-1]) { // 升序
+                increase[i] = increase[i-1] + 1;
+            }
+        }
+        
+        for (int i = len-1-1; i >= 0; i--) {
+            if (A[i] > A[i+1]) {
+                decrease[i] = decrease[i+1] + 1;
+            }
+        }
+        
+        int res = Integer.MIN_VALUE;
+        for (int i = 1; i < len-1; i++) {
+            if (A[i] > A[i-1] && A[i] > A[i+1]) {
+                res = Math.max(increase[i-1] + decrease[i+1]+1, res);  // +1: peak A[i]
+            }
+        }
+        return res == Integer.MIN_VALUE? 0: res;
+    }
+    
+// Follow up
+Can you solve this problem with only one pass?
+Can you solve this problem in O(1) space?
+// 省空间，一遍for loop
+public int longestMountain(int[] A) {
+        if (A.length < 3) {
+            return 0;
+        }
+        int len = A.length;
+        int increase = 0;
+        int decrease = 0;
+        int res = 0;
+        for (int i = 1; i < len; i++) {
+            if ((decrease > 0 && A[i-1] < A[i]) || A[i-1] == A[i]) {  
+                // 此时是在走下坡路，突然有个上坡，或者此时是平坡，肯定不能被算在结果里，清零。
+                increase = 0;
+                decrease = 0;
+            }
+            if (A[i-1] < A[i]) {
+                increase++;
+            }
+            if (A[i-1] > A[i]) {
+                decrease++;
+            }
+            if (increase > 0 && decrease > 0 && increase + decrease + 1 > res) {
+                res = increase+decrease+1;
+            }
+        }
+        return res;
+    }
+    
+    
+最快的： 我没看懂咋回事
+public int longestMountain(int[] A) {
+        int n=A.length;
+        if(n<3)return 0;
+        
+        int left=0;int right;int max=0;
+        
+        while(left<n-2){
+            //skip decending and equal array
+            while(left<n-1 && A[left]>=A[left+1]){
+                left++;
+            }
+            right=left+1;
+            //mountain up
+            while(right<n-1 && A[right]<A[right+1]){
+                right++;
+            }
+            //mountain down
+            while(right<n-1 && A[right]>A[right+1]){
+                right++;
+                //update the max value
+                max=Math.max(max,right-left+1);
+            }
+            left=right;
+        }
+        return max;
+    }
