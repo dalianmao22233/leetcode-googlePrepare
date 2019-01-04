@@ -27,6 +27,9 @@ public class Solution {
         if (node.random != null) {  // 注意这里要判断，不做的话会有NullpointerEX。
             copy.random = new RandomListNode(node.random.label);
         }
+        if (node.next != null) {  // 不加 居然也没错。。
+            newNode.next = new RandomListNode(node.next.label);
+        }
         return copy;
     }
 }
