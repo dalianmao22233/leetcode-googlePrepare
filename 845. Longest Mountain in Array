@@ -21,7 +21,7 @@ public int longestMountain(int[] A) {
             }
         }
         
-        int res = Integer.MIN_VALUE;
+        int res = Integer.MIN_VALUE;  // int res = 0; 也没问题。因为res不可能比1 小，初始化了increase/decrease数组值都是1.
         for (int i = 1; i < len-1; i++) {
             if (A[i] > A[i-1] && A[i] > A[i+1]) {
                 res = Math.max(increase[i-1] + decrease[i+1]+1, res);  // +1: peak A[i]
