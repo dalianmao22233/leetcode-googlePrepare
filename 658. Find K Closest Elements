@@ -1,4 +1,4 @@
-from laioffer:
+from laioffer: 常规做法
 class Solution {
     public List<Integer> findClosestElements(int[] arr, int k, int x) {
         List<Integer> res = new ArrayList<>();
@@ -6,15 +6,15 @@ class Solution {
             return res;
         }
         // left: index of largest element <= target
-		// right: left+1, 这两个是离target最近的
+	// right: left+1, 这两个是离target最近的
         int left = findIndex(arr, x);
         int right = left+1;
         
         // get K elements.
         for (int i = 0; i < k; i++) {
             // 1. right: out of bound
-			// 2. no out of bound, array[left] is closer to target than right.
-			// sorted array, 不需要abs
+	    // 2. no out of bound, array[left] is closer to target than right.
+	    // sorted array, 不需要abs
             if (right >= arr.length || left >= 0 && x-arr[left] <= arr[right]-x) {
                 // add at the head, 这题要求sorted output.
                 res.add(0, arr[left]);
@@ -43,5 +43,25 @@ class Solution {
         } else {
             return high;
         }
+    }
+    
+    // 高票回答：
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        int lo = 0;
+        int hi = arr.length - k;
+        int mid;
+        Integer[] ret = new Integer[k];
+        while (lo < hi) {
+            mid = lo + (hi - lo) / 2;
+            if(x - arr[mid] > arr[mid+k] - x)   // 小 x 大： 小到x的距离> x到大的距离，肯定是大的更close，所以low=mid+1.
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+
+        List<Integer> list = new ArrayList<>();
+        for(int i = lo; i < lo+k; i++)   // 注意别越界。。
+            list.add(arr[i]);
+        return list;
     }
 }
