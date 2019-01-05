@@ -1,0 +1,40 @@
+很巧妙:
+public boolean validMountainArray(int[] A) {
+    int i = 0;
+    while (i < A.length - 1 && A[i] < A[i + 1]) {
+        i++;
+    }
+    if (i == 0 || i == A.length - 1) return false; // 只有升序，不是山
+
+    while (i < A.length - 1 && A[i] > A[i + 1]) {
+        i++;
+    }
+
+    return i == A.length - 1;
+}
+
+我直接用的845的套路  
+public boolean validMountainArray(int[] A) {
+    if (A == null || A.length == 0) {
+        return false;
+    }
+    int increase = 0;
+    int decrease = 0;
+    int res = 0;
+    for (int i = 1; i < A.length; i++) {
+        if (decrease > 0 && A[i] > A[i-1] || A[i] == A[i-1]) {
+            increase = 0; 
+            decrease = 0;
+        }
+        if (A[i] > A[i-1]) {
+            increase++;
+        }
+        if (A[i] < A[i-1]) {
+            decrease++;
+        } 
+        if (increase > 0 && decrease > 0 && res < increase + decrease + 1) {
+            res = increase+decrease+1;
+        }
+    }
+    return res == A.length;
+}
