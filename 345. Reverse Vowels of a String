@@ -1,31 +1,41 @@
 // my solucion, AC!
-class Solution {
-    public String reverseVowels(String s) {
+public String reverseVowels(String s) {
         if (s == null || s.length() == 0) {
             return s;
         }
-        int low = 0, high = s.length()-1;
-        char[] s_char = s.toCharArray();
+        int low = 0;
+        int high = s.length()-1;
+        char[] arr = s.toCharArray();
         while (low < high) {
-            if ("aeiouAEIOU".contains(String.valueOf(s.charAt(low)))) {
-                if ("aeiouAEIOU".contains(String.valueOf(s.charAt(high)))) {
-                    char tmp = s_char[low];
-                    s_char[low] = s_char[high];
-                    s_char[high] = tmp;
-                    low++;
-                    high--;
-                } else {
-                    // wait high pointer find vowel
-                    high--;
-                }
-            } else {
-                // wait low pointer find vowel
+            if (!isValid(arr[low])) {
                 low++;
+                // wait low pointer find vowel
+                continue;
             }
+            if (!isValid(arr[high])) {
+                high--;
+                // wait high pointer find vowel
+                continue;
+            }
+            swap(arr, low, high);
+            low++;
+            high--;
         }
-        return String.valueOf(s_char);
+        for (int i : arr) {
+        System.out.println("arr: " + i);
+        }
+        return String.valueOf(arr);
     }
-}
+    public boolean isValid(Character c) {
+        // return "aeiou".indexOf(String.valueOf(c)) != -1 || "AEIOU".indexOf(String.valueOf(c)) != -1;
+        c = Character.toLowerCase(c);
+        return (c == 'a' || c =='e' || c =='i' || c == 'o' || c =='u');
+    }
+    public void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
 
 // another solution:
 因为我用的string.contains()方法，Java处理的慢，更快的:string.indexOf(s.charAt(i)) != -1, 意思是如果string含有这个字符
