@@ -1,4 +1,4 @@
-//laioffer:
+//laioffer: DP:
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
         if (s == null || s.length() == 0) {
@@ -13,7 +13,7 @@ class Solution {
             } else {
                 //else check subproblem, rest of word.
                 for (int j = 1; j < i; j++) {
-                    if (M[j] && wordDict.contains(s.substring(j, i))) {
+                    if (M[j] && wordDict.indexOf(s.substring(j, i)) != -1) {
                         M[i] = true;
                         break;
                     }
@@ -25,22 +25,137 @@ class Solution {
 }
 
 
-class Solution {
+// 暴力recursion: O(n^n) 最差的情况是每个prefix都在dict中。recursion tree n^n, space: (n) 
+public boolean wordBreak(String s, List<String> wordDict) {
+    return word_Break(s, new HashSet(wordDict), 0);
+}
+public boolean word_Break(String s, Set<String> wordDict, int start) {
+    if (start == s.length()) {
+        return true;
+    }
+    for (int end = start + 1; end <= s.length(); end++) {
+        if (wordDict.contains(s.substring(start, end)) && word_Break(s, wordDict, end)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+//  优化： recursion with memorization做法，也要掌握
+public boolean wordBreak(String s, List<String> wordDict) {
+    return helper(s, new HashSet(wordDict), 0, new Boolean[s.length()]);
+}
+public boolean helper(String s, Set<String> wordDict, int start, Boolean[] memo) {
+    if (start == s.length()) {
+        return true;
+    }
+    if (memo[start] != null) {
+        return memo[start];
+    }
+    for (int end = start + 1; end <= s.length(); end++) {
+        if (wordDict.contains(s.substring(start, end)) && helper(s, wordDict, end, memo)) {
+            return memo[start] = true;
+        }
+    }
+    return memo[start] = false;
+}
+
+
+
+
+Trie:
+public class Solution {
+    public static class TrieNode{
+        char c;
+        HashMap<Character, TrieNode> children;
+        boolean end;
+        int wordIdx;
+        public TrieNode(char c, int idx){
+            this.c = c;
+            children = new HashMap<Character, TrieNode>();
+            this.wordIdx = idx;
+        }
+        public TrieNode add(char ch, int idx){
+            if(!children.containsKey(ch)){
+                children.put(ch, new TrieNode(ch, idx));
+            }
+            return children.get(ch);
+        }
+        public boolean hasChild(char ch){
+            return children.containsKey(ch);
+        }
+        public TrieNode getChild(char ch){
+            return children.get(ch);
+        }
+        public void setEnd(){
+            this.end = true;
+        }
+    }
+    public void addString(TrieNode root, String word, int idx){
+        TrieNode curr = root;
+        for(int i = 0; i < word.length(); i++){
+            curr = curr.add(word.charAt(i), idx);
+        }
+        curr.setEnd();
+    }
+    public int solve(int idx, int n, TrieNode node, TrieNode root, String s, int[][] dp){
+        if(idx >= n){
+            if(node.end)
+                return 1;
+            return 0;
+        }else if(dp[idx][node.wordIdx]!=-1){
+            return dp[idx][node.wordIdx];
+        }else{
+            int ret = 0;
+            // System.out.println((char)s.charAt(idx) + " idx is: "+ idx);
+            if(node.hasChild(s.charAt(idx))){
+                // System.out.println(idx + " Continued");
+                ret += solve(idx+1, n, node.getChild(s.charAt(idx)), root, s, dp);
+                
+            }
+            if(node.end == true && root.hasChild(s.charAt(idx))){
+                // System.out.println(idx + " New");
+                ret += solve(idx+1, n, root.getChild(s.charAt(idx)), root, s, dp);
+                
+            }
+            
+            dp[idx][node.wordIdx] = ret;
+            
+            return ret; 
+        }
+    }
     public boolean wordBreak(String s, List<String> wordDict) {
-        boolean[] res = new boolean[s.length()+1];
-        res[0] = true;
-        for(int i = 1; i <= s.length(); i++) {//这里注意i 的取值。可以去到最后一位，因为最后一位是）而不是]。
-            for(int j = 0; j < i; j++) {
-                if(res[j] && wordDict.indexOf(s.substring(j, i)) != -1) {
-                    res[i] = true;
-                    break;
+        TrieNode root = new TrieNode('0', 0);
+        for(int i = 0; i < wordDict.size(); i++){
+            addString(root, wordDict.get(i), i+1);
+        }
+        int n = s.length();
+        int m = wordDict.size() +1 ;
+        boolean [] dp = new boolean[n+1];
+        dp[n] = true;
+        for (int i = n-1; i >=0; i--) {
+            if(root.hasChild(s.charAt(i))){
+                TrieNode curr = root;
+                for (int j = i; j < n; j++) {
+                    if(curr.hasChild(s.charAt(j))){
+                        curr = curr.getChild(s.charAt(j));
+                        if (dp[j+1] && curr.end) {
+                            dp[i] = true;
+                            break;
+                        }    
+                    }else{
+                        break;
+                    }
+                    
                 }
             }
         }
-        return res[s.length()];
-
+        return dp[0];
     }
 }
+
+
+
 第二次：
 这道题目其实没有说清楚的是，wordDict中的元素是否可以被重复使用。测试了几次以后发现是可以的。比如S = "aa"，wordDict = ["a"]，结果为true。
 面试的时候一定要注意问清楚面试官的意思，一点一点clarify问题。 
