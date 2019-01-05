@@ -1,0 +1,18 @@
+// 我考虑了太多的细节，还分类讨论了，实际上不用，for里面的条件和+2k已经能包括这些分类了。
+// 1. len < k, reverse all
+// 2. len > 2k, reverse k, k, k...
+// 3. k <= len < 2k, reverse only k
+
+
+public static String reverseStr(String s, int k) {
+		char[] a = s.toCharArray();
+		for (int start = 0; start < a.length; start += 2 * k) {
+			int i = start, j = Math.min(start + k - 1, a.length - 1);  // 这步很关键，不会越界。我没想到这个。
+			while (i < j) {
+				char tmp = a[i];
+				a[i++] = a[j];
+				a[j--] = tmp;
+			}
+		}
+		return new String(a);
+}
