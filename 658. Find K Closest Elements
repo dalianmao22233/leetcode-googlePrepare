@@ -45,7 +45,7 @@ class Solution {
         }
     }
     
-    // 高票回答：
+    // 高票回答：O(logn)
     public List<Integer> findClosestElements(int[] arr, int k, int x) {
         int lo = 0;
         int hi = arr.length - k;
@@ -63,5 +63,13 @@ class Solution {
         for(int i = lo; i < lo+k; i++)   // 注意别越界。。
             list.add(arr[i]);
         return list;
+    }
+    
+    // 用Collection.sort(), time: O(nlogn) 
+    public List<Integer> findClosestElements(List<Integer> arr, int k, int x) { // -->int[] arr
+     Collections.sort(arr, (a,b) -> a == b ? a - b : Math.abs(a-x) - Math.abs(b-x));
+     arr = arr.subList(0, k);
+     Collections.sort(arr);
+     return arr;
     }
 }
