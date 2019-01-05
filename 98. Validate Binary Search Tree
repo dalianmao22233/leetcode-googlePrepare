@@ -26,3 +26,53 @@ class Solution {
             isBST(root.right, root.val, max);
     }
 }
+
+
+// 或者用inorder的性质，看是不是升序的。
+
+public boolean isValidBST(TreeNode root) {
+    //inorder traversal
+    //边排序，边比较
+    return inorder(root, new LinkedList<Integer>());
+}
+public boolean inorder(TreeNode root, LinkedList<Integer> list) {
+    if(root == null) return true;
+    boolean left = inorder(root.left, list);
+
+    if(list.size() != 0 && list.get(list.size()-1) >= root.val) {
+        return false;    
+    }
+    list.add(root.val);
+
+    boolean right = inorder(root.right, list);
+    return left && right;
+}
+
+// 用inorder的性质，看array/queue是不是升序的。
+public boolean isValidBST(TreeNode root) {
+    if(root == null){
+        return true;
+    }
+    Queue<Integer> q = new LinkedList<Integer>();
+    traverse(root,q);
+
+    int prev = q.remove();
+    while(!q.isEmpty()){
+        int i = q.remove();
+        if(i <= prev){
+            return false;
+        }
+        prev = i;
+    }
+    return true;
+}
+
+private void traverse(TreeNode root, Queue<Integer> q){
+    if(root == null){
+        return;
+    }
+    traverse(root.left, q);
+    q.add(root.val);
+
+    traverse(root.right, q);
+}
