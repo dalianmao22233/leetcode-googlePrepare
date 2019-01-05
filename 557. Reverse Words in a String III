@@ -1,31 +1,35 @@
-// my solution, 1-time AC! but slow.
+// my solution, 1-time AC!  
 class Solution {
-    public String reverseWords(String s) {
-        if (s == null || s.length() == 0) {
-            return s;
-        }
-        String[] str = s.split(" ");
-        String result = "";
-        for (String each_s : str) {
-            result += reverseOneWord(each_s) + " ";
-        }
-        return result.trim();
-    }
-    private String reverseOneWord(String s) {
-        if (s == null || s.length() == 0) {
-            return s;
-        }
-        int low = 0, high = s.length()-1;
-        char[] s_char = s.toCharArray();
-        while (low < high) {
-            char tmp = s_char[low];
-            s_char[low] = s_char[high];
-            s_char[high] = tmp;
-            low++;
-            high--;
-        }
-        return String.valueOf(s_char);
-    }
+    public static String reverseWords(String s) {
+		if (s == null || s.length() == 0) {
+			return s;
+		}
+		String[] str = s.split(" ");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < str.length; i++) {
+			str[i] = reverse(str[i]);
+			sb.append(str[i]);
+			sb.append(" ");
+		}
+		return sb.deleteCharAt(sb.length()-1).toString();
+	}
+	public static String reverse(String s) {
+		if (s == null || s.length() == 0) {
+			return s;
+		}
+		int low = 0;
+		int high = s.length()-1;
+		char[] arr = s.toCharArray();
+		char temp;
+		while (low < high) {
+			temp = arr[low];
+			arr[low] = arr[high];
+			arr[high] = temp;
+			low++;
+			high--;
+		}
+		return String.valueOf(arr);
+	}
 }
 // other better idea: 89.04%, using StringBuilder.reverse() feature.
 public class Solution {
