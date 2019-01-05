@@ -33,7 +33,7 @@ public boolean word_Break(String s, Set<String> wordDict, int start) {
     if (start == s.length()) {
         return true;
     }
-    for (int end = start + 1; end <= s.length(); end++) {
+    for (int end = start + 1; end <= s.length(); end++) {  // end <= 是因为substring只能取到end-1，不会越界。
         if (wordDict.contains(s.substring(start, end)) && word_Break(s, wordDict, end)) {
             return true;
         }
