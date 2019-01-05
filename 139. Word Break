@@ -62,7 +62,10 @@ public boolean word_Break(String s, Set<String> wordDict, int start, Boolean[] m
     return false;
 }
 
-// BFS:
+// BFS:“nightmare”-->night, mare, || nightmare
+// 图中每个点表示word的第一个character的index, 每条边表示一个word。图可以表示为：0->5->9
+// 由此可以简化为 0->9之间是否有path. 用BFS遍历一遍，用queue和set,set用来追踪visited node,防止重复工作。
+// time: O(n^2), space: O(n),可以用来解决word break II (把图存到map中，用BFS找所有路径). 
 
 public boolean wordBreak(String s, List<String> wordDict) {
     Set<String> wordDictSet=new HashSet(wordDict);
@@ -81,6 +84,34 @@ public boolean wordBreak(String s, List<String> wordDict) {
                 }
             }
             visited[start] = 1;
+        }
+    }
+    return false;
+}
+
+// BFS优化：
+// only traverse max_len rather than to the end of s to find end.
+// mark visited when enqueue rather than dequeue.
+
+public boolean wordBreak(String s, List<String> wordDict) {
+    int max_len = -1;
+    for (String word : wordDict)
+        max_len = Math.max (max_len, word.length ());  // 最长的word长度
+    Set<String> wordDictSet=new HashSet(wordDict);
+    Queue<Integer> queue = new LinkedList<>();
+    boolean[] visited = new boolean[s.length()];
+    queue.add(0);
+    visited[0] = true;
+    while (!queue.isEmpty()) {
+        int start = queue.remove();
+        for (int end = start + 1; end <= s.length () && end - start <= max_len; end++) {
+            if (wordDictSet.contains(s.substring(start, end)) && !(end < s.length () && visited[end])) {
+                if (end == s.length()) {
+                    return true;
+                }
+                queue.add(end);
+                visited[end] = true;
+            }
         }
     }
     return false;
