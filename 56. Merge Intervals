@@ -12,6 +12,36 @@ public class MergeInterval {
 	}
 
 	// Sorting:
+	
+	public List<Interval> merge(List<Interval> intervals) {
+        List<Interval> res = new ArrayList<>();
+		if (intervals == null || intervals.size() == 0) {
+			return res;
+		}
+		PriorityQueue<Interval> pq = new PriorityQueue<Interval>(intervals.size(), new Comparator<Interval>() {
+			@Override
+			public int compare(Interval i1, Interval i2) {
+				if (i1.start == i2.start) {
+					return 0;
+				}
+				return i1.start < i2.start ? -1 : 1;
+			}
+		});
+		
+		//可以直接用Collections.sort(intervals, new Comparator<Interval>()..... 不用for加入pq了。
+		for (Interval i : intervals) {
+			pq.offer(i);
+		}
+		while (!pq.isEmpty()) {  //注意这里不能直接循环。for(i: pq), pq里没有顺序，是拿出来的时候有顺序。
+			Interval i = pq.poll();
+			if (res.isEmpty() || res.get(res.size()-1).end < i.start) { //不冲突的情况下直接加入。
+				res.add(i);
+			} else {
+				res.get(res.size()-1).end = Math.max(i.end, res.get(res.size()-1).end);  // 冲突的时候取最大的end.
+			}
+		}
+		return res;
+    }
 
 	public static List<Interval> merge1(List<Interval> intervals) {
 		Collections.sort(intervals, new Comparator<Interval>() {
@@ -56,20 +86,5 @@ public class MergeInterval {
 		}
 		res.add(new Interval(start, end));//key point here dont forget to add this line
 		return res;
-	}
-
-
-
-	public static void main(String[] args) {
-		Interval interval1 = new Interval(0, 30);
-		Interval interval2 = new Interval(5, 10);
-		Interval interval3 = new Interval(15, 20);
-		List<Interval> list = Arrays.asList(interval1, interval2, interval3);
-		for (Interval item : merge1(list)) {
-			System.out.println(item.start + "," + item.end);
-		}
-		for (Interval item : merge2(list)) {
-			System.out.println(item.start + "," + item.end);
-		}
 	}
 }
