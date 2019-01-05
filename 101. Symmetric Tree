@@ -21,7 +21,8 @@ class Solution {
         if (left == null || right == null) {
             return false;
         }
-        if (left.val != right.val) {
+        if (left.val != right.val) {   
+        // 这里不能 ==， return TRUE。这样就直接返回true了，没有对于left的子树和right的子树的判断
             return false;
         }
         return helper(left.left, right.right) && helper(left.right, right.left);
