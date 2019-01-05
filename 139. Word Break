@@ -1,4 +1,6 @@
-//laioffer: DP:
+//laioffer: DP: “leetcode”
+// 思路就是dp[i]记录i左边的是否能用wordDict表示，从底向上来构建
+
 class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
         if (s == null || s.length() == 0) {
@@ -26,6 +28,15 @@ class Solution {
 
 
 // 暴力recursion: O(n^n) 最差的情况是每个prefix都在dict中。recursion tree n^n, space: (n) 
+wordBreak(l), wordDict.contains(eetcode)
+wordBreak(le), wordDict.contains(etcode)
+wordBreak(lee), wordDict.contains(tcode)
+wordBreak(leet), wordDict.contains(code)
+wordBreak(leetc), wordDict.contains(ode)
+wordBreak(leetco), wordDict.contains(de)
+wordBreak(leetcod), wordDict.contains(e)
+wordBreak(leetcode)
+======================
 public boolean wordBreak(String s, List<String> wordDict) {
     return word_Break(s, new HashSet(wordDict), 0);
 }
