@@ -70,6 +70,7 @@ public boolean word_Break(String s, Set<String> wordDict, int start, Boolean[] m
             return true;
         }
     }
+    // 否则就return false; 因为都不满足
     memo[start] = false;
     return false;
 }
