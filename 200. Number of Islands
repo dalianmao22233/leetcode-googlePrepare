@@ -44,7 +44,8 @@ class Solution {
 
 2. BFS：
 思路：扫描矩阵，如果其中某一个值==‘1’， 那么这就是触发BFS的root node。 然后标记visited，遍历邻居。这个比DFS慢很多。
-Time: O(m*n), Space:O(min(m, n)), in worst case where the grid is filled with lands, the size of queue can grow up to min(m,n).
+Time: O(m*n), Space:O(min(m, n)), 最差的情况是整个grid都是1, the size of queue can grow up to min(m,n).
+
 class Solution {
   public int numIslands(char[][] grid) {
     if (grid == null || grid.length == 0) {
