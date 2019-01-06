@@ -1,6 +1,7 @@
 1. DFS:
 思路：扫描矩阵，如果其中某一个值==‘1’， 那么这就是触发DFS的root node。 
-在DFS期间，每个扫描的点都改变值为‘0’，为了标记为visited node. 
+在DFS期间，每个扫描的点都改变值为‘0’，为了标记为visited node. 下一轮当遍历到这个'0'的时候就会break.
+这样的话，只要扫到一个1，它周围的1都会变成0，直到没有1为止。由此可以得到岛的数目。 真的好巧妙！！！
 最后就返回有多少root node, 就知道有几个岛。
 Linear scan the 2d grid map, if a node contains a '1', then it is a root node that triggers a Depth First Search. 
 During DFS, every visited node should be set as '0' to mark as visited node. 
