@@ -53,7 +53,7 @@ class Solution {
 }
 
 
-// 用了一维DP数组，占用空间，比上面的快：
+// 用了一维DP数组，占用空间
 class Solution {
     public int uniquePathsWithObstacles(int[][] obstacleGrid) {
         int col = obstacleGrid[0].length;
