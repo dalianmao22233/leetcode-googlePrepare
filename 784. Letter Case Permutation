@@ -1,55 +1,86 @@
-1. BFS
-class Solution {
-    public List<String> letterCasePermutation(String s) {
-        Queue<String> queue = new LinkedList<>();
-        queue.offer(s);
-        
-        String answer = "";
-        for (int i = 0; i < s.length(); i++) {
-            if (Character.isDigit(s.charAt(i))) {
-                continue;
-            }
-            int size = queue.size();
-            for (int j = 0; j < size; j++) {
-                String cur = queue.poll();
-                char[] curArr = cur.toCharArray();
-                curArr[i] = Character.toUpperCase(curArr[i]);
-                queue.offer(String.valueOf(curArr));
-                
-                curArr[i] = Character.toLowerCase(curArr[i]);
-                queue.offer(String.valueOf(curArr));
-            }
-        }
-        return new LinkedList<>(queue);
+1. 第一个想法是DFS，类似于permutation.
+public List<String> letterCasePermutation(String S) {
+    List<String> res = new ArrayList<>();
+    if (S == null || S.length() == 0) {  // 或者只写S==null, 这样就直接return res, 后面的dfs可以自己处理空字符串的情况。
+        res.add(S);
+        return res;
+    }
+    helper(S, res, new StringBuilder(), 0);
+    return res;
+}
+public void helper(String S, List<String> res, StringBuilder answer, int index) {
+    if (answer.length() == S.length()) {
+        res.add(answer.toString());
+        return;
+    }
+    char c = S.charAt(index);
+    if (Character.isLetter(c)) { // 字母
+        answer.append(Character.toLowerCase(c));  // 小写
+        helper(S, res, answer, index+1);
+        answer.deleteCharAt(answer.length()-1);
+
+        answer.append(Character.toUpperCase(c));  // 大写
+        helper(S, res, answer, index+1);
+        answer.deleteCharAt(answer.length()-1);   
+    } else { // 数字或其他
+        answer.append(c);
+        helper(S, res, answer, index+1);
+        answer.deleteCharAt(answer.length()-1);
     }
 }
 
-2. DFS:
-class Solution {
-    public List<String> letterCasePermutation(String S) {
-        if (S == null) {
-            return new LinkedList<>();
-        }
-        
-        List<String> res = new LinkedList<>();
-        helper(S.toCharArray(), res, 0);
-        return res;
+  ===========================================
+  // 以上方法用了额外空间，以下是in-place做法：
+  public List<String> letterCasePermutation(String S) {
+      if (S == null) {
+          return new LinkedList<>();
+      }
+
+      List<String> res = new LinkedList<>();
+      helper(S.toCharArray(), res, 0);
+      return res;
+  }
+
+  public void helper(char[] chs, List<String> res, int pos) {
+      if (pos == chs.length) {
+          res.add(new String(chs));
+          return;
+      }
+      if (chs[pos] >= '0' && chs[pos] <= '9') {
+          helper(chs, res, pos + 1);
+          return;
+      }
+
+      chs[pos] = Character.toLowerCase(chs[pos]);  //直接在char[]里改。
+      helper(chs, res, pos + 1);
+
+      chs[pos] = Character.toUpperCase(chs[pos]);
+      helper(chs, res, pos + 1);
+  }
+
+
+2. BFS：
+public List<String> letterCasePermutation(String S) {
+    if (S == null) {
+        return new LinkedList<>();
     }
-    
-    public void helper(char[] chs, List<String> res, int pos) {
-        if (pos == chs.length) {
-            res.add(new String(chs));
-            return;
+    Queue<String> queue = new LinkedList<>();
+    queue.offer(S);
+
+    for (int i = 0; i < S.length(); i++) {
+        if (Character.isDigit(S.charAt(i))) continue;            
+        int size = queue.size();
+        for (int j = 0; j < size; j++) {
+            String cur = queue.poll();
+            char[] chs = cur.toCharArray();
+
+            chs[i] = Character.toUpperCase(chs[i]);
+            queue.offer(String.valueOf(chs));
+
+            chs[i] = Character.toLowerCase(chs[i]);
+            queue.offer(String.valueOf(chs));
         }
-        if (chs[pos] >= '0' && chs[pos] <= '9') {
-            helper(chs, res, pos + 1);
-            return;
-        }
-        
-        chs[pos] = Character.toLowerCase(chs[pos]);
-        helper(chs, res, pos + 1);
-        
-        chs[pos] = Character.toUpperCase(chs[pos]);
-        helper(chs, res, pos + 1);
     }
+
+    return new LinkedList<>(queue);
 }
