@@ -13,6 +13,25 @@ class Solution {
 		return set.size() <= 1;
 	}
 }
+2. 用数组也能做，1-128的范围，输入字符串不止是小写字母，还有大写和特殊字符
+public boolean canPermutePalindrome(String s) {
+	int[] map = new int[128];
+	for (int i = 0; i < s.length(); i++) {
+	    map[s.charAt(i)]++;
+	}
+	int count = 0;
+	for (int key = 0; key < map.length && count <= 1; key++) {
+	    count += map[key] % 2;
+	}
+	return count <= 1;
+}
+
+
+hashmap 也可以
+
+
+
+
 
 // my solution: based on permutation + palindrome but TLE:
 class Solution {
