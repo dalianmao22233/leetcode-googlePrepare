@@ -1,0 +1,322 @@
+// 1. 给4个点， 能否组成正方形
+
+
+	// 1）暴力解法：dfs+backtracking
+	// time: O(4!)-->O(1), space: O(1)
+	public double dist(int[] p1, int[] p2) {
+		return (p2[0]-p1[0]) * (p2[0]-p1[0]) + (p2[1]-p1[1]) * (p2[1]-p1[1]);
+	}
+
+	public boolean check(int[] p1, int[] p2, int[] p3, int[] p4) {
+		return
+				dist(p1, p2)==dist(p2, p3) &&
+						dist(p2, p3)==dist(p3, p4) &&
+						dist(p1, p4)==dist(p1, p2) &&
+						dist(p1, p3)==dist(p4, p2) &&  // 对角线也相等， 不然有可能是菱形，仍然四边相等。
+						dist(p1, p2) > 0;  // 确保这俩点之间是有距离的，不是重合的点。
+	}
+	public boolean validSquare(int[] p1, int[] p2, int[] p3, int[] p4) {
+		int[][] p = {p1, p2, p3, p4};
+		return checkAllPermutations(p, 0);
+	}
+	public boolean checkAllPermutations(int[][] p, int index) {
+		//base case: check 这个组合是否是正方形。
+		if (index == 4) {
+			return check(p[0], p[1], p[2], p[3]);
+		}
+		boolean res =  false;
+		for (int i = index; i < 4; i++) {
+			// generate 所有的组合
+			swap(p, i, index);
+			res = res || checkAllPermutations(p, index+1);
+			swap(p, i, index);
+		}
+		return res;
+	}
+	public void swap(int[][] p, int x, int y) {
+		int[] temp = p[x];
+		p[x] = p[y];
+		p[y] = temp;
+	}
+
+	// 2) 给坐标排序, 先基于x坐标，如果x相等，基于y排序。肯定能保证顺序
+	// time: O(1), sorting 4 points 用constant time. space: O(1)
+	public boolean validSquare2(int[] p1, int[] p2, int[] p3, int[] p4) {
+		int[][] p={p1,p2,p3,p4};
+		Arrays.sort(p, (l1, l2) -> l2[0] == l1[0] ? l1[1] - l2[1] : l1[0] - l2[0]);
+		return dist(p[0], p[1]) != 0 && dist(p[0], p[1]) == dist(p[1], p[3]) && dist(p[1], p[3]) == dist(p[3], p[2]) && dist(p[3], p[2]) == dist(p[2], p[0])   && dist(p[0],p[3])==dist(p[1],p[2]);
+	}
+
+
+
+
+	// 3) 通过观察：
+	// set 中剩下的就是2个长度，一个边长，一个对角线长。 不可能有其他结果。
+	// corner case: 等边三角形内部有第四个点，此时需要加个check 对角线长度是根号二倍的边长
+	// time： O(n^2)
+	public boolean validSquare3(int[] p1, int[] p2, int[] p3, int[] p4) {
+		if (p1 == null || p2 == null || p3 == null || p4 == null
+				|| p1.length != 2 || p2.length != p1.length || p3.length != p1.length || p4.length != p1.length) {
+			return false;
+		}
+		HashSet<Long> length_set = new HashSet<Long>();
+		int[][] ps = new int[][]{p1, p2, p3, p4};
+
+		for (int i = 0; i < 4; i++) {
+			for (int j = i + 1; j < 4; j++) {
+				long dist = getL2Distance(ps[i], ps[j]);
+				if (dist == 0) {
+					return false;
+				}
+				length_set.add(dist);
+
+			}
+		}
+		if (length_set.size() == 2) {
+			long[] arr = new long[2];
+			int j = 0;
+			for (long i : length_set) {
+				arr[j] = i;
+				j++;
+			}
+			if (arr[0] == arr[1]*2 || arr[1] == arr[0]*2) {  // 开方损失精度。
+				return true;
+			}
+		}
+		return false;
+	}
+
+//	======================================
+	// 2. 给n个点，找有多少个正方形
+  
+  // O(n^4), 接着call上面第一种题的方法，哪个都行。
+	public boolean validSquare4(int[] p1, int[] p2, int[] p3, int[] p4) {
+		// Tell if the point is valid
+		// Put four points into a list
+		List<int[]> list = new LinkedList<>();
+		list.add(p1);
+		list.add(p2);
+		list.add(p3);
+		list.add(p4);
+
+		for(int[] p : list){
+			if(p == null || p.length != 2)
+				return false;
+		}
+		Set<Double> set = new HashSet<>();
+		for(int i = 0; i < 3; i ++){
+			for(int j = i + 1; j < 4; j ++){
+				int[] px = list.get(i);
+				int[] py = list.get(j);
+				double distance = dist(px, py);
+				if(distance == 0)
+					return false;
+				set.add(distance);
+			}
+		}
+
+		// 记得加上*2 check . 这里忘记写了
+		return set.size() == 2;
+	}
+	// The follow up question is, given a series of point, tell number of squares.
+	// First of all, tell if the list contains at least 4 points
+	public int validSquareII(List<int[]> list){
+		if(list == null || list.size() < 4)
+			return 0;
+		int length = list.size();
+		int result = 0;
+		for(int i = 0; i < length - 3; i ++){
+			for(int j = i + 1; j < length - 2; j ++){
+				for(int k = j + 1; k < length -1; k ++){
+					for(int l = k + 1; l < length; l ++){
+						int[] p1 = list.get(i);
+						int[] p2 = list.get(j);
+						int[] p3 = list.get(k);
+						int[] p4 = list.get(l);
+						if (validSquare4(p1,p2,p3,p4)){
+							result ++;
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+  
+  
+  //	=====================================
+// O(n^3): 由3个点计算出第四个点的位置
+ //	=====================================
+// O(n^2)：由对角线唯一确定一个正方形
+	//首先先把所有可能的边存在map里，注意去重
+	//其次每两个点，产生一个对角线，看对角线是不是在map中，是的话，count++;
+
+	public static boolean validSquareIII(int[] p1, int[] p2, int[] p3, int[] p4, int[] p5, int[] p6, int[] p7, int[] p8) {
+		if (p1 == null || p2 == null || p3 == null || p4 == null) return false;
+		Map<String, Integer> map = new HashMap<>();
+		List<int[]> list = Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8);
+		int count = 0;
+		for (int i = 0; i < list.size() - 1; i++) {
+			for (int j = i + 1; j < list.size(); j++) {
+				if (!check(list.get(i), list.get(j))) continue;
+				String str = genStr(list.get(i), list.get(j));
+				map.put(str, 1 + map.getOrDefault(str, 0));
+			}
+		}
+		for (int i = 0; i < list.size() - 1; i++) {
+			for (int j = i + 1; j < list.size(); j++) {
+				if (!check(list.get(i), list.get(j))) continue;
+				String diag = createDiag(list.get(i), list.get(j));
+				if (diag.length() == 0) continue;
+				count += map.getOrDefault(diag, 0);
+			}
+		}
+		count >>= 1;
+		return count > 0;
+	}
+
+	private static boolean check(int[] p1, int[] p2) {
+		if (p1[0] == p2[0] && p1[1] == p2[1]) return false;  // 2点重合
+		return true;
+	}
+
+	private static String genStr(int[] p1, int[] p2) {
+		if (p1[0] < p2[0] || (p1[0] == p2[0] && p1[1] < p2[1])) {  //做个顺序，这样能保证不重复使用某两个点。
+			return String.format("%d,%d;%d,%d", p1[0], p1[1], p2[0], p2[1]);
+		} else {
+			return String.format("%d,%d;%d,%d", p2[0], p2[1], p1[0], p1[1]);
+		}
+
+	}
+
+	private static String createDiag(int[] a, int[] c) {
+		int midX = a[0] + c[0];
+		int midY = a[1] + c[1];
+
+		int Ax = 2*a[0] - midX;
+		int Ay = 2*a[1] - midY;
+		int bX = midX - Ay;
+		int bY = midY + Ax;
+
+		int cX = 2*c[0] - midX;
+		int cY = 2*c[1] - midY;
+		int dX = midX - cY;
+		int dY = midY + cX;
+
+
+		// bx = x1+x2-y1+y2 = x1+x2 - (y1-y2)
+		// by = x1-x2+y1+y2 = x1-x2 + y1+y2
+		// dx = x1+x2+y1-y2 = x1+x2 - (y2-y1)
+		// dy = -x1+x2+y1+y2 = (x2-x1) + y1+y2
+		if ((bX & 1) == 0 && (bY & 1) == 0 && (dX & 1) == 0 && (dY & 1) == 0) {
+			if (bX < dX || (bX == dX && bY < dY)) {
+				return String.format("%d,%d;%d,%d", bX/2, bY/2, dX/2, dY/2);
+			} else {
+				return String.format("%d,%d;%d,%d", dX/2, dY/2, bX/2, bY/2);
+			}
+		} else {
+			return "";
+		}
+	}
+
+
+
+
+
+
+// n^2， 我最后用的这种，画图解释就行。用对角线确定一个正方形
+	public boolean isValid (int[] p1, int[] p2, int[] p3, int[] p4) {
+		int x1 = p1[0];
+		int y1 = p1[1];
+		int x2 = p2[0];
+		int y2 = p2[1];
+		if (x1 == x2 && y1 == y2) {
+			return false;
+		}
+		int[] third_point = new int[2];
+		int[] forth_point = new int[2];
+		int a = y1 - y2;
+		int b = x1 - x2;
+		int tmp1 = x1 +x2 + a;
+		int tmp2 = y1 +y2 - b;
+		int tmp3 = x1 +x2 - a;
+		int tmp4 = y1 +y2 + b;
+		if (tmp1 % 2 != 0 || tmp2 % 2 !=0 || tmp3 % 2 != 0 ||tmp4 % 2 != 0) {
+			return false;
+		}
+		third_point[0] = tmp1 / 2;
+		third_point[1] = tmp2 / 2;
+		forth_point[0] = tmp3 / 2;
+		forth_point[1] = tmp4 / 2;
+		return (equalPoint(third_point, p3) && equalPoint(forth_point, p4))
+				|| (equalPoint(third_point, p4) && equalPoint(forth_point, p3));
+	}
+
+	private boolean equalPoint(int[] p1, int[] p2) {
+		return p1[0] == p2[0] && p1[1] == p2[1];
+	}
+
+	public boolean validSquare5(int[] p1, int[] p2, int[] p3, int[] p4) {
+		if (p1 == null || p2 == null || p3 == null || p4 == null
+				|| p1.length != 2 || p2.length != p1.length || p3.length != p1.length || p4.length != p1.length) {
+			return false;
+		}
+		int[][] p = {p1, p2, p3, p4};
+		int count = 0;
+		List<int[][]> dests = new ArrayList<>();
+		for (int a = 0; a < p.length; a++) {
+			for (int b = a + 1; b < p.length; b++) {
+				int[] pa = p[a];
+				int[] pb = p[b];
+				int[][] dest = getTarget(pa, pb);
+				if (dest != null) {
+					dests.add(dest);
+				}
+			}
+		}
+
+		for (int[][] dest : dests) {
+			if (found(dest[0], p) && found(dest[1], p)) {
+				count++;
+			}
+		}
+
+		count /= 2;   //结果注意要去重，因为对角线确定的可能是2个正方形。
+
+		return count == 1;
+	}
+	private boolean found(int[] p1, int[][] p) {
+		for (int[] point : p) {
+			if (p1[0] == point[0] && p1[1] == point[1]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// n ^ 2
+	private int[][] getTarget(int[] p1, int[] p2) {
+		int x1 = p1[0];
+		int y1 = p1[1];
+		int x2 = p2[0];
+		int y2 = p2[1];
+		if (x1 == x2 && y1 == y2) {
+			return null;
+		}
+		int[] third_point = new int[2];
+		int[] forth_point = new int[2];
+		int a = y1 - y2;
+		int b = x1 - x2;
+		int tmp1 = x1 +x2 + a;
+		int tmp2 = y1 +y2 - b;
+		int tmp3 = x1 +x2 - a;
+		int tmp4 = y1 +y2 + b;
+		if (tmp1 % 2 != 0 || tmp2 % 2 !=0 || tmp3 % 2 != 0 ||tmp4 % 2 != 0) {
+			return null;
+		}
+		third_point[0] = tmp1 / 2;
+		third_point[1] = tmp2 / 2;
+		forth_point[0] = tmp3 / 2;
+		forth_point[1] = tmp4 / 2;
+		return new int[][] {third_point, forth_point};
+	}
