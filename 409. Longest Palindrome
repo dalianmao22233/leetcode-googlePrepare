@@ -1,0 +1,37 @@
+my solution:如果有重复的，就从map中移除，count+2;或者用set也行。 
+public int longestPalindrome(String s) {
+    if (s == null || s.length() == 0) {
+        return 0;
+    }
+    HashMap<Character, Integer> map = new HashMap<>();
+    int count = 0;
+    for (int i = 0; i < s.length(); i++) {
+        if (map.containsKey(s.charAt(i))) {
+            count += 2;
+            map.remove(s.charAt(i));
+        } else {
+            map.put(s.charAt(i), 1);
+        }
+    }
+    if (map.size() == 0) {  // for case "bb"
+        return count;
+    }
+    return count+1;  // for case: "bcb"
+}
+
+
+public int longestPalindrome(String s) {
+        if(s==null || s.length()==0) return 0;
+        HashSet<Character> hs = new HashSet<Character>();
+        int count = 0;
+        for(int i=0; i<s.length(); i++){
+            if(hs.contains(s.charAt(i))){
+                hs.remove(s.charAt(i));
+                count++;
+            }else{
+                hs.add(s.charAt(i));
+            }
+        }
+        if(!hs.isEmpty()) return count*2+1;
+        return count*2;
+}
