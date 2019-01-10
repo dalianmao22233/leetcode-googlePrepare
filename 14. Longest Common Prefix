@@ -40,32 +40,29 @@ public String longestCommonPrefix(String[] strs) {
 // my solution, slow. Brute force
 class Solution {
     public String longestCommonPrefix(String[] strs) {
-        if (strs == null || strs.length == 0) {
-            return "";
-        }
-        int minLen = Integer.MAX_VALUE;
-        
-        // find shortest string first, then make round number as length.
-        for (String s : strs) {
-            minLen = Math.min(minLen, s.length());
-            if (s.equals("")) {  // remember to check here. otherwise will go below.
-                return "";
-            }
-        }
-        // get prefix
-        String prefix = "";
-        int index = 0;
-        for (int i = 0; i < minLen; i++) {
-            prefix += String.valueOf(strs[0].charAt(index));
-            for (String s : strs) {
-                for (int j = 0; j < prefix.length(); j++) {
-                    if (s.charAt(j) != prefix.charAt(j)) {
-                        return prefix.substring(0, j);
-                    }
-                }
-            }
-            index++;
-        }
-        return prefix;
-    }
+		if (strs == null || strs.length == 0) {
+			return "";
+		}
+		int minlen = Integer.MAX_VALUE;
+		for (int i = 0; i < strs.length; i++) {
+			minlen = Math.min(minlen, strs[i].length());
+		}
+		String first = strs[0];
+		for (int i = 1; i < strs.length; i++) {
+			if (first.length() == 0) {
+				return "";
+			}
+			String item = strs[i];
+			int a = 0;
+			while (a < minlen && a < first.length()) {
+				if (first.charAt(a) == item.charAt(a)) {
+					a++;
+				} else {
+					break;
+				}
+			}
+			first = first.substring(0, a);
+		}
+		return first;
+	}
 }
