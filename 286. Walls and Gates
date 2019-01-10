@@ -29,7 +29,9 @@ class Solution {
             for (int i = 0; i < 4; i++) { // 4 directions
                 int x = point[0] + dx[i];
                 int y = point[1] + dy[i];
-                if (x < 0 || y < 0 || x >= m || y >= n || rooms[x][y] != EMPTY) { //越界或者不是空房间，就跳出，找下一个方向。
+                if (x < 0 || y < 0 || x >= m || y >= n || rooms[x][y] != EMPTY) { 
+                //越界或者不是空房间，就跳出，找下一个方向。
+                // 不是空房间意味着：1. 这个是空房间，但是里面的内容被更新了，所以代表了visted了，2. 这是个墙。。
                     continue;
                 }
                 rooms[x][y] = rooms[point[0]][point[1]] + 1;
