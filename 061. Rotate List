@@ -1,0 +1,51 @@
+// 不用遍历整个list长度，用快慢指针，快指针先往后走k步，然后快慢一起走。
+public ListNode rotateRight(ListNode head, int k) {
+    if (head == null || head.next == null) {
+        return head;
+    }
+    ListNode p1 = head;
+    ListNode p2 = head;
+    for (int i = 0; i < k; i++) {
+        if (p1.next != null) {
+            p1 = p1.next;
+        } else {
+            k = k % (i+1);
+            i = -1;
+            p1 = head;
+        }
+    }
+    while (p1.next != null) {
+        p1 = p1.next;
+        p2 = p2.next;
+    }
+    p1.next = head;
+    head = p2.next;
+    p2.next = null;
+    return head;
+}
+
+// 先遍历链表到最后一个node,首尾相连构成一个环，然后移动tail指针，走len-k步，head=tail.next, tail.next = null. 切割完成
+//I first used a ListNode p, and point it to the head, then move it to the end of the list, 
+//and at the same time get the length of the list. Then p.next = head; gives me a circle. 
+//At this time, by moving p for len-k times, it will be pointing to the node before the break point. 
+//Then all we need to do is record the next node as head, and break the circle with p.next = null.
+
+public ListNode rotateRight(ListNode head, int k) {
+    if(head == null || k == 0) {
+        return head;
+    }
+    ListNode p = head;
+    int len = 1;
+    while(p.next != null) {
+        p = p.next;
+        len++;
+    }
+    p.next = head;
+    k %= len;
+    for(int i = 0; i < len - k; i++) {
+        p = p.next;
+    }
+    head = p.next;  // 先保存next node给头指针。不然会丢失
+    p.next = null;
+    return head;
+}
