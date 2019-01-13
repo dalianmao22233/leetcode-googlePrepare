@@ -1,0 +1,85 @@
+//用quick select，选一个Pivot，左边是比Pivot小的（有k个），右边是大于等于pivot的。 如果分的不好，左边有少于k个，那么就在右边继续partition。
+//Time： average: O(n), space: O(n)
+import java.util.concurrent.ThreadLocalRandom;
+
+class Solution {
+    int[][] points;
+    public int[][] kClosest(int[][] points, int K) {
+        this.points = points;
+        work(0, points.length - 1, K);
+        return Arrays.copyOfRange(points, 0, K);
+    }
+
+    public void work(int i, int j, int K) {
+        if (i >= j) return;
+        int oi = i, oj = j;
+        int pivot = dist(ThreadLocalRandom.current().nextInt(i, j));
+
+        while (i < j) {
+            while (i < j && dist(i) < pivot) i++;
+            while (i < j && dist(j) > pivot) j--;
+            swap(i, j);
+        }
+
+        if (K <= i - oi + 1)
+            work(oi, i, K);
+        else
+            work(i+1, oj, K - (i - oi + 1));
+    }
+
+    public int dist(int i) {
+        return points[i][0] * points[i][0] + points[i][1] * points[i][1];
+    }
+
+    public void swap(int i, int j) {
+        int t0 = points[i][0], t1 = points[i][1];
+        points[i][0] = points[j][0];
+        points[i][1] = points[j][1];
+        points[j][0] = t0;
+        points[j][1] = t1;
+    }
+}
+
+//用自带的sort，重写comparator，拿出前K个。O(nlogn)
+public int[][] kClosest(int[][] points, int K) {
+    Arrays.sort(points, Comparator.comparing(p -> p[0] * p[0] + p[1] * p[1]));
+    return Arrays.copyOfRange(points, 0, K);
+}
+    
+    
+//还是用pq, O(nlogk)，pq size = k.
+public int[][] kClosest(int[][] points, int K) {
+    PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparing(a -> -a[0] * a[0] - a[1] * a[1]));
+    for (int[] p : points) { 
+        pq.offer(p); 
+        if (pq.size() > K) { pq.poll(); } // poll out the farthest among the K + 1 points.
+    }
+    int[][] ans = new int[K][2];
+    for (int i = 0; i < K; ++i) { ans[i] = pq.poll(); }
+    return ans;
+}
+
+
+//my solution: 用pq： O(Klogn) 不好，我都一次性装进去再poll
+class Solution {
+    public int[][] kClosest(int[][] points, int K) {
+        if (points == null || points.length == 0) {
+            return new int[0][0];
+        }
+        PriorityQueue<int[]> pq = new PriorityQueue<int[]>(points.length, new Comparator<int[]>(){
+            @Override
+            public int compare(int[] p1, int[] p2) {
+                return p1[0]*p1[0]+p1[1]*p1[1] - (p2[0]*p2[0]+p2[1]*p2[1]);
+            }
+        });
+        for (int i = 0; i < points.length; i++) {
+            pq.offer(points[i]);
+        }
+        int[][] res = new int[K][2];
+        while (K > 0) {
+            res[K-1] = pq.poll();
+            K--;
+        }
+        return res;
+    }
+}
