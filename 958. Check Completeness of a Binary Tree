@@ -1,0 +1,43 @@
+// 更好 不用都循环一遍，就能找到泡泡，画图就懂了
+// level order traverse，在traverse的时候维持一个boolean变量叫end, 
+// 当poll出来的结点为null, end=TRUE; 如果poll出来的结点非空 并且 end=TRUE，此时queue还不是空，那么一定有泡泡 
+// Time Complexity: O(N), where N is the number of nodes.
+// Space Complexity: O(N)
+
+public boolean isCompleteTree(TreeNode root) {
+    if (root == null) {
+        return true;
+    }
+
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    boolean end = false;
+
+    while (!queue.isEmpty()) {
+        TreeNode cur = queue.poll();
+        if (cur == null) {
+            end = true;
+        } else {
+            if (end) {
+                return false;
+            }
+            queue.offer(cur.left);
+            queue.offer(cur.right);
+        }
+    }
+    return true;
+}
+
+// level order traverse一遍，都放进queue中，然后一个一个往外拿，拿的同时这个节点还得是空， 最后看queue的size，如果不是空，就有泡泡
+public boolean isCompleteTree(TreeNode root) {
+    //root-left-right
+    Queue<TreeNode> q = new LinkedList<TreeNode>();
+    q.offer(root);
+    while(q.peek() != null){
+        TreeNode c = q.poll();
+        q.offer(c.left);
+        q.offer(c.right);
+    }
+    while(!q.isEmpty() && q.peek() == null) q.poll();
+    return q.isEmpty();
+}
