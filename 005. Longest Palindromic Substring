@@ -72,3 +72,51 @@ public class Solution {
 
 // 马拉车解法： https://articles.leetcode.com/longest-palindromic-substring-part-ii/， 太复杂了我没看
 http://www.cnblogs.com/TenosDoIt/p/3675788.html
+
+// 我写了个DP：也过了, 慢
+
+class Solution {
+	public static String longestPalindrome(String s) {
+		if (s == null || s.length() <= 1) {
+			return s;
+		}
+		int len = s.length();
+        if (isValid(s)) {
+			return s;
+		}
+		int[][] dp = new int[len+1][len+1];
+      
+		// from i-j, longest palindrome string
+		String res = "";
+		int max = 0;
+		for (int i = 0; i <= len; i++) {
+			for (int j = i+1; j <= len; j++) {
+				if (isValid(s.substring(i, j))) {
+					dp[i][j] = j-i;
+					if (dp[i][j] > max) {
+						max = dp[i][j];
+						res = s.substring(i, j);
+					}
+				} else {
+					dp[i][j] = 1;  // 1 character is also palindrome
+                    
+				}
+			}
+		}
+		return res;
+	}
+	public static boolean isValid(String s) {
+		if (s == null || s.length() == 0) {
+			return true;
+		}
+		int l = 0, h = s.length()-1;
+		while (l < h) {
+			if (s.charAt(l) != s.charAt(h)) {
+				return false;
+			}
+			l++;
+			h--;
+		}
+		return true;
+	}
+}
