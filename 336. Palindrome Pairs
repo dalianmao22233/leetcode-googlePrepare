@@ -89,7 +89,7 @@ public class Solution {
 
 
 =====================================================
-// Trie:
+// Trie structure: O(n * k^2)
 class Solution {
     class TrieNode {
 			TrieNode[] next;
