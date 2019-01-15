@@ -1,3 +1,4 @@
+我的：
 class Solution {
     public String toGoatLatin(String s) {
         if (s == null || s.length() == 0) {
