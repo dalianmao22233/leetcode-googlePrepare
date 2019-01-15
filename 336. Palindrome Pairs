@@ -89,73 +89,98 @@ public class Solution {
 
 
 =====================================================
+https://leetcode.com/problems/palindrome-pairs/discuss/79195/O(n-*-k2)-java-solution-with-Trie-structure
 // Trie structure: O(n * k^2)
+// 建立trie树：
+// 为了区分不同单词，结构中加一个变量index来记录当前能形成的word的dictionary index. 如果当前节点不能形成一个word，default=-1;
+// root.list: 存word index. 
+// 1. list中每一个word都有共同的后缀（就是当前的trie node），
+// 2. 这些word除了当前后缀之外剩余部分是否是一个palindrome, 如果是，记录这个word的index.
+// aaa 是以a为suffix, 并且剩余的aa是回文串，所以[2,1]是一个结果。 
+// search过程：
+// 1. "ba",在trie tree中正向搜索，root.next没有['b'-'a']，为null，直接return。
+// 2. "a",在trie tree中正向搜索，root.next有['a'-'a'], 不是null, 看到root.list中有0，1，2， 说明0th, 1th, 2nd个单词都是以a为后缀，
+// 除去后缀的剩余部分都是回文串。 然后就用一个循环来往结果集合list中加入pair.注意不要和当前word重复。当前word index放在前面，
+// 此时就生成2个结果[1,0],[1,2]
+// 3. "aaaa",正向搜。。。 
+
+举例子: ["ba", "a", "aaa"]
+	root (-1,[1,2])
+            | 'a'
+          n1 (1,[0,1,2])
+    ---------------------
+'b' |                 | 'a'
+  n2 (0,[0])    n3 (-1,[2])
+                      | 'a'
+                 n4 (2,[2])
+		 
+		 
 class Solution {
-    class TrieNode {
-			TrieNode[] next;
-			int index;
-			List<Integer> list;
+        class TrieNode {
+		TrieNode[] next;
+		int index;
+		List<Integer> list;
 
-			TrieNode() {
-				next = new TrieNode[26];
-				index = -1;
-				list = new ArrayList<>();
+		TrieNode() {
+			next = new TrieNode[26];
+			index = -1;
+			list = new ArrayList<>();
+		}
+        }
+
+	private void addWord(TrieNode root, String word, int index) {
+		for (int i = word.length() - 1; i >= 0; i--) {
+			if (root.next[word.charAt(i) - 'a'] == null) {
+				root.next[word.charAt(i) - 'a'] = new TrieNode();
 			}
+
+			if (isPalindrome(word, 0, i)) {   // 除去后缀(i+1~末尾)，剩下的是回文串。
+				root.list.add(index);
+			}
+
+			root = root.next[word.charAt(i) - 'a'];
 		}
 
-		private void addWord(TrieNode root, String word, int index) {
-			for (int i = word.length() - 1; i >= 0; i--) {
-				if (root.next[word.charAt(i) - 'a'] == null) {
-					root.next[word.charAt(i) - 'a'] = new TrieNode();
-				}
+		root.list.add(index);
+		root.index = index;
+	}
 
-				if (isPalindrome(word, 0, i)) {
-					root.list.add(index);
-				}
-
-				root = root.next[word.charAt(i) - 'a'];
-			}
-
-			root.list.add(index);
-			root.index = index;
+	private boolean isPalindrome(String word, int i, int j) {
+		while (i < j) {
+			if (word.charAt(i++) != word.charAt(j--)) return false;
 		}
 
-		private boolean isPalindrome(String word, int i, int j) {
-			while (i < j) {
-				if (word.charAt(i++) != word.charAt(j--)) return false;
+		return true;
+	}
+
+	private void search(String[] words, int i, TrieNode root, List<List<Integer>> list) {
+		for (int j = 0; j < words[i].length(); j++) {
+			if (root.index >= 0 && root.index != i && isPalindrome(words[i], j, words[i].length() - 1)) {
+				list.add(Arrays.asList(i, root.index));
 			}
 
-			return true;
+			root = root.next[words[i].charAt(j) - 'a'];
+			if (root == null) return;
 		}
 
-		private void search(String[] words, int i, TrieNode root, List<List<Integer>> list) {
-			for (int j = 0; j < words[i].length(); j++) {
-				if (root.index >= 0 && root.index != i && isPalindrome(words[i], j, words[i].length() - 1)) {
-					list.add(Arrays.asList(i, root.index));
-				}
+		for (int j : root.list) {
+			if (i == j) continue;
+			list.add(Arrays.asList(i, j));
+		}
+	}
 
-				root = root.next[words[i].charAt(j) - 'a'];
-				if (root == null) return;
-			}
+	public List<List<Integer>> palindromePairs(String[] words) {
+		List<List<Integer>> res = new ArrayList<>();
 
-			for (int j : root.list) {
-				if (i == j) continue;
-				list.add(Arrays.asList(i, j));
-			}
+		TrieNode root = new TrieNode();
+		for (int i = 0; i < words.length; i++) {
+			addWord(root, words[i], i);
 		}
 
-		public List<List<Integer>> palindromePairs(String[] words) {
-			List<List<Integer>> res = new ArrayList<>();
-
-			TrieNode root = new TrieNode();
-			for (int i = 0; i < words.length; i++) {
-				addWord(root, words[i], i);
-			}
-
-			for (int i = 0; i < words.length; i++) {
-				search(words, i, root, res);
-			}
-
-			return res;
+		for (int i = 0; i < words.length; i++) {
+			search(words, i, root, res);
 		}
+
+		return res;
+	}
 }
