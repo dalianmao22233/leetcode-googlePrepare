@@ -1,0 +1,62 @@
+我的做法： 统计increase、decrease的个数，然后看是不是==数组长度。如果是，就是单调的。也挺快哒~
+class Solution {
+    public boolean isMonotonic(int[] A) {
+        if (A == null || A.length <= 1) {
+            return true;
+        }
+        int temp = A[0];
+        int increase = 1;
+        int decrease = 1;
+        for (int i = 1; i < A.length; i++) {
+            if (A[i] > temp) {
+                temp = A[i];
+                increase++;
+            } else if (A[i] < temp){
+                temp = A[i];
+                decrease++;
+            } else {
+                increase++;
+                decrease++;
+            }
+        }
+        int len = A.length;
+        if (increase == len || decrease == len) {
+            return true;
+        }
+        return false;
+    }
+}
+
+
+其他：
+class Solution {
+    public boolean isMonotonic(int[] A) {
+        boolean increasing = true;
+        boolean decreasing = true;
+        for (int i = 0; i < A.length - 1; ++i) {
+            if (A[i] > A[i+1])
+                increasing = false;
+            if (A[i] < A[i+1])
+                decreasing = false;
+        }
+
+        return increasing || decreasing;
+    }
+}
+
+// compare的结果就是1，0，-1
+class Solution {
+    public boolean isMonotonic(int[] A) {
+        int store = 0;
+        for (int i = 0; i < A.length - 1; ++i) {
+            int c = Integer.compare(A[i], A[i+1]);
+            if (c != 0) {
+                if (c != store && store != 0)
+                    return false;
+                store = c;
+            }
+        }
+
+        return true;
+    }
+}
