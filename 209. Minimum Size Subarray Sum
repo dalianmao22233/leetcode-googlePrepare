@@ -1,0 +1,47 @@
+// sliding window做法：start~end为所求结果。
+public int minSubArrayLen(int s, int[] nums) {   
+    int min = 0;
+    int sum = 0;
+    int start = 0;
+    int end = 0;
+
+    while (end < nums.length) {
+        sum += nums[end];
+
+        // find end
+        if (sum >= s) {
+            // look for a new start
+            while (sum - nums[start] >= s) {
+                sum -= nums[start];
+                start++;
+            }
+
+            if (min == 0 || end - start + 1 < min) {
+                min = end - start + 1;
+            }
+
+            sum -= nums[start];
+            start++;
+        }
+
+        end++;
+    }
+
+    return min;
+}
+
+简化一点逻辑：c++， time : O(n)
+int minSubArrayLen(int s, vector<int>& nums) {
+    int n = nums.size();
+    int ans = INT_MAX;
+    int left = 0;
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += nums[i];
+        while (sum >= s) {
+            ans = min(ans, i + 1 - left);
+            sum -= nums[left++];
+        }
+    }
+    return (ans != INT_MAX) ? ans : 0;
+}
