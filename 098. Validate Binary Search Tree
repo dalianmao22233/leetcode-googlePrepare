@@ -19,7 +19,7 @@ class Solution {
         if (root == null) {
             return true;
         }
-        if (root.val >= max || root.val <= min) {
+        if (root.val >= max || root.val <= min) {  // 注意等号要写，不然报错。[1,1]--> false;
             return false;
         }
         return isBST(root.left, min, root.val) &&
