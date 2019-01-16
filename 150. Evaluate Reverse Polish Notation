@@ -1,0 +1,39 @@
+// my solution, using stack.
+class Solution {
+    public int evalRPN(String[] tokens) {
+        if (tokens == null || tokens.length == 0) {
+            return 0;
+        }
+        Stack<Integer> stack = new Stack<>();
+        int a = 0;
+        int b = 0;
+        for (String t : tokens) {
+            if (t.equals("+")) {
+                b = stack.pop();
+                a = stack.pop();
+                stack.push(a+b);
+            } else if (t.equals("-")) {
+                b = stack.pop();
+                a = stack.pop();
+                stack.push(a-b);
+            } else if (t.equals("*")) {
+                b = stack.pop();
+                a = stack.pop();
+                stack.push(a*b);
+            } else if (t.equals("/")) {
+                b = stack.pop();
+                if (b == 0) {
+                    throw new RuntimeException("bad input");
+                }
+                a = stack.pop();
+                stack.push(a/b);
+            } else {
+                stack.push(Integer.parseInt(t));
+            }
+        }
+        if (stack.isEmpty() || stack.size() != 1) {
+            throw new RuntimeException("bad input for tokens");
+        }
+        return stack.pop();
+    }
+}
