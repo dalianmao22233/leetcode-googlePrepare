@@ -1,0 +1,69 @@
+// sliding window: 
+public class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        if (s1.length() > s2.length())
+            return false;
+        int[] s1map = new int[26];
+        int[] s2map = new int[26];
+        for (int i = 0; i < s1.length(); i++) {
+            s1map[s1.charAt(i) - 'a']++;
+            s2map[s2.charAt(i) - 'a']++;
+        }
+        for (int i = 0; i < s2.length() - s1.length(); i++) {
+            if (matches(s1map, s2map))
+                return true;
+            s2map[s2.charAt(i + s1.length()) - 'a']++;
+            s2map[s2.charAt(i) - 'a']--;
+        }
+        return matches(s1map, s2map);
+    }
+    public boolean matches(int[] s1map, int[] s2map) {
+        for (int i = 0; i < 26; i++) {
+            if (s1map[i] != s2map[i])
+                return false;
+        }
+        return true;
+    }
+}
+
+
+
+//My Solution: 就用anagram,感觉是暴力。。也过啦
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        if (s1 == null || s1.length() == 0 || s2 == null || s2.length() == 0 || s1.length() > s2.length()) {
+            return false;
+        }
+        if (s1.equals(s2)) {
+            return true;
+        }
+        int[] arr1 = new int[26];
+        int len = s1.length();
+        for (int i = 0; i < len; i++) {
+            arr1[s1.charAt(i)-'a']++;
+        }
+        
+        int[] arr2 = new int[26];
+        for (int i = 0; i <= s2.length() - len; i++) {  //这里注意有==
+            Arrays.fill(arr2, 0);
+            for (int j = 0; j < len; j++) {
+                arr2[s2.charAt(i+j) - 'a']++;
+            }
+            if (isAnagram(arr1, arr2)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean isAnagram(int[] a, int[] b) {
+        if (a.length != b.length) {
+            return false;
+        }
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] != b[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
