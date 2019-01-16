@@ -1,0 +1,159 @@
+package FlatIron;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+
+
+public class Island {
+// 1. dfs: no extra space for store visited. 修改grid cell, 需要和面试官确认能否修改
+class Solution1 {
+	public int maxAreaOfIsland(int[][] grid) {
+		int m = grid.length;
+		if(m == 0) {
+			return 0;
+		}
+		int n = grid[0].length;
+
+		int max = 0;
+		for(int i = 0; i < m; i++) {
+			for(int j = 0; j < n; j++) {
+				if(grid[i][j] == 1) {
+					max = Math.max(max, count(grid, i, j));
+				}
+			}
+		}
+		return max;
+	}
+
+	private int count(int[][] grid, int i, int j) {
+		int m = grid.length;
+		int n = grid[0].length;
+		if(i < 0 || i >= m || j < 0 || j >= n || grid[i][j] != 1) {
+			return 0;
+		}
+
+		grid[i][j] = -1;
+		return 1
+				+ count(grid, i - 1, j)
+				+ count(grid, i + 1, j)
+				+ count(grid, i, j - 1)
+				+ count(grid, i, j + 1);
+	}
+}
+
+
+
+	// 2. dfs：Time: O(r*c) only visited one cell 1 time, Space: O(r*c) for visited
+	// A function to check if a given cell (row, col)
+	// can be included in DFS
+	public static boolean isSafe(int[][] grid, int i, int j, boolean[][] visited) {
+		// row number is in range, column number is in
+		// range and value is 1 and not yet visited
+		int row = grid.length;
+		int col = grid[0].length;
+		return (i >= 0) && (i < row) &&
+				(j >= 0) && (j < col) &&
+				(grid[i][j] == 1 && !visited[i][j]);
+	}
+
+	// A utility function to do DFS for a 2D boolean
+	// matrix. It only considers the 8 neighbours as
+	// adjacent vertices
+	public static int DFS(int[][] grid, int i, int j, boolean[][] visited) {
+		int res = 1;
+		// These arrays are used to get row and column
+		// numbers of 8 neighbours of a given cell, 上下左右对角
+//		int dx[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+//		int dy[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+		int dx[] = {1, -1, 0, 0};
+		int dy[] = {0, 0, 1, -1};
+
+		// Mark this cell as visited
+		visited[i][j] = true;
+
+		// Recur for all connected neighbours
+		for (int k = 0; k < 4; ++k) {
+			if (isSafe(grid, i + dx[k], j + dy[k], visited)) {
+				// increment region length by one
+				res += DFS(grid, i + dx[k], j + dy[k], visited);
+			}
+		}
+		return res;
+	}
+
+	// The main function that returns largest length region
+	// of a given boolean 2D matrix
+	public static int largestRegion(int grid[][]) {
+		// Make a bool array to mark visited cells.
+		// Initially all cells are unvisited
+		int row = grid.length;
+		int col = grid[0].length;
+		boolean[][] visited = new boolean[row][col];
+
+		// Initialize result as 0 and traverse through the
+		// all cells of given matrix
+		int result  = 0;
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				// If a cell with value 1 is not visited
+				if (grid[i][j] == 1 && !visited[i][j]) {
+					// maximum region
+					result = Math.max(result, DFS(grid, i, j, visited));
+				}
+			}
+		}
+		return result;
+	}
+
+	// Driver program to test above function
+	public static void main(String[] args) {
+		int grid[][] = {
+				{0, 0, 1, 1, 0},
+				{1, 0, 1, 1, 0},
+				{0, 1, 0, 0, 0},
+				{0, 0, 0, 0, 1}};
+
+		System.out.println(largestRegion(grid));
+	}
+}
+
+// 3. bfs: O(m*n), space: O(m*n) for stack
+class Solution {
+	public int maxAreaOfIsland(int[][] grid) {
+		boolean[][] seen = new boolean[grid.length][grid[0].length];
+		int[] dr = new int[]{1, -1, 0, 0};
+		int[] dc = new int[]{0, 0, 1, -1};
+
+		int ans = 0;
+		for (int r0 = 0; r0 < grid.length; r0++) {
+			for (int c0 = 0; c0 < grid[0].length; c0++) {
+				if (grid[r0][c0] == 1 && !seen[r0][c0]) {
+					int shape = 0;
+					Queue<int[]> queue = new LinkedList<>();
+					queue.offer(new int[]{r0, c0});
+					seen[r0][c0] = true;
+					while (!queue.isEmpty()) {
+						int[] node = queue.poll();
+						int r = node[0], c = node[1];
+						shape++;
+						for (int k = 0; k < 4; k++) {
+							int nr = r + dr[k];
+							int nc = c + dc[k];
+							if (0 <= nr && nr < grid.length &&
+									0 <= nc && nc < grid[0].length &&
+									grid[nr][nc] == 1 && !seen[nr][nc]) {
+								queue.offer(new int[]{nr, nc});
+								seen[nr][nc] = true;
+							}
+						}
+					}
+					ans = Math.max(ans, shape);
+				}
+			}
+		}
+		return ans;
+	}
+}
