@@ -1,9 +1,3 @@
-package Facebook;
-//76
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class MinWindowSubstring {
 //	Input: S = "ADOBECODEBANC", T = "ABC"
 //	Output: "BANC"
@@ -16,35 +10,41 @@ public class MinWindowSubstring {
 	// Space Complexity: O(|S| + |T|)
 	// |S| when the window size is equal to the entire string S. |T| when T has all unique characters.
 
+思路： sliding window
+1. 两个指针，left,right. 初始的时候都指在S的第一位上。
+2. 用right指针来扩展window,直到window里面包含T的所有字符。
+3. 一旦window有了所有T字符，可以移动left指针，如果window里还是有T的所有字符，那么更新最小窗口的size.
+4. 如果window里不再满足T中所有字符，那么重复2.
+
 	public static String minWindow(String s, String t) {
 
 		if (s.length() == 0 || t.length() == 0) {
 			return "";
 		}
 
-		// Dictionary which keeps a count of all the unique characters in t.
+		// Dictionary which keeps a count of all the unique characters in t.计算T中所有字符频率。
 		Map<Character, Integer> dictT = new HashMap<Character, Integer>();
 		for (int i = 0; i < t.length(); i++) {
 			int count = dictT.getOrDefault(t.charAt(i), 0);
 			dictT.put(t.charAt(i), count + 1);
 		}
 
-		// Number of unique characters in t, which need to be present in the desired window.
+		// Number of unique characters in t, which need to be present in the desired window.T中有多少个不重复的字符。
 		int required = dictT.size();
 
-		// Left and Right pointer
+		// Left and Right pointer 左右指针
 		int l = 0, r = 0;
 
 		// formed is used to keep track of how many unique characters in t
 		// are present in the current window in its desired frequency.
 		// e.g. if t is "AABC" then the window must have two A's, one B and one C.
-		// Thus formed would be = 3 when all these conditions are met.
-		int formed = 0;
+		// Thus formed would be = 3 when all these conditions are met. 用于看是否满足含有  所有T字符（频率也相等）
+		int formed = 0; 
 
-		// Dictionary which keeps a count of all the unique characters in the current window.
+		// Dictionary which keeps a count of all the unique characters in the current window.  当前窗口中的char频率
 		Map<Character, Integer> windowCounts = new HashMap<Character, Integer>();
 
-		// ans list of the form (window length, left, right)
+		// ans list of the form (window length, left, right)  
 		int[] ans = {-1, 0, 0};
 
 		while (r < s.length()) {
@@ -77,26 +77,101 @@ public class MinWindowSubstring {
 				}
 
 				// Move the left pointer ahead, this would help to look for a new window.
+				// 缩小窗口，移动左边指针，看是否依然满足当前窗口含有所有T字符
 				l++;
 			}
 
-			// Keep expanding the window once we are done contracting.
+			// Keep expanding the window once we are done contracting. 扩展窗口
 			r++;
 		}
 
 		return ans[0] == -1 ? "" : s.substring(ans[1], ans[2] + 1);
 	}
+}
 
-	public static void main(String[] args) {
-		System.out.println(minWindow("ADOBECODEBANC", "ABC"));
-	}
+// 优化第一种：如果S太长了，只含有少数的T字符，那么预处理一下：
+// 用Pair，只记录在S中出现过的 T中的字符，存成一个list : filteredS
+// 这样能减少搜索时间。
+import javafx.util.Pair;
+
+class Solution {
+    public String minWindow(String s, String t) {
+
+        if (s.length() == 0 || t.length() == 0) {
+            return "";
+        }
+
+        Map<Character, Integer> dictT = new HashMap<Character, Integer>();
+
+        for (int i = 0; i < t.length(); i++) {
+            int count = dictT.getOrDefault(t.charAt(i), 0);
+            dictT.put(t.charAt(i), count + 1);
+        }
+
+        int required = dictT.size();
+
+        // Filter all the characters from s into a new list along with their index.
+        // The filtering criteria is that the character should be present in t.
+	// 用Pair，只记录在S中出现过的 T中的字符，存成一个list : filteredS
+        List<Pair<Integer, Character>> filteredS = new ArrayList<Pair<Integer, Character>>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (dictT.containsKey(c)) {
+                filteredS.add(new Pair<Integer, Character>(i, c));
+            }
+        }
+
+        int l = 0, r = 0, formed = 0;
+        Map<Character, Integer> windowCounts = new HashMap<Character, Integer>();  
+        int[] ans = {-1, 0, 0};
+
+        // Look for the characters only in the filtered list instead of entire s.
+        // This helps to reduce our search.
+        // Hence, we follow the sliding window approach on as small list.
+        while (r < filteredS.size()) {
+            char c = filteredS.get(r).getValue();
+            int count = windowCounts.getOrDefault(c, 0);
+            windowCounts.put(c, count + 1);
+
+            if (dictT.containsKey(c) && windowCounts.get(c).intValue() == dictT.get(c).intValue()) {
+                formed++;
+            }
+
+            // Try and contract the window till the point where it ceases to be 'desirable'.
+            while (l <= r && formed == required) {
+                c = filteredS.get(l).getValue();
+
+                // Save the smallest window until now.
+                int end = filteredS.get(r).getKey();
+                int start = filteredS.get(l).getKey();
+                if (ans[0] == -1 || end - start + 1 < ans[0]) {
+                    ans[0] = end - start + 1;
+                    ans[1] = start;
+                    ans[2] = end;
+                }
+
+                windowCounts.put(c, windowCounts.get(c) - 1);
+                if (dictT.containsKey(c) && windowCounts.get(c).intValue() < dictT.get(c).intValue()) {
+                    formed--;
+                }
+                l++;
+            }
+            r++;   
+        }
+        return ans[0] == -1 ? "" : s.substring(ans[1], ans[2] + 1);
+    }
 }
 
 
 
 
+
+
+
+
+
 快！
-//version 2: two pointers + one int[]
+// version 2: two pointers + one int[]
 // array access is much faster than hashmap: 9s  VS 55s
 public class Solution {
     public String minWindow(String s, String t) {
@@ -112,7 +187,9 @@ public class Solution {
         int minLeft = -1, minLen = Integer.MAX_VALUE;
         while (r < s.length()) {
             char cr = s.charAt(r);
-            if (--map[cr] >= 0) match++;
+            if (--map[cr] >= 0) {
+				match++;
+			}
             while (match == t.length()) {
                 if (r - l + 1 < minLen) {
                     minLeft = l;
@@ -127,6 +204,9 @@ public class Solution {
         return minLeft == -1 ? "" : s.substring(minLeft, minLeft + minLen);
     }
 }
+
+
+
 
 
 
