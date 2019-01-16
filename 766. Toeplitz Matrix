@@ -1,0 +1,40 @@
+follow-up:
+1.What if the matrix is stored on disk, and the memory is limited 
+  such that you can only load at most one row of the matrix into the memory at once?
+2.What if the matrix is so large that you can only load up a partial row into the memory at once?
+For part 2 we will need to do https://en.wikipedia.org/wiki/Loop_nest_optimization on Approach 1.
+
+//my solution:就斜线比较。
+class Solution {
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        if (matrix == null || matrix.length == 0) {
+            return false;
+        }
+        int row = matrix.length;
+        int col = matrix[0].length;
+        for (int i = 0; i < row-1; i++) {
+            for (int j = 0; j < col-1; j++) {
+                if (matrix[i][j] != matrix[i+1][j+1]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+// 利用对角线斜率，r-c相同的cell肯定值相同， 比我的方法好，因为不需要之前cell的信息
+class Solution {
+    public boolean isToeplitzMatrix(int[][] matrix) {
+        Map<Integer, Integer> groups = new HashMap();
+        for (int r = 0; r < matrix.length; ++r) {
+            for (int c = 0; c < matrix[0].length; ++c) {
+                if (!groups.containsKey(r-c))
+                    groups.put(r-c, matrix[r][c]);
+                else if (groups.get(r-c) != matrix[r][c])
+                    return False;
+            }
+        }
+        return True;
+    }
+}
