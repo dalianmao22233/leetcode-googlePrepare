@@ -1,0 +1,71 @@
+1. my solution, in-order traversal, iterative
+class Solution {
+    public int kthSmallest(TreeNode root, int k) {
+        if (root == null || k <= 0) {
+            return 0;
+        }
+        if (root.left == null && root.right == null) {
+            return root.val;
+        }
+        TreeNode cur = root;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while ((!stack.isEmpty() || cur != null)) {
+            if (cur == null) {
+                cur = stack.pop();  
+                k--;
+                if (k == 0) {
+                    return cur.val;
+                }
+                cur = cur.right;
+            } else {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            
+        } 
+        return -1;
+    }
+}
+
+2. recursive:
+class Solution {
+    int count = 0;
+    int result = Integer.MIN_VALUE;
+
+    public int kthSmallest(TreeNode root, int k) {
+        traverse(root, k);
+        return result;
+    }
+
+    public void traverse(TreeNode root, int k) {
+        if(root == null) {
+            return;
+        }
+        traverse(root.left, k);
+        count ++;
+        if(count == k) {
+            result = root.val;
+        }
+        traverse(root.right, k);       
+    }
+
+}
+
+3. binary search
+public int kthSmallest(TreeNode root, int k) {
+    int count = countNodes(root.left);
+    if (k <= count) {
+        return kthSmallest(root.left, k);
+    } else if (k > count + 1) {
+        return kthSmallest(root.right, k-1-count); // 1 is counted as current node
+    }
+
+    return root.val;
+}
+
+public int countNodes(TreeNode n) {
+    if (n == null) return 0;
+
+    return 1 + countNodes(n.left) + countNodes(n.right);
+}
