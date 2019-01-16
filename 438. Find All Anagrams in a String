@@ -1,17 +1,120 @@
+// sliding window: 这种方法就是先统计target字符串p和大字符串s的char频率，用两个数组表示，
+// 然后再走一遍循环(s.len-p.len)，每次比较s.substring()和p的频路match情况，很巧妙的没有用substring,而是使用之前的频率数组。
+
+class Solution {
+	public static List<Integer> findAnagrams(String s, String p) {
+		List<Integer> rst = new ArrayList<>();
+		if (s == null || s.length() == 0 || s.length() < p.length()) {  // 注意p的长度不能大于s。不然没法比较了。
+			return rst;
+		}
+
+		int[] map_p = new int[26];
+		int[] map_s = new int[26];
+		// Initialize the map / window
+		for (int i = 0; i < p.length(); i++) {
+			map_p[p.charAt(i) - 'a']++;
+		}
+		for (int i = 0; i < p.length(); i++) {
+			map_s[s.charAt(i) - 'a']++;
+		}
+
+		for (int i = 0; i < s.length() - p.length(); i++) {
+			if (isMatch(map_p, map_s)) {
+				rst.add(i);
+			}
+			// if don't match, we move the sliding window
+			// remove the preceding character and add a new succeeding character to the new window
+			map_s[s.charAt(i+p.length()) - 'a']++;  // 比较完上面一步之后向后移动。这句的意思就是把下一个char纳入到map中。
+			map_s[s.charAt(i) - 'a']--; //把当前这个被比较过的删除一次频率。
+		}
+		if (isMatch(map_p, map_s)) {
+			rst.add(s.length() - p.length());
+		}
+		return rst;
+	}
+
+	public static boolean isMatch(int[] arr1, int[] arr2) {  // 判断是否是anagram
+		for (int i = 0; i < arr1.length; i++) {
+			if (arr1[i] != arr2[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
+
+/**
+ * Approach 3：Using Sliding Window Template
+ * Detail explanations about the template is here:
+ * https://github.com/cherryljr/LeetCode/blob/master/Sliding%20Window%20Template.java
+ */
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> rst = new ArrayList<>();
+        if (s == null || s.length() == 0 || s.length() < p.length()) {
+            return rst;
+        }
+
+        Map<Character, Integer> map = new HashMap<>();
+        for (char c : p.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        // begin - left of window, end - right of window
+        int begin = 0, end = 0;
+        // The number of distinct characters
+        int counter = map.size();
+        
+        while (end < s.length()) {
+            char c = s.charAt(end);
+            if (map.containsKey(c)){
+                map.put(c, map.get(c) - 1);
+                if (map.get(c) == 0) {
+                    counter--;
+                }
+            }
+            end++;
+
+            while (counter == 0) {
+                char tempc = s.charAt(begin);
+                if (map.containsKey(tempc)) {
+                    map.put(tempc, map.get(tempc) + 1);
+                    if (map.get(tempc) > 0) {
+                        counter++;
+                    }
+                }
+
+                if (end - begin == p.length()) {
+                    rst.add(begin);
+                }
+                begin++;
+            }
+        }
+
+        return rst;
+    }
+}
+
+
+
 
 // my solution, very slow...
 class Solution {
     public List<Integer> findAnagrams(String s, String p) {
-        List<Integer> result = new ArrayList<>();
-        if (s == null || p == null || s.length() < p.length()) {
-            return result;
+        List<Integer> res = new ArrayList<Integer>();
+        if (s == null || p == null || s.length() == 0 || p.length() == 0) {
+            return res;
         }
-        for (int i = 0; i < s.length(); i++) {
-            if (i+p.length() <= s.length() && isAnagram(s.substring(i, i+p.length()), p)) {
-                result.add(i);
+        int len = p.length();
+        
+        for (int i = 0; i < s.length()-len+1; i++) {  // 注意这里+1，不然取不到末尾+len，举例"abab",=>[0,1,2],会取不到2.
+            String temp = s.substring(i, i+len);
+            if (isAnagram(p, temp)) {
+                res.add(i);
             }
         }
-        return result;
+        return res;
     }
     private boolean isAnagram(String s, String target) {
         if (s == null || target == null || s.length() != target.length()) {
