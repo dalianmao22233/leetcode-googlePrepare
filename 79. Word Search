@@ -1,0 +1,67 @@
+// dfs找连通路径
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        if (board == null || board.length == 0 || word == null || word.length() == 0) {
+            return false;
+        }
+        
+        int row = board.length;
+        int col = board[0].length;
+        boolean[][] visited = new boolean[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (word.charAt(0) == board[i][j] && dfs(board, word, i, j, 0, visited)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private boolean dfs(char[][] board, String word, int i, int j, int index, boolean[][] visited) {
+        if (index == word.length()) {
+            return true;
+        }
+        int row = board.length;
+        int col = board[0].length;
+        if (i < 0 || i >= row || j < 0 || j >= col || board[i][j] != word.charAt(index) || visited[i][j]) {
+            return false;
+        }
+        visited[i][j] = true;
+        if (dfs(board, word, i+1, j, index+1, visited) ||
+            dfs(board, word, i-1, j, index+1, visited) ||
+            dfs(board, word, i, j+1, index+1, visited) ||
+            dfs(board, word, i, j-1, index+1, visited)
+           ) {
+            return true;
+        }
+        visited[i][j] = false;  
+        // 不是number of island那种求连通量（都沉没下去）
+        // 对于当前格子要恢复状态，这样到下一个for循环的时候这个格子还可以继续用。可能会组成结果的一部分
+        return false;
+    }
+}
+
+
+// 高票回答：没用visited数组，用Board本身记录visited信息
+public boolean exist(char[][] board, String word) {
+    char[] w = word.toCharArray();
+    for (int y=0; y<board.length; y++) {
+    	for (int x=0; x<board[y].length; x++) {
+    		if (exist(board, y, x, w, 0)) return true;
+    	}
+    }
+    return false;
+}
+
+private boolean exist(char[][] board, int y, int x, char[] word, int i) {
+	if (i == word.length) return true;
+	if (y<0 || x<0 || y == board.length || x == board[y].length) return false;
+	if (board[y][x] != word[i]) return false;
+	board[y][x] ^= 256;
+	boolean exist = exist(board, y, x+1, word, i+1)
+		|| exist(board, y, x-1, word, i+1)
+		|| exist(board, y+1, x, word, i+1)
+		|| exist(board, y-1, x, word, i+1);
+	board[y][x] ^= 256;
+	return exist;
+}
