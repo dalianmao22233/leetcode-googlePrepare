@@ -3,8 +3,53 @@ Output: "world"
 Explanation: 
 The word "world" can be built one character at a time by "w", "wo", "wor", and "worl".
 
+1.//trie: 固定模式。 时间空间： 每个word长度之和
+class Solution {
+    TrieNode root = new TrieNode();
+    String solution = "";
+    
+    public String longestWord(String[] words) {
+        for (String w: words) {
+            root.insert(w);
+        }
+        dfs(root, true);
+        return solution;
+    }
+    
+    public void dfs(TrieNode curr, boolean isRoot) {
+        if(curr.word == null && !isRoot) {
+            return;
+        }
+        for(TrieNode child: curr.children) {
+            if(child == null) {
+                continue;
+            }
+            dfs(child, false);
+        }
+        if(curr.word != null && curr.word.length() > solution.length()) {
+            solution = curr.word;
+        }
+    }
+    
+    class TrieNode {
+        String word;
+        TrieNode[] children = new TrieNode[26];
+        
+        public void insert(String word) {
+            char[] ws = word.toCharArray();
+            TrieNode curr = root;
+            for(char w: ws) {
+                if(curr.children[w - 'a'] == null) {
+                    curr.children[w - 'a'] = new TrieNode();
+                }
+                curr = curr.children[w - 'a'];
+            }
+            curr.word = word;
+        }
+    }
 
-普通做法:暴力
+}
+// 2. 普通做法:暴力
 1. 先把所有word加到set中，去重
 2. 对每一个word，在set中找是否有word.substring(0,i)， 如果全都有（0~word.length()-1），那么就是答案。
 时间： 每个word的长度平方 求和
