@@ -1,0 +1,41 @@
+words = ["w","wo","wor","worl", "world"]
+Output: "world"
+Explanation: 
+The word "world" can be built one character at a time by "w", "wo", "wor", and "worl".
+
+
+普通做法:暴力
+1. 先把所有word加到set中，去重
+2. 对每一个word，在set中找是否有word.substring(0,i)， 如果全都有（0~word.length()-1），那么就是答案。
+时间： 每个word的长度平方 求和
+空间： create substring，需要 word的长度平方 ，求和
+
+
+class Solution {
+    public String longestWord(String[] words) {
+        if (words == null || words.length == 0) {
+            return "";
+        }
+        Set<String> set = new HashSet<>();
+        
+        for (String word: words) {
+            set.add(word);
+        }
+        String answer = "";
+        for (String word: words) {
+            if (word.length() > answer.length() || (word.length() == answer.length() && word.compareTo(answer) < 0)) {
+                boolean good = true;
+                for (int i = 1; i < word.length(); i++) {  //substring
+                    if (!set.contains(word.substring(0, i))) {
+                        good = false;
+                        break;
+                    }
+                }
+                if (good == true) {
+                    answer = word;
+                }
+            }
+        }
+        return answer;
+    }
+}
