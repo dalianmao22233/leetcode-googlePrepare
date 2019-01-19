@@ -1,3 +1,44 @@
+// 2 pointer:
+class Solution {
+    public int lengthOfLastWord(String s) {
+        if (s.equals("")) return 0;
+        char[] sArry= s.toCharArray();
+        
+        int length=0;
+        int i;
+        for (i=sArry.length-1;i>=0;i--){
+            if (sArry[i]!=' ') break;
+        }
+        
+        for (int j=i;j>=0;j--){
+            if (sArry[j]==' ') break;
+            length++;
+        }
+        return length;
+    }
+}
+
+
+// my solution: 二刷
+class Solution {
+    public int lengthOfLastWord(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        String[] arr = s.split(" ");
+        System.out.println(arr.length);
+        if (arr.length == 0) {
+            return 0;
+        }
+        if (arr[arr.length-1].equals(" ")) {
+            return 0;
+        }
+        return arr[arr.length-1].length();
+    }
+}
+
+
+
 // my solution, slow: 
 class Solution {
     public int lengthOfLastWord(String s) {
