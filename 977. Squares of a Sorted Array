@@ -1,0 +1,14 @@
+my solution
+class Solution {
+    public int[] sortedSquares(int[] A) {
+        if (A == null || A.length == 0) {
+            return new int[0];
+        }
+        int[] res = new int[A.length];
+        for (int i = 0; i < A.length; i++) {
+            res[i] = A[i]*A[i] > Integer.MAX_VALUE ? Integer.MAX_VALUE : A[i]*A[i];
+        }
+        Arrays.sort(res);
+        return res;
+    }
+}
