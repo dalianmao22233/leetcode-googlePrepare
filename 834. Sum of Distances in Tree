@@ -1,0 +1,64 @@
+1. tree[i] : 所有连接到i的结点
+2. count[i] : 以i为根的子树中所有的node
+3. res[i]: 以i为根的子树中所有的node到i的路径之和
+4. post order traversal：更新count和res, 计算所有点到根节点距离之和：u为根，v为儿子，如果只有v一个儿子的话。 
+  计算res[u]= res[v] + count[v], 
+  意思是其他点到u的所有路径之和 = 其他点(v的子节点)到v的路径之和 + （每个v的子节点到u都要走一遍v-u（路径+1）,所以就是差子节点的个数。）
+5. pre order traversal: 更新res, 计算v到其他所有点距离之和： res[v] = res[u] - count[v] + (N - count[v]) ， u为根，vw为儿子
+意思是：
+从u->v的子节点，不需要多走一步u-v, 参考4（换陈减法。。）； 从w(以及子节点)->v，多走一步u-v,所以需要加上，其他的Node就是N-count[v]。
+(N-count[v]中包含了u以及w和w的子节点，res[u]已经包含了其他点到u的距离，少了这一步而已）
+
+//Time Complexity:
+//dfs: O(N)
+//dfs2: O(N)
+Time Complexity: O(N) where N is the number of nodes in the graph.
+
+Space Complexity: O(N)
+
+
+class Solution {
+    int[] res;
+    int[] count;
+    ArrayList<HashSet<Integer>> tree;
+    int n;
+    public int[] sumOfDistancesInTree(int N, int[][] edges) {
+        
+        tree = new ArrayList<HashSet<Integer>>();
+        res  = new int[N];
+        count = new int[N];
+        n = N;
+        for (int i = 0; i < N; i++) {
+            tree.add(new HashSet<Integer>());
+        }
+        for (int[] e: edges) {
+            tree.get(e[0]).add(e[1]);
+            tree.get(e[1]).add(e[0]);
+        }
+        dfs(0, new HashSet<Integer>());
+        dfs2(0, new HashSet<Integer>());
+        return res;
+    }
+    public void dfs(int root, HashSet<Integer> seen) {
+        seen.add(root);
+        for (int i : tree.get(root)) {
+            if (!seen.contains(i)) {
+                dfs(i, seen);
+                count[root] += count[i];
+                res[root] += res[i]+count[i];   //这步是说更新每个点i的子树node到i的距离之和。
+            }
+        }
+        count[root]++;  // 记得更新count,每走一次这里都是说明遍历了一个节点，子树的node个数+1.
+    }
+    public void dfs2(int root, HashSet<Integer> seen) {
+        seen.add(root);
+        for (int i : tree.get(root)) {
+            if (!seen.contains(i)) {
+                res[i] = res[root]-count[i]+n-count[i];  
+                //这步是说更新每个点到其他所有点的距离之和。
+                //这个要在dfs2之前call,因为后面要用到res[root]->(就是这里的res[i])
+                dfs2(i, seen);
+            }
+        }
+    }
+}
