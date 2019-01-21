@@ -18,47 +18,43 @@ Space Complexity: O(N)
 
 
 class Solution {
-    int[] res;
-    int[] count;
-    ArrayList<HashSet<Integer>> tree;
-    int n;
+    int[] res, count;
+    List<Set<Integer>> graph;
+    int N;
     public int[] sumOfDistancesInTree(int N, int[][] edges) {
-        
-        tree = new ArrayList<HashSet<Integer>>();
-        res  = new int[N];
+        this.N = N;
+        graph = new ArrayList<Set<Integer>>();
+        res = new int[N];
         count = new int[N];
-        n = N;
-        for (int i = 0; i < N; i++) {
-            tree.add(new HashSet<Integer>());
+        Arrays.fill(count, 1);
+
+        for (int i = 0; i < N; ++i)
+            graph.add(new HashSet<Integer>());
+        for (int[] edge: edges) {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
         }
-        for (int[] e: edges) {
-            tree.get(e[0]).add(e[1]);
-            tree.get(e[1]).add(e[0]);
-        }
-        dfs(0, new HashSet<Integer>());
-        dfs2(0, new HashSet<Integer>());
+        dfs(0, -1);
+        dfs2(0, -1);
         return res;
     }
-    public void dfs(int root, HashSet<Integer> seen) {
-        seen.add(root);
-        for (int i : tree.get(root)) {
-            if (!seen.contains(i)) {
-                dfs(i, seen);
-                count[root] += count[i];
-                res[root] += res[i]+count[i];   //这步是说更新每个点i的子树node到i的距离之和。
+
+    public void dfs(int node, int parent) {
+        for (int child: graph.get(node))
+            if (child != parent) {
+                dfs(child, node);
+                count[node] += count[child];
+                res[node] += res[child] + count[child]; //这步是说更新每个点i的子树node到i的距离之和。
             }
-        }
-        count[root]++;  // 记得更新count,每走一次这里都是说明遍历了一个节点，子树的node个数+1.
     }
-    public void dfs2(int root, HashSet<Integer> seen) {
-        seen.add(root);
-        for (int i : tree.get(root)) {
-            if (!seen.contains(i)) {
-                res[i] = res[root]-count[i]+n-count[i];  
+
+    public void dfs2(int node, int parent) {
+        for (int child: graph.get(node))
+            if (child != parent) {
+                res[child] = res[node] - count[child] + N - count[child];
                 //这步是说更新每个点到其他所有点的距离之和。
                 //这个要在dfs2之前call,因为后面要用到res[root]->(就是这里的res[i])
-                dfs2(i, seen);
+                dfs2(child, node);
             }
-        }
     }
 }
