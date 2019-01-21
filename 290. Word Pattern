@@ -1,0 +1,22 @@
+class Solution {
+    public boolean wordPattern(String pattern, String str) {
+        if ((pattern == null && str == null) || (pattern.length() == 0 && str.length() == 0)) {
+            return true;
+        }
+        if (pattern == null || pattern.length() == 0 || str == null || str.length() == 0) {
+            return false;
+        }   
+        String[] words = str.split(" ");
+        if (words.length != pattern.length()) {
+            return false;
+        }
+        HashMap map = new HashMap();  // <Object, Object> both Characters and Strings are Objects.
+        for (Integer i = 0; i < pattern.length(); i++) {  //此处需要用Integer, 因为map中存放的是Object, primitive的不可以。 不然会报错！
+            if (map.put(pattern.charAt(i), i) != map.put(words[i], i)) {
+                // 若之前就有arr[i]这个key了，那么此时放进去会返回之前的value.
+                return false;
+            }
+        }
+        return true;
+    }
+}
