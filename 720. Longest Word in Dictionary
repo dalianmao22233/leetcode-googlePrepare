@@ -69,7 +69,8 @@ class Solution {
         String answer = "";
         for (String word: words) {
             if (word.length() > answer.length() || (word.length() == answer.length() && word.compareTo(answer) < 0)) {
-                boolean good = true;
+            // word.compareTo(answer) < 0保证顺序，apple or apply.
+             boolean good = true;
                 for (int i = 1; i < word.length(); i++) {  //substring
                     if (!set.contains(word.substring(0, i))) {
                         good = false;
