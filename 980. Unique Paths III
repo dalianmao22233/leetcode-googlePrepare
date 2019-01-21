@@ -1,6 +1,7 @@
 class Solution {
     int res = 0, empty = 1, sx, sy, ex, ey;  // 从起点开始，empty=1。也会把它改成-2(dfs),此时empty--，从0开始。到最后就是以0结尾。
     //极限情况就是只有俩格，start->end, empty=0的时候就算做结束。
+    //如果不从empty=1开始：举例，进入第一个dfs,empty--, empty=0; 进入下一个dfs, 走到if(empty==0)的时候就直接被return了。。返回0！
     // 题中说格子数<=20,所以dfs是4^20次，差不多1百万，10^6，java可以Handle在1s之内，不会算作TLE.
     // 如果有时间限制，优化就是memory，比如之前走过了10个格子，记下来是多少种走法，11th的时候就用上之前的处理结果。相当于dp吧。
     public int uniquePathsIII(int[][] grid) {
