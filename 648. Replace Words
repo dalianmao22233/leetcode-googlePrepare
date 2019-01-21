@@ -1,0 +1,99 @@
+//其实跟我的差不多，就是用了hashset先给字典去重。这个要注意。
+class Solution {
+    public String replaceWords(List<String> roots, String sentence) {
+        Set<String> rootset = new HashSet();
+        for (String root: roots) rootset.add(root);
+
+        StringBuilder ans = new StringBuilder();
+        for (String word: sentence.split("\\s+")) {  // 注意这个\\s+,多个空白字符的test case.
+            String prefix = "";
+            for (int i = 1; i <= word.length(); ++i) {
+                prefix = word.substring(0, i);
+                if (rootset.contains(prefix)) break;
+            }
+            if (ans.length() > 0) ans.append(" ");
+            ans.append(prefix);
+        }
+        return ans.toString();
+    }
+}
+
+//希望自己掌握的: trie:
+Put all the roots in a trie (prefix tree). 
+Then for any query word, we can find the smallest root that was a prefix in linear time.
+time: O(n) n 是句子长度， space：O(n), size of trie
+
+
+class Solution {
+    public String replaceWords(List<String> dict, String sentence) {
+        if (dict == null || dict.size() == 0 || sentence == null || sentence.length() == 0) {
+            return "";
+        }
+        TrieNode root = new TrieNode();
+        for (String word: dict) {
+            TrieNode cur = root;
+            for (char letter: word.toCharArray()) {
+                if (cur.children[letter-'a'] == null) {
+                    cur.children[letter-'a'] = new TrieNode();
+                }
+                cur = cur.children[letter-'a'];
+            }
+            cur.word = word;
+        }
+        
+        StringBuilder sb = new StringBuilder("");
+        for (String word: sentence.split("\\s+")) {
+            if (sb.length() > 0) {
+                sb.append(" ");
+            }
+            TrieNode cur = root;
+            for (char letter: word.toCharArray()) {
+                if (cur.children[letter-'a'] == null || cur.word != null) {
+                    break;
+                }
+                cur = cur.children[letter-'a'];
+            }
+            sb.append(cur.word != null ? cur.word : word);
+        }
+        return sb.toString();
+    }
+    
+}
+class TrieNode {
+    TrieNode[] children;
+    String word;
+    public TrieNode() {
+        this.children = new TrieNode[26];
+    }
+}
+
+
+
+
+
+//my solution: 就一个一个跟字典里的比较，符合prefix就append，prefix check用string.startsWith()，还是有小瑕疵的。参看上面的
+class Solution {
+    public String replaceWords(List<String> dict, String sentence) {
+        if (dict == null || dict.size() == 0 || sentence == null || sentence.length() == 0) {
+            return "";
+        }
+        String[] words = sentence.split(" ");
+        StringBuilder sb = new StringBuilder("");
+        boolean flag = false;
+        for (String word : words) {
+            flag = false;
+            for (String prefix : dict) {
+                if (word.startsWith(prefix)) {
+                    flag = true;
+                    sb.append(prefix);     
+                    break;
+                } 
+            }
+            if (!flag) {
+                sb.append(word);
+            }
+            sb.append(" ");
+        }
+        return sb.deleteCharAt(sb.length()-1).toString();
+    }
+}
