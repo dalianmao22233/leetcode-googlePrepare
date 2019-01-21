@@ -1,0 +1,50 @@
+class Solution {
+    int res = 0, empty = 1, sx, sy, ex, ey;  // 从起点开始，empty=1。也会把它改成-2(dfs),此时empty--，从0开始。到最后就是以0结尾。
+    // 题中说格子数<=20,所以dfs是4^20次，差不多1百万，10^6，java可以Handle在1s之内，不会算作TLE.
+    // 如果有时间限制，优化就是memory，比如之前走过了10个格子，记下来是多少种走法，11th的时候就用上之前的处理结果。相当于dp吧。
+    public int uniquePathsIII(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
+            return 0;
+        }
+        int row = grid.length;
+        int col = grid[0].length;
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (grid[i][j] == 0) {
+                    empty++;
+                } else if (grid[i][j] == 1) {
+                    sx = i;
+                    sy = j;
+                } else if (grid[i][j] == 2) {
+                    ex = i;
+                    ey = j;
+                } 
+            }
+        }
+        dfs(grid, sx, sy);
+        return res;
+    }
+    public void dfs(int[][] grid, int i, int j) {
+        if (check(grid, i, j) == false) {
+            return;
+        }  // check能否进来
+        if (i == ex && j == ey && empty == 0) {  // 证明都走过一遍啦！
+            res++;
+            return;
+        }
+        grid[i][j] = -2;  // 给点加个锁，先占住
+        empty--;
+        dfs(grid, i+1, j);
+        dfs(grid, i-1, j);
+        dfs(grid, i, j+1);
+        dfs(grid, i, j-1);
+        grid[i][j] = 0;   // 走完之后释放这个点
+        empty++;
+    }
+    public boolean check(int[][] grid, int i, int j) {
+        int row = grid.length;
+        int col = grid[0].length;
+        return i >= 0 && i < row && j >= 0 && j < col && grid[i][j] >= 0;
+    }
+}
