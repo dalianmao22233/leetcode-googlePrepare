@@ -4,6 +4,8 @@
 //    3
 //  0   0
 // 则步数为2
+//走一遍就懂了： 
+left=0, 到最后就是-1，代表了欠1个coin， right=0，到最后就是-1， 代表了欠一个coin。左右加一起，就是需要2个coin，需要2步。 
 class Solution {
     int ans;
     public int distributeCoins(TreeNode root) {
@@ -14,9 +16,68 @@ class Solution {
 
     public int dfs(TreeNode node) {
         if (node == null) return 0;
-        int L = dfs(node.left);
-        int R = dfs(node.right);
-        ans += Math.abs(L) + Math.abs(R);
-        return node.val + L + R - 1;
+        int L = dfs(node.left);   //左边欠的钱/多出来的钱
+        int R = dfs(node.right);  //右边欠的钱/多出来的钱
+        ans += Math.abs(L) + Math.abs(R);   //钱总数加一起
+        return node.val + L + R - 1;  // 当前节点多几个钱/少几个钱，都返回给父节点。 -1是给自己留一个，其他的都可以分给别人。
+    }
+}
+
+
+
+用pre-order来做：其实差不太多
+class Solution {
+    private int steps = 0; 
+
+    public int distributeCoins(TreeNode root) {
+        postorder(root);
+        return steps;
+    }
+
+    // return coins of this level
+    private int postorder(TreeNode node) {
+        if(node == null) return 0;
+
+        // coin from children -- post-order traversal
+        int coin = postorder(node.left) + postorder(node.right);
+
+        // current node coin
+        if(node.val == 0) coin += -1; // current node need one coin
+        else coin += node.val - 1; // keep one coin for current node
+
+        steps += Math.abs(coin); // each coin move up to parent node need 1 step
+        return coin; 
+    }
+}
+
+
+没有全局变量版本：
+public int distributeCoins(TreeNode root) {
+    int res = 0;
+    if (root.left != null) {
+        res += distributeCoins(root.left);
+        root.val += root.left.val - 1;
+        res += Math.abs(root.left.val - 1);
+    }
+    if (root.right != null) {
+        res += distributeCoins(root.right);
+        root.val += root.right.val - 1;
+        res += Math.abs(root.right.val - 1);
+    }
+    return res;
+}
+
+如果给了parent节点：
+class Solution {
+    TreeNode pre = null;
+    int distributeCoins(TreeNode root, TreeNode pre) {
+        if (root == null) {
+            return 0;
+        }
+        int res = distributeCoins(root.left, root) + distributeCoins(root.right, root);
+        if (pre != null) {
+            pre.val += root.val - 1;
+        }
+        return res + Math.abs(root.val - 1);
     }
 }
