@@ -1,0 +1,38 @@
+2 pointer:  O(n)
+class Solution {
+    public int maxArea(int[] height) {
+        if (height == null || height.length == 0) {
+            return 0;
+        }
+        int len = height.length;
+        int water = 0;
+        int l = 0, r = len-1;
+        while (l < r) {
+            water = Math.max(water, Math.min(height[l], height[r]) * (r-l));
+            if (height[l] < height[r]) {
+                l++;
+            } else {
+                r--;
+            }
+        }
+        return water;
+    }
+}
+
+
+暴力：pair比较。
+class Solution {
+    public int maxArea(int[] height) {
+        if (height == null || height.length == 0) {
+            return 0;
+        }
+        int len = height.length;
+        int water = 0;
+        for (int i = 0; i < len; i++) {
+            for (int j = i+1; j < len; j++) {
+                water = Math.max(water, (j-i) * Math.min(height[i], height[j]));
+            }
+        }
+        return water;
+    }
+}
