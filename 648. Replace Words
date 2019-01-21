@@ -19,6 +19,71 @@ class Solution {
 }
 
 //希望自己掌握的: trie:
+用isWord当做成员变量：
+
+class Solution {
+    
+    class Trie {
+        Trie[] next;
+        boolean end;
+        
+        Trie() {
+            next = new Trie[26];
+        }
+        
+        void insert(String s) {
+            Trie t = this;
+            for (int i = 0; i < s.length(); i++) {
+                int pos = s.charAt(i) - 'a';
+                if (t.next[pos] == null) {
+                    t.next[pos] = new Trie();
+                }
+                t = t.next[pos];
+            }
+            t.end = true;
+        }
+        
+        String findPrefix(String s) {
+            Trie t = this;
+            for (int i = 0; i < s.length(); i++) {
+                int pos = s.charAt(i) - 'a';
+                if (t.next[pos] == null) {
+                    break;
+                }
+                t = t.next[pos];
+                if (t.end) {
+                    return s.substring(0, i+1);
+                }
+            }
+            return s;
+        }
+    }
+    
+    public String replaceWords(List<String> dict, String sentence) {
+        Trie t = makeTrie(dict);
+        
+        StringBuilder sb = new StringBuilder();
+        for (String s : sentence.split(" ")) {
+            sb.append(t.findPrefix(s));
+            sb.append(" ");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
+    
+    Trie makeTrie(List<String> dict) {
+        Trie t = new Trie();
+        for (String s : dict) {
+            t.insert(s);
+        }
+        return t;
+    }
+}
+
+
+
+
+//这种是用word当做成员变量的
 Put all the roots in a trie (prefix tree). 
 Then for any query word, we can find the smallest root that was a prefix in linear time.
 time: O(n) n 是句子长度， space：O(n), size of trie
