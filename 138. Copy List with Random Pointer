@@ -47,7 +47,7 @@ public class Solution {
         }
         
         RandomListNode node = new RandomListNode(head.label);
-        this.visited.put(head, node);
+        this.visited.put(head, node);  // 这句必须写在前面，如果写在最后，则每次进入dfs的时候map都是空的，出现stackoverflow error,IDE调试一下
         
         node.next = this.copyRandomList(head.next);
         node.random = this.copyRandomList(head.random);
