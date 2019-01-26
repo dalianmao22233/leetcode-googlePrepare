@@ -12,11 +12,11 @@ public class Solution {
             return head;
         }
         RandomListNode dummy = new RandomListNode(0);
-        RandomListNode p = dummy;
+        RandomListNode p = dummy; // 为了后面用next串起来。
         RandomListNode cur = head;
         
         while (cur != null) {
-            p.next = copyNode(cur);
+            p.next = copyNode(cur);  // 记得要用next串起来。
             cur = cur.next;
             p = p.next;
         }
@@ -25,10 +25,10 @@ public class Solution {
     public RandomListNode copyNode(RandomListNode node) {
         RandomListNode copy = new RandomListNode(node.label);
         if (node.random != null) {  // 注意这里要判断，不做的话会有NullpointerEX。
-            copy.random = new RandomListNode(node.random.label);
+            copy.random = new RandomListNode(node.random.label); // 记得这里要新建。
         }
         if (node.next != null) {  // 不加 居然也没错。。
-            newNode.next = new RandomListNode(node.next.label);
+            newNode.next = new RandomListNode(node.next.label); // 记得这里要新建。
         }
         return copy;
     }
