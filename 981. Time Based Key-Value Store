@@ -1,0 +1,95 @@
+1. 
+//用java中的Pair class，https://docs.oracle.com/javase/8/javafx/api/javafx/util/Pair.html
+//https://www.geeksforgeeks.org/pair-class-in-java/
+//内置的binary search:https://www.geeksforgeeks.org/collections-binarysearch-java-examples/ 这里有自定义pair的写法，可以看看
+
+Arrays.binarysearch() works for arrays which can be of primitive data type also. 
+Collections.binarysearch() works for objects Collections like ArrayList and LinkedList.
+如果输入数组不是排好升序的，那么结果就是Undefined。如果有重复的，则不能确定哪个会被找到。
+
+//Time: O(1) for set ; O(logn) for get, 
+//Space: O(n)
+
+import javafx.util.Pair; // 注意引入这个
+class TimeMap {
+    Map<String, List<Pair<Integer, String>>> map;
+    /** Initialize your data structure here. */
+    public TimeMap() {
+        map = new HashMap();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        if (!map.containsKey(key)) {
+            map.put(key, new ArrayList<Pair<Integer, String>>());
+        }
+        map.get(key).add(new Pair(timestamp, value));
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) {
+            return "";
+        }
+        List<Pair<Integer, String>> ans = map.get(key);
+        int i = Collections.binarySearch(ans, new Pair<Integer, String>(timestamp, "{"),
+                                        (a, b) -> Integer.compare(a.getKey(), b.getKey()));
+        if (i >= 0) {
+            return ans.get(i).getValue();  //找到了！
+        } else if (i == -1) {
+            return "";
+        } else {
+            return ans.get(-i-2).getValue();  
+            // the index of the search key, if it is contained in the list; 
+            // 否则, (-(insertion point) - 1). 
+       
+            // 插入位置：定义为这个key可能会在哪里插入？
+            // 第一个大于key的元素的index
+            // 或者最后一位：所有元素都比key小
+            
+        }
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.set(key,value,timestamp);
+ * String param_2 = obj.get(key,timestamp);
+ */
+ 
+ 
+ 2. treeMap:https://www.geeksforgeeks.org/java-util-treemap-floorentry-floorkey-java/
+ floorKey() : It returns the greatest key less than or equal to the given key, or null if there is no such key.
+//Time: O(1) for set ; O(logn) for get, 
+//Space: O(n)
+
+ class TimeMap {
+    Map<String, TreeMap<Integer, String>> map;
+    
+    /** Initialize your data structure here. */
+    public TimeMap() {
+        map = new HashMap();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        if (!map.containsKey(key)) {
+            map.put(key, new TreeMap());
+        }
+        map.get(key).put(timestamp, value);
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) {
+            return "";
+        }
+        TreeMap<Integer, String> treemap = map.get(key);
+        Integer t = treemap.floorKey(timestamp);
+        return t != null ? treemap.get(t) : "";
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.set(key,value,timestamp);
+ * String param_2 = obj.get(key,timestamp);
+ */
