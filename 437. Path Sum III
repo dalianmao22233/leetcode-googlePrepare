@@ -1,0 +1,67 @@
+class Solution {
+    private Map<Integer, Integer> prefixSum;
+    private int res = 0;
+    
+    public int pathSum(TreeNode root, int sum) {
+        prefixSum = new HashMap<>();
+        prefixSum.put(0, 1);
+        pathSumRec(root, 0, sum);
+        return res;
+    }
+    
+    private void pathSumRec(TreeNode root, int curSum, int target) {
+        if (root == null) {
+            return;
+        }
+        curSum += root.val;
+        res += prefixSum.getOrDefault(curSum - target, 0);
+        prefixSum.put(curSum, prefixSum.getOrDefault(curSum, 0) + 1);
+        pathSumRec(root.left, curSum, target);
+        pathSumRec(root.right, curSum, target);
+        // !!!
+        prefixSum.put(curSum, prefixSum.get(curSum) - 1);
+    }
+}
+
+
+class Solution {
+    public int pathSum(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        return helper(root, sum) + pathSum(root.left, sum) + pathSum(root.right, sum); 
+    }
+    public int helper(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        int res = 0;
+        if (root.val == sum) {
+            res = 1;
+        } else {
+            res = 0;
+        }
+        return res + helper(root.left, sum-root.val) + helper(root.right, sum-root.val);
+    }
+}
+
+
+// Space: O(n) due to recursion.
+// Time: O(n^2) in worst case (no branching); O(nlogn) in best case (balanced tree).
+class Solution {
+    int result = 0;
+    public int pathSum(TreeNode root, int sum) {
+        if(root == null) return 0;
+        helper(root, sum);
+        pathSum(root.left, sum);
+        pathSum(root.right, sum);
+        return result;
+    }
+    
+    public void helper(TreeNode root, int sum) {
+        if (root == null) return;
+        if (sum - root.val == 0) result+=1;  // 不用到底，所以就不用check root.left == null && root.right == null了。
+        helper(root.left, sum-root.val);
+        helper(root.right, sum-root.val);
+    }
+}
