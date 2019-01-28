@@ -1,0 +1,62 @@
+1. recursive: 我第一次写只能写对一多半。加油
+// time: O(n)
+class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (root == null) {
+            return res;
+        }
+        path(root, sum, new ArrayList<>(), res);
+        return res;
+    }
+    public void path(TreeNode root, int sum, List<Integer> ans, List<List<Integer>> res) {
+        if (root == null) {
+            return;
+        }
+        ans.add(root.val);  // 这句顺序我放后面了，错误。要和后面的remove pair起来。
+        if (root.val == sum && root.left == null && root.right == null) {  // 和path sum I 相同。 
+            res.add(new ArrayList<>(ans));   // 我之前在这个后面加了个return,最后报错了。
+            // 必须要new一个，因为如果没有建立一个新的copy,所有加入res的reference都指向同一个Object，ans的所有变化都会影响到res.
+        }
+        
+        path(root.left, sum-root.val, ans, res);
+        path(root.right, sum-root.val, ans, res);
+        ans.remove(ans.size()-1);  // 忘记这步
+        // size() -1 is the last element in the array list. Remove it so that we can go back one step and traverse other branches.
+    }
+}
+
+2. iterative: 用stack模拟DFS， post-order。
+public class Solution {
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        int SUM = 0;
+        TreeNode cur = root;
+        TreeNode pre = null;
+        while(cur!=null || !stack.isEmpty()){
+            while(cur!=null){
+                stack.push(cur);
+                path.add(cur.val);
+                SUM+=cur.val;
+                cur=cur.left;
+            }
+            cur = stack.peek();
+            if(cur.right!=null && cur.right!=pre){
+                cur = cur.right;
+                continue;
+            } 
+            if(cur.left==null && cur.right==null && SUM==sum) 
+                res.add(new ArrayList<Integer>(path));
+  
+            pre = cur;
+            stack.pop();
+            path.remove(path.size()-1);
+            SUM-=cur.val;
+            cur = null;
+        
+        }
+        return res;
+    }
+}
