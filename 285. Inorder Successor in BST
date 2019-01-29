@@ -3,7 +3,7 @@
 	// 1. root.val > p.val, root 可能为answer,先存储root.val为res， 然而并不知道root.left是否有比p.val更大的，所以向root.left走
 	// 2. root.val <= p.val, root 不可能是answer, 需要在root.right中查找比p.val小的
 
-	// Only in a balanced BST O(h) = O(log n). In the worst case h can be as large as n
+	// Time: Only in a balanced BST O(h) = O(log n). In the worst case h can be as large as n
 
 	public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
 		TreeNode res = null;
@@ -42,3 +42,33 @@
 			return (right != null) ? right : root;
 		}
 	}
+
+
+
+这种肯定没错，就是慢，直接inorder 遍历，找比p大的就行了。my solution.
+class Solution {
+    public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
+        if (root == null || p == null) {
+            return root;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        ArrayList<TreeNode> list = new ArrayList<>();
+        while (!stack.isEmpty() || cur != null) {
+            if (cur == null) {
+                cur = stack.pop();
+                list.add(cur);
+                cur = cur.right;
+            } else {
+                stack.push(cur);
+                cur = cur.left;
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).val > p.val) {
+                return list.get(i);
+            }
+        }
+        return null;
+    }
+}
