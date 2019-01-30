@@ -19,7 +19,7 @@ public TreeNode deleteNode(TreeNode root, int key) {
             } else if (root.right == null) {
                 return root.left;
             }
-            
+            // case 4: both left and right are not null.
             TreeNode minNode = findMin(root.right); // 首先在右子树找最小的
             root.val = minNode.val; // 把这个值赋给root
             root.right = deleteNode(root.right, root.val);  // 在右子树中删除这个最小值节点（这样就没有dup了）
