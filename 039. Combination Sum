@@ -1,0 +1,33 @@
+Input: candidates = [2,3,6,7], target = 7,
+A solution set is:
+[
+  [7],
+  [2,2,3]
+]
+
+
+
+class Solution {
+    public List<List<Integer>> combinationSum(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        dfs(nums, target, res, new ArrayList<>(), 0);
+        return res;
+    }
+    public void dfs(int[] nums, int target, List<List<Integer>> res, List<Integer> ans, int pos) {
+        if (target < 0) {
+            return;
+        } 
+        if (target == 0) {
+            res.add(new ArrayList<>(ans));
+            return;
+        } 
+        for (int i = pos; i < nums.length; i++) {
+            ans.add(nums[i]);
+            dfs(nums, target-nums[i], res, ans, i);  // 此处不能写i+1,因为可以重复利用数字，2+2+3 = 7
+            ans.remove(ans.size()-1);
+        }
+    }
+}
