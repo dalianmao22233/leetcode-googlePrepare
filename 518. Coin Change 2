@@ -1,4 +1,4 @@
-DP:有一个case: 
+1.DP:有一个case: 
 input: 0, [], 返回1. 这就是为什么dp[0]=1，并且我没设置边界check。
 class Solution {
     public static int change(int amount, int[] coins) {
@@ -12,6 +12,137 @@ class Solution {
           return dp[amount];
     }
 }
+
+2.
+// LaiOffer
+
+/*
+coins[1, 2, 5]
+i  dp[i]
+0  1
+1  1
+2  2 (1, 1), (2)
+3  2 (1, 2), (1, 1, 1)
+4  3 (1, 1, 1, 1), (1, 1, 2), (2, 2)
+5  4 
+
+
+来Offer. dp[i][j]: number of combinations to amount j with the first i types of coins
+        0   1  2  3  4  5
+0(none) 1   0  0  0  0  0
+1(1)    1   1  1  1  1  1
+2(2)    1   1  2  2  3  3
+3(5)    1   1  2  2  3  4
+
+            No 2       one 2       two 2
+dp[2][4] = dp[1][4] + dp[1][2] + dp[1][0] = 1 + 1 + 1
+         = dp[1][4] + dp[2][2]
+        
+
+            No 5        one 5
+dp[3][5] = dp[2][5] + dp[2][0] = 3 + 1 = 4
+         = dp[2][5] + dp[3][0]
+            
+            No coins[i - 1]      one coins[i - 1]                     two coins[i - 1]
+dp[i][j] =  dp[i - 1][j] + dp[i - 1][j -coins[i - 1]] + dp[i - 1][j - coins[i - 1] * 2] + ...
+         =  dp[i - 1][j] + dp[i][j - coins[i - 1]]
+
+*/
+
+
+class Solution {
+    // method1: Solution2 of LaiOffer
+    // O(nm) time, O(nm) space
+    public int change(int amount, int[] coins) {
+        if(coins == null || coins.length == 0) return (amount == 0 ? 1 : 0);
+        int n = coins.length;
+        int[][] dp = new int[n + 1][amount + 1];
+        
+        for(int j = 0; j <= amount; j++) {
+            if(j == 0) {
+                dp[0][j] = 1;
+            }else {
+                dp[0][j] = 0;
+            }
+        }
+        
+        for(int i = 1; i <= n; i++) {
+            for(int j = 0; j <= amount; j++) {
+                dp[i][j] = dp[i - 1][j];
+                if(j >= coins[i - 1]) dp[i][j] = dp[i - 1][j] + dp[i][j - coins[i - 1]]; // method1: O(nm)
+            }
+        }
+        
+        return dp[n][amount];
+    }
+    
+    
+    // method2: O(nm) time, O(m) space
+    // 1D array to save space
+    public int change2(int amount, int[] coins) {
+        if(coins == null || coins.length == 0) return (amount == 0 ? 1 : 0);
+        int n = coins.length;
+        int[] dp = new int[amount + 1];
+        
+        for(int j = 0; j <= amount; j++) {
+            if(j == 0) {
+                dp[j] = 1;
+            }else {
+                dp[j] = 0;
+            }
+        }
+        
+        for(int i = 1; i <= n; i++) {
+            for(int j = 0; j <= amount; j++) {
+                if(j >= coins[i - 1]) dp[j] += dp[j - coins[i - 1]]; 
+            }
+        }
+        
+        return dp[amount];
+    }
+}
+
+
+
+
+
+
+
+// 1D array is good enough
+
+/*
+<<Knapsack problem - Java solution with thinking process O(nm) Time and O(m) Space>>
+
+    public int change(int amount, int[] coins) {
+        int[][] dp = new int[coins.length+1][amount+1];
+        dp[0][0] = 1;
+        
+        for (int i = 1; i <= coins.length; i++) {
+            dp[i][0] = 1;
+            for (int j = 1; j <= amount; j++) {
+                dp[i][j] = dp[i-1][j] + (j >= coins[i-1] ? dp[i][j-coins[i-1]] : 0);
+            }
+        }
+        return dp[coins.length][amount];
+    }
+
+Now we can see that dp[i][j] only rely on dp[i-1][j] and dp[i][j-coins[i]], then we can optimize the space by only using one-dimension array.
+
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        for (int coin : coins) {
+            for (int i = coin; i <= amount; i++) {
+                dp[i] += dp[i-coin];
+            }
+        }
+        return dp[amount];
+    }
+
+
+*/
+
+
 
 explaination:   https://www.youtube.com/watch?time_continue=579&v=jaNZ83Q3QGc has good explanation!!!
 If outer loop is amount, you are considering every coin at every stage.
