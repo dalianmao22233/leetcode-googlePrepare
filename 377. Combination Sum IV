@@ -1,0 +1,71 @@
+给一个数组，target，求这个数组中能组成target的方法个数，可以重复使用数组元素，但是组合必须是唯一的。
+follow up: 数组中含有负数，此时会有无限种可能，举例：[2,-2,4], target=4. 组合可以是-2+2+4, -2+2+2-2+4....
+如果要做follow up,需要限定能重复使用数组元素多少次 或者 最终答案最长可以是多少：-2+2+2-2+4， 长度为5 etc. 这个我没写。
+
+1。从低往上： DP
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        int[] comb = new int[target + 1]; //comb[i]代表能形成sum=i的方法个数。
+        comb[0] = 1;
+        for (int i = 1; i < comb.length; i++) {
+            for (int j = 0; j < nums.length; j++) {
+                if (i - nums[j] >= 0) {
+                    comb[i] += comb[i - nums[j]];
+                }
+            }
+        }
+        return comb[target];
+    }
+}
+
+2. 从上到下，recursion:也很简单，分解成子问题，base case: target=0, 方法多一种。
+
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        if (target == 0) {
+            return 1;
+        }
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (target >= nums[i]) {
+                res += combinationSum4(nums, target - nums[i]);
+            }
+        }
+        return res;
+    }
+
+}
+2. hashmap:
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        // Write your code here
+        if (nums == null || nums.length == 0 || target <= 0) {
+            return 0;
+        }
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put(0, 1);
+        search(nums, target, map);
+        return map.get(target);
+    }
+    
+    private int search(int[] nums, int sum, HashMap<Integer, Integer> map) {
+        if (sum < 0) {
+            return 0;
+        }
+        if (map.containsKey(sum)) {
+            return map.get(sum);
+        }
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum -= nums[i];
+            if (map.containsKey(sum)) {
+                res += map.get(sum);
+            } else {
+                res += search(nums, sum, map);
+            }
+            sum += nums[i];
+        }
+        map.put(sum, res);
+        return map.get(sum);
+    }
+}
