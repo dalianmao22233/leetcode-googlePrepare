@@ -1,0 +1,41 @@
+//可能有重复元素，但是结果一定是唯一的，每个元素只能被用1次
+Input: candidates = [2,5,2,1,2], target = 5,
+A solution set is:
+[
+  [1,2,2],
+  [5]
+]
+
+
+class Solution {
+    public List<List<Integer>> combinationSum2(int[] nums, int target) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        Arrays.sort(nums);  // 先排序，下面DFS中有为了避免重复元素进行的判断。
+        dfs(nums, res, new ArrayList<Integer>(), 0, target);
+        return res;
+    }
+    public void dfs(int[] nums, List<List<Integer>> res, List<Integer> ans, int pos, int target) {
+        if (target < 0) {
+            return;
+        }
+        if (target == 0) {
+            res.add(new ArrayList<>(ans));
+            return;
+        }
+        for (int i = pos; i < nums.length; i++) {
+            if (i > pos && nums[i] == nums[i-1]) {  // 避免重复元素使用，i > pos为了防i-1越界。
+                continue;
+            }
+            // 举例： 如果没有上述if，
+            // 输入： [10,1,2,7,6,1,5]  target=8
+            // 会出现结果：[[1,1,6],[1,2,5],[1,7],[1,2,5],[1,7],[2,6]]
+            // 对第一个1进行dfs一次之后，下一个1又做一次dfs，所以会出现重复结果。排序是为了躲开重复的元素。
+            ans.add(nums[i]);
+            dfs(nums, res, ans, i+1, target-nums[i]);
+            ans.remove(ans.size()-1);
+        }
+    }
+}
