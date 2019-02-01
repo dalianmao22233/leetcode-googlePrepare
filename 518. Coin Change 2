@@ -17,6 +17,40 @@ class Solution {
 
 
 2. dfs: TLE 需要掌握， (当amount很大时，所以需要优化成方法3，用Map) 
+
+
+class Solution {
+    public int change(int amount, int[] coins) {
+        if (amount == 0) {
+            return 1;
+        }
+        if (coins == null || coins.length == 0) {
+            return 0;
+        }
+        int[] res = new int[1];
+        dfs(amount, coins, new ArrayList<Integer>(), res, 0);
+        return res[0];
+        
+    }
+    public void dfs(int amount, int[] coins, List<Integer> ans, int[] res, int pos) {
+        if (amount < 0) {
+            return;
+        }
+        if (amount == 0 || pos == coins.length) {
+            res[0]++;
+        }
+        for (int i = pos; i < coins.length; i++) {
+            if (amount >= coins[i]) {
+                //ans.add(coins[i]);  这个不用加，因为跟ans集合没啥关系，主要是pos用来作为check条件。
+                dfs(amount-coins[i], coins, ans, res, i);
+                //ans.remove(ans.size()-1);
+            }
+        }
+    }
+}
+
+
+
 class Solution {
     public int change(int amount, int[] coins) {
         int[] result = new int[1];
