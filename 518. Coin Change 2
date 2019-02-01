@@ -13,7 +13,91 @@ class Solution {
     }
 }
 
-2.
+
+2. dfs: TLE 需要掌握， (当amount很大时，所以需要优化成方法3，用Map) 
+class Solution {
+    public int change(int amount, int[] coins) {
+        int[] result = new int[1];
+        dfs(coins, amount, 0, result);
+        return result[0];
+    }
+    
+    private void dfs(int[] a, int target, int start, int[] result) {
+        if (target == 0) {
+            result[0]++;
+            return;
+        }
+        
+        if (start == a.length || target < 0) {
+            return;
+        }
+        
+        for (int i = start; i < a.length; i++) {
+            if (target - a[i] >= 0) {
+                dfs(a, target - a[i], i, result); //一定用a[i]， 一定用a[j] (即一定不用a[i])...
+            }
+        }
+    }
+}
+
+3. dfs: 优化：
+BottomUp DFS  + Map<Target, indexInCoins>（也可理解成图的解法）
+class Solution {
+    public int change(int amount, int[] coins) {
+        Map<Key, Integer> results = new HashMap<>(); //Map<targetSum, indexInCoins>
+        return dfs(coins, coins.length - 1, amount, results);
+    }
+    
+    private int dfs(int[] a, int index, int target, Map<Key, Integer> memo) {
+        Key key = new Key(target, index);
+        
+        if (memo.containsKey(key)) {
+            return memo.get(key);
+        }
+        
+        //如果找到一组解返回1
+        if (target == 0) {
+            return 1;
+        }
+        //若本次搜索无解则返回0
+        if (index == -1 || target < 0) { 
+            return 0;
+        }
+        
+        //本题是否可也可BFS？每层的每个点的下一步的可能性为两种用和不用下一个点  -- 类似322BFS？？
+        int result = dfs(a, index, target - a[index], memo)  //一定用a[i]
+                    + dfs (a, index - 1, target, memo);     //一定不用a[i]
+        
+        memo.put(key, result);
+        return result;
+    }
+    
+    private class Key {
+        final int _target;
+        final int _index;
+        
+        public Key(int target, int index) {
+            _target = target;
+            _index = index;
+        }
+        
+        @Override //因为contains（）会call equasls（），所以这里要overwrite
+        public boolean equals(Object that) {
+            return that != null && that instanceof Key 
+                &&((Key)that)._target == _target
+                &&((Key)that)._index == _index;
+        } 
+        
+        @Override
+        public int hashCode() {
+            return 31 * _target + _index;
+        }
+    }
+}
+
+
+
+3.
 // LaiOffer
 
 /*
@@ -102,180 +186,8 @@ class Solution {
     }
 }
 
-
-
-
-
-
-
-// 1D array is good enough
-
-/*
-<<Knapsack problem - Java solution with thinking process O(nm) Time and O(m) Space>>
-
-    public int change(int amount, int[] coins) {
-        int[][] dp = new int[coins.length+1][amount+1];
-        dp[0][0] = 1;
-        
-        for (int i = 1; i <= coins.length; i++) {
-            dp[i][0] = 1;
-            for (int j = 1; j <= amount; j++) {
-                dp[i][j] = dp[i-1][j] + (j >= coins[i-1] ? dp[i][j-coins[i-1]] : 0);
-            }
-        }
-        return dp[coins.length][amount];
-    }
-
-Now we can see that dp[i][j] only rely on dp[i-1][j] and dp[i][j-coins[i]], then we can optimize the space by only using one-dimension array.
-
-    public int change(int amount, int[] coins) {
-        int[] dp = new int[amount + 1];
-        dp[0] = 1;
-        for (int coin : coins) {
-            for (int i = coin; i <= amount; i++) {
-                dp[i] += dp[i-coin];
-            }
-        }
-        return dp[amount];
-    }
-
-
-*/
-
-
-
-
-
-
-
-
-//与 322 coins change 区别---
-//322 --- Map<合target, 解个数>, 遍历所有解只记录组成当前target值的最小解 -- 贪心 
-//本题 --- Map<合为target，从coins中以i为起点f(i)可以找到何为target的解个数>
-
-// //F1 --summer -  BottomUp DFS  + Map<Target, indexInCoins>（也可理解成图的解法）
-// class Solution {
-//     public int change(int amount, int[] coins) {
-//         Map<Key, Integer> results = new HashMap<>(); //Map<targetSum, indexInCoins>
-//         return dfs(coins, coins.length - 1, amount, results);
-//     }
-    
-//     private int dfs(int[] a, int index, int target, Map<Key, Integer> memo) {
-//         Key key = new Key(target, index);
-        
-//         if (memo.containsKey(key)) {
-//             return memo.get(key);
-//         }
-        
-//         //如果找到一组解返回1
-//         if (target == 0) {
-//             return 1;
-//         }
-//         //若本次搜索无解则返回0
-//         if (index == -1 || target < 0) { 
-//             return 0;
-//         }
-        
-//         //本题是否可也可BFS？每层的每个点的下一步的可能性为两种用和不用下一个点  -- 类似322BFS？？
-//         int result = dfs(a, index, target - a[index], memo)  //一定用a[i]
-//                     + dfs (a, index - 1, target, memo);     //一定不用a[i]
-        
-//         memo.put(key, result);
-//         return result;
-//     }
-    
-//     private class Key {
-//         final int _target;
-//         final int _index;
-        
-//         public Key(int target, int index) {
-//             _target = target;
-//             _index = index;
-//         }
-        
-//         @Override //因为contains（）会call equasls（），所以这里要overwrite
-//         public boolean equals(Object that) {
-//             return that != null && that instanceof Key 
-//                 &&((Key)that)._target == _target
-//                 &&((Key)that)._index == _index;
-//         } 
-        
-//         @Override
-//         public int hashCode() {
-//             return 31 * _target + _index;
-//         }
-//     }
-// }
-
-
-
-//F2 内含TopDown ---- TLE (当amount很大时，所以需要优化成F1，用Map) 
-// 即 combination Sum 的解法
-// class Solution {
-//     public int change(int amount, int[] coins) {
-//         int[] result = new int[1];
-//         dfs(coins, amount, 0, result);
-//         return result[0];
-//     }
-    
-//     private void dfs(int[] a, int target, int start, int[] result) {
-//         if (target == 0) {
-//             result[0]++;
-//             return;
-//         }
-        
-//         if (start == a.length || target < 0) {
-//             return;
-//         }
-        
-//         for (int i = start; i < a.length; i++) {
-//             if (target - a[i] >= 0) {
-//                 dfs(a, target - a[i], i, result); //一定用a[i]， 一定用a[j] (即一定不用a[i])...
-//             }
-//         }
-//     }
-// }
-
-
-//F3 -- DP
-class Solution {
-    public int change(int amount, int[] coins) {
-        int[] dp = new int[amount + 1];
-        dp[0] = 1;        
-        for (int j = 0; j < coins.length; j++) {
-            for (int i = 1; i <= amount; i++) {
-                if (i - coins[j] >= 0) {
-                    dp[i] += dp[i - coins[j]];
-                }
-            }
-        }
-        return dp[amount];
-    }
-}
-
-
-
-////F3 ---prac 
-// //F3 ----- 同样个数的硬币但不同顺序，算同一个的解
-// //区别 ---- 本方法用于： 如果同样个数的硬币但不同顺序，算不同的解
-// class Solution {
-//     public int change(int amount, int[] coins) {
-//         int[] dp = new int[amount + 1];
-//         dp[0] = 1;        
-//         for (int i = 1; i <= amount; i++) {
-//             for (int j = 0; j < coins.length; j++) {
-//                 if (i - coins[j] >= 0) {
-//                     dp[i] += dp[i - coins[j]];
-//                 }
-//             }
-//         }
-        
-//         return dp[amount];
-//     }
-// }
-
-
-
+ 
+ 
 
 explaination:   https://www.youtube.com/watch?time_continue=579&v=jaNZ83Q3QGc has good explanation!!!
 If outer loop is amount, you are considering every coin at every stage.
