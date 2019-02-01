@@ -1,3 +1,5 @@
+https://www.youtube.com/watch?v=DJ4a7cmjZY0 解释很好
+
 1.DP:有一个case: 
 input: 0, [], 返回1. 这就是为什么dp[0]=1，并且我没设置边界check。
 class Solution {
@@ -158,31 +160,6 @@ class Solution {
         }
         
         return dp[n][amount];
-    }
-    
-    
-    // method2: O(nm) time, O(m) space
-    // 1D array to save space
-    public int change2(int amount, int[] coins) {
-        if(coins == null || coins.length == 0) return (amount == 0 ? 1 : 0);
-        int n = coins.length;
-        int[] dp = new int[amount + 1];
-        
-        for(int j = 0; j <= amount; j++) {
-            if(j == 0) {
-                dp[j] = 1;
-            }else {
-                dp[j] = 0;
-            }
-        }
-        
-        for(int i = 1; i <= n; i++) {
-            for(int j = 0; j <= amount; j++) {
-                if(j >= coins[i - 1]) dp[j] += dp[j - coins[i - 1]]; 
-            }
-        }
-        
-        return dp[amount];
     }
 }
 
