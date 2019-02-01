@@ -1,4 +1,4 @@
-1. iterative:
+1. iterative:time: O(n), 最差就是每个node都遍历一遍才找到LCA , space: O(1)
 public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         while(root != null) {
             if(root.val > p.val && root.val > q.val)
@@ -12,6 +12,9 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 }
 
 2. recursive: 其实和LCA一样，就是基本条件处理不同，用BST的性质了。
+time: O(n), 最差就是每个node都遍历一遍才找到LCA
+space： O（n）height of a skewed BST could be N. 
+
 public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
     if (root == null || root.val == p.val || root.val == q.val) {
         return root;
