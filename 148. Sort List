@@ -53,3 +53,33 @@ class Solution {
         return dummyNode.next;
     }
 }
+
+
+2. 哈哈哈普通方法，跟链表没屁关系：
+class Solution {
+    public ListNode sortList(ListNode head) {
+	        ListNode h = head;
+	        int length = 0;
+	        while(head != null)
+	        {
+	        	length++;
+	        	head = head.next;
+	        }
+	        int[] arr = new int[length];
+	        head = h;
+	        int cur = 0;
+	        while(head != null)
+	        {
+	        	arr[cur++] = head.val;
+	        	head = head.next;
+	        }
+	        Arrays.sort(arr);
+	        head = h;
+	        for(int a=0; a<arr.length; a++)
+	        {
+	        	head.val = arr[a];
+	        	head = head.next;
+	        }
+	    	return h;
+    }
+}
