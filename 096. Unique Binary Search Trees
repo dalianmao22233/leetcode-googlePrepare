@@ -1,0 +1,59 @@
+package Vmware;
+import java.util.*;
+
+public class UniqueBST {
+// 1. dp:
+//    G(n): unique BST formed by length n, 即为所求
+//    F(i, n): unique BST formed by length n, root is number i
+//    sum(F(i, n)) == G(n)
+//    G(0) = 1, G(1) = 1
+//    eg:
+//    n = 7, [1,2,3,4,5,6,7], 求G(7)
+//    F(3, 7) = G(2) * G(4), root = 3, 分为2部分，[1,2], [4,5,6,7]
+//    F(i, n) = G(i-1) * G(n-i)
+//    G(n) = sum(G(i-1) * G(n-i))
+// time: O(n^2), space: O(n)
+    public static int numTrees(int n) {
+        int[] G = new int[n + 1];
+        G[0] = 1;
+        G[1] = 1;
+
+        for (int i = 2; i <= n; ++i) {
+            for (int j = 1; j <= i; ++j) {
+                G[i] += G[j - 1] * G[i - j];
+            }
+        }
+        return G[n];
+    }
+
+// 2. DFS:
+    static int[] memory = new int[1000000];
+    public static int num(int n) {
+        Arrays.fill(memory, -1);
+        return numTrees2(n);
+    }
+
+    public static int numTrees2(int n) {
+        if(memory[n]!=-1) {
+            return memory[n];
+        }
+        if(n==0) {
+            return 1;
+        }
+        if(n==1) {
+            return 1;
+        }
+        int ret = 0;
+        for(int i=0; i<=n-1; i++){
+            ret+=numTrees2(n-1-i) * numTrees2(i);
+        }
+        memory[n] = ret;
+        return ret;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(numTrees(7));
+        System.out.println(num(7));
+
+    }
+}
