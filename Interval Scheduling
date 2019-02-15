@@ -7,6 +7,8 @@
 
 // 算法：
 // job 排序，按照finish time 升序排列， 如果兼容，就count进来。
+//Sorting O(n log(n)) + for-loop Θ(n)
+//time: O(n log(n))
 
 
 
