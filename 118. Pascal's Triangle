@@ -1,0 +1,23 @@
+DP: 第一次做DP条件没写对。。没想清楚。 
+时间 & 空间复杂度： O(numRows ^ 2)
+class Solution {
+    public static List<List> generate(int numRows) {
+        List<List> res = new ArrayList<List>();
+        List ans = null;
+        int lengthOfArray = 0;
+        for (int i = 0; i < numRows; i++) {
+            ans = new ArrayList();
+            for (int j = 0; j <= lengthOfArray; j++) {
+                if(j==0 || j==lengthOfArray){
+                    ans.add(j, 1);
+                } else {
+                    int sum = res.get(i-1).get(j-1) + res.get(i-1).get(j);
+                    ans.add(j,sum);
+                }
+            }
+            lengthOfArray++;
+            res.add(i, ans);
+        }
+        return res;
+    }
+}
