@@ -98,6 +98,8 @@ at the end, return the number of connected components maintained in the UnionFin
 Time: O(m*n), Space: O(m*n), required by UnionFind data structure.
 Attention!: Union operation takes essentially constant time when UnionFind is implemented with both path compression and union by rank.
 
+https://www.coursera.org/learn/algorithms-part1/lecture/RZW72/quick-union-improvements  不懂了可以再看一遍视频。
+
 class Solution {
   class UnionFind {
     int count; // # of connected components
