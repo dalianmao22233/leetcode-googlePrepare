@@ -137,10 +137,11 @@ class Solution {
         } else if (rank[rootx] < rank[rooty]) {
           parent[rootx] = rooty;
         } else {
-          parent[rooty] = rootx; 
-          rank[rootx] += 1; // 只有当height相同高度的时候更新高度，因为是一个node接到另一个node的下面，多了一层。
+        // 可以把逻辑颠倒，parent[rootx] = rooty; rank[rooty]++; 结果没问题。
+          parent[rooty] = rootx;  
+          rank[rootx]++; // 只有当height相同高度的时候更新高度，因为是一个node接到另一个node的下面，多了一层。
         }
-        --count;
+        count--;
       }
     }
 
@@ -163,7 +164,7 @@ class Solution {
         if (grid[r][c] == '1') {
           grid[r][c] = '0';
           if (r - 1 >= 0 && grid[r-1][c] == '1') {
-            uf.union(r * nc + c, (r-1) * nc + c);
+            uf.union(r * nc + c, (r-1) * nc + c);  // 注意r*nc, 行*列。。我弄反了
           }
           if (r + 1 < nr && grid[r+1][c] == '1') {
             uf.union(r * nc + c, (r+1) * nc + c);
