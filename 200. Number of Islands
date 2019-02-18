@@ -101,8 +101,8 @@ Attention!: Union operation takes essentially constant time when UnionFind is im
 class Solution {
   class UnionFind {
     int count; // # of connected components
-    int[] parent;
-    int[] rank;
+    int[] parent;  // 存储当前节点的root
+    int[] rank;  // height of subtree
 
     public UnionFind(char[][] grid) { // for problem 200
       count = 0;
@@ -135,7 +135,8 @@ class Solution {
         } else if (rank[rootx] < rank[rooty]) {
           parent[rootx] = rooty;
         } else {
-          parent[rooty] = rootx; rank[rootx] += 1;
+          parent[rooty] = rootx; 
+          rank[rootx] += 1; // 只有当height相同高度的时候更新高度，因为是一个node接到另一个node的下面，多了一层。
         }
         --count;
       }
