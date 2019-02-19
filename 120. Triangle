@@ -28,8 +28,8 @@ class Solution {
                 // 边界条件很多，注意
                     dp[i][j] = triangle.get(i).get(j) + 
                     Math.min(
-                    (i!=j ? dp[i-1][j]:Integer.MAX_VALUE),
-                    (j>0 ? dp[i-1][j-1]:Integer.MAX_VALUE)
+                    (i!=j ? dp[i-1][j]:Integer.MAX_VALUE),  //举例 dp[1][1] = dp[0][1]不存在，不应该被计入选择范围, dp[0][0]是存在的
+                    (j>0 ? dp[i-1][j-1]:Integer.MAX_VALUE)  // j-1>=0. 
                     );
                 }
             }
