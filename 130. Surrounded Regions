@@ -85,6 +85,19 @@ class Solution {
 
 2. DFS
 
+The idea is pretty simple: a 'O' marked cell cannot be captured whether:
+
+It is in contact with the border of the board or
+It is adjacent to an unflippable cell.
+So the algorithm is straightforward:
+
+Go around the border of the board
+When a 'O' cell is found mark it with 'U' and perform a DFS on its adjacent cells looking for other 'O' marked cells.
+When the entire border is processed scan again the board
+If a cell is marked as 'O' it wasn't connected to unflippable cell. Hence capture it with 'X'
+If a cell is marked as 'X' nothing must be done.
+If a cell is marked as 'U' mark it as 'O' because it was an original 'O' marked cell which satisfied one of the above conditions.
+
 class Solution {
     public void solve(char[][] board) {
         if (board.length == 0 || board[0].length == 0)
