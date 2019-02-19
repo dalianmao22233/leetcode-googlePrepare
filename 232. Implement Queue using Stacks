@@ -1,0 +1,57 @@
+class MyQueue {
+    Stack<Integer> s1;  // queue
+    Stack<Integer> s2;  // temp
+    /** Initialize your data structure here. */
+    public MyQueue() {
+        s1 = new Stack<Integer>();
+        s2 = new Stack<Integer>();
+    }
+    
+    /** Push element x to the back of queue. */
+    public void push(int x) {
+        s1.push(x);
+    }
+    
+    /** Removes the element from in front of queue and returns that element. */
+    public int pop() {
+        // if (s2.isEmpty()) {   // 我忘记这句了，后果就是可能s2不是空的，因为pop这步操作没有把s2的内容返回给s1. 
+            while (!s1.isEmpty()) {
+                s2.push(s1.pop());
+            }
+            int res = s2.pop();
+        // }
+        
+        // 加上这部分就不用管上面那个if的问题了。更通畅
+        while (!s2.isEmpty()) {
+            s1.push(s2.pop());
+        }
+        return res;
+    }
+    
+    /** Get the front element. */
+    public int peek() {
+        while (!s1.isEmpty()) {
+            s2.push(s1.pop());
+        }
+        int res = s2.pop();
+        s1.push(res);
+        while (!s2.isEmpty()) {
+            s1.push(s2.pop());
+        }
+        return res;
+    }
+    
+    /** Returns whether the queue is empty. */
+    public boolean empty() {
+        return s1.isEmpty() && s2.isEmpty();
+    }
+}
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * boolean param_4 = obj.empty();
+ */
