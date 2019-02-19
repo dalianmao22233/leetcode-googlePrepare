@@ -1,0 +1,73 @@
+1. 2维DP
+首先可以观察到，边界和之前的题不同了，之前的题，边界是 i = 0 , j = 0 而在这道题里边界变为了i = 0 , i = j
+
+接下来我们看对于非边界上的点来怎么推算，图里显示的很清楚,来自上方的格子，和左上角的格子
+
+即： 对于dp[i][j] = dp[i-1][j-1] + dp[i-1][j]
+
+对于左边边界i=0，只有上方一个来源 dp[i][j] = dp[i-1][j]
+
+对于右边边界j = i，只有斜上角一个来源 dp[i][j] = dp[i-1][j-1]
+
+还有一点需要注意的是，在上面的题目中，我们最后只要求得最右下角的值就行了，
+而对于Triangle，我们求的是最小和路径，路径可以通过最后一行里任意一个元素出去，所以在算出最后一行值后，要求出其中的最小值
+
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if (triangle == null || triangle.size() == 0) {
+            return 0;
+        }
+        // DP
+        int n = triangle.size();
+        int[][] dp = new int[n][n];
+        for(int i=0;i<n;i++) {
+            for(int j=0;j<i+1;j++) {
+                if(i==0 && j==0) {
+                    dp[0][0] = triangle.get(0).get(0);
+                } else {
+                // 边界条件很多，注意
+                    dp[i][j] = triangle.get(i).get(j) + 
+                    Math.min(
+                    (i!=j ? dp[i-1][j]:Integer.MAX_VALUE),
+                    (j>0 ? dp[i-1][j-1]:Integer.MAX_VALUE)
+                    );
+                }
+            }
+        }
+        Arrays.sort(dp[n-1]);
+        return dp[n-1][0];
+    }
+}
+
+2. 1维DP：
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int[] A = new int[triangle.size() + 1];
+        
+        for(int i = triangle.size() - 1; i >= 0; i--) {
+            for(int j = 0; j < triangle.get(i).size(); j++) {
+                A[j] = Math.min(A[j], A[j+1]) + triangle.get(i).get(j);
+            }
+        }
+        return A[0];
+    }
+}
+
+
+3. dfs: TLE
+class Solution {
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if(triangle == null || triangle.size() == 0) return 0;
+        int n = triangle.size();
+        int[][] dp = new int[n][n];
+        return helper(dp, triangle, 0, 0, n);
+    }
+    public int helper(int[][] dp, List<List<Integer>> triangle, int line, int index, int n){
+        if(line >= n) return 0;
+        if(dp[line][index] > 0) return dp[line][index];
+        List<Integer> row = triangle.get(line);
+        int sum = row.get(index) + Math.min(helper(dp, triangle, line+1, index, n), helper(dp, triangle, line+1, index+1, n));
+        dp[line][index] = sum;
+        return sum;
+    }
+}
