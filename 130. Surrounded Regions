@@ -92,7 +92,8 @@ class Solution {
         if (board.length < 2 || board[0].length < 2)
             return;
         int m = board.length, n = board[0].length;
-
+        //Any 'O' connected to a boundary can't be turned to 'X', so ...边界上的O都不能变成X，只有内层的O才有可能
+	    //Start from first and last column, turn 'O' to '*'.    所以先走一遍边界，把O都变成特殊字符作为标记
         for (int i = 0; i < m; i++) {
             if (board[i][0] == 'O')
                 dfs(board, i, 0);
@@ -106,6 +107,7 @@ class Solution {
             if (board[m-1][j] == 'O')
                 dfs(board, m-1, j);	
         }
+        //post-prcessing, turn 'O' to 'X', '*' back to 'O', keep 'X' intact.
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (board[i][j] == 'O')
@@ -115,18 +117,24 @@ class Solution {
             }
         }
     }
-
+    
+    //Use DFS algo to turn internal however boundary-connected 'O' to '*';
     private void dfs(char[][] board, int i, int j) {
-        if (i < 0 || i > board.length - 1 || j <0 || j > board[0].length - 1)
+        if (i < 0 || i > board.length - 1 || j <0 || j > board[0].length - 1) {
+            // sanity check.
             return;
+        }
 
-        if(board[i][j] != 'O')return;
+        if(board[i][j] != 'O') {
+            // 是X或者1
+            return;
+        }
 
-            board[i][j] = '1';
+        board[i][j] = '1';
 
-            dfs(board, i-1, j);
-            dfs(board, i+1, j);
-            dfs(board, i, j-1);
-            dfs(board, i, j+1);
+        dfs(board, i-1, j);
+        dfs(board, i+1, j);
+        dfs(board, i, j-1);
+        dfs(board, i, j+1);
     }
 }
