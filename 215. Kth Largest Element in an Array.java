@@ -45,6 +45,7 @@ class Solution {
             // System.out.println(i);  打印看看过程就懂了
             while (a[--j] > a[l] && j > l);   // a[j] = a[r]， --l之后就是a[r]和a[l]比较，不会漏掉最后一个元素
             // System.out.println(j);
+            // i的左边都比l小， j的右边都比l大
             if (i >= j) {
                 break;
             }
@@ -61,7 +62,7 @@ class Solution {
         //     System.out.print("final:" + a[m]+",");
         // }
         // System.out.println("   j = " + j);
-        return j;
+        return j; // j 是挡板了
     }
     private void swap(int[] a, int i, int j) {
         int t = a[i];
