@@ -1,4 +1,6 @@
 // dfs找连通路径
+我个人觉得是每个格子都要上下左右搜，所以每个格子有4个可能，一共m*n个格子，所以是O(4^(m*n))的时间复杂度。空间是m*n
+
 class Solution {
     public boolean exist(char[][] board, String word) {
         if (board == null || board.length == 0 || word == null || word.length() == 0) {
@@ -41,8 +43,52 @@ class Solution {
     }
 }
 
+2. 其实和3 思路一样，就是关于取代和还原board[i][j]的做法不同，这种好想
+class Solution {
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
 
-// 高票回答：没用visited数组，用Board本身记录visited信息
+        boolean result = false;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+               if(dfs(board,word,i,j,0)){
+                   result = true;
+               }
+            }
+        }
+
+        return result;
+    }
+
+    public boolean dfs(char[][] board, String word, int i, int j, int k){
+        int m = board.length;
+        int n = board[0].length;
+
+        if(i<0 || j<0 || i>=m || j>=n){
+            return false;
+        }
+
+        if(board[i][j] == word.charAt(k)){
+            char temp = board[i][j];
+            board[i][j]='#';  // 用#标志visited
+            if(k==word.length()-1){
+                return true;
+            }else if(dfs(board, word, i-1, j, k+1)
+            ||dfs(board, word, i+1, j, k+1)
+            ||dfs(board, word, i, j-1, k+1)
+            ||dfs(board, word, i, j+1, k+1)){
+                return true;
+            }
+            board[i][j]=temp;
+        }
+
+        return false;
+    }
+}
+
+
+3. // 高票回答：没用visited数组，用Board本身记录visited信息
 
 把空间复杂度优化到了常数空间，怎么做的呢？
 
@@ -81,3 +127,6 @@ private boolean exist(char[][] board, int y, int x, char[] word, int i) {
 	board[y][x] ^= 256;
 	return exist;
 }
+
+
+还有trie的做法
