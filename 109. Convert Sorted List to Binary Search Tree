@@ -61,59 +61,38 @@ class Solution {
 
 
 2. 单纯recursion， time: O(nlogn), space: O(logn)
-/**
- * Definition for singly-linked list. public class ListNode { int val; ListNode next; ListNode(int
- * x) { val = x; } }
- */
-/**
- * Definition for a binary tree node. public class TreeNode { int val; TreeNode left; TreeNode
- * right; TreeNode(int x) { val = x; } }
- */
 class Solution {
-
-  private ListNode findMiddleElement(ListNode head) {
-
-    // The pointer used to disconnect the left half from the mid node.
-    ListNode prevPtr = null;
-    ListNode slowPtr = head;
-    ListNode fastPtr = head;
-
-    // Iterate until fastPr doesn't reach the end of the linked list.找中点
-    while (fastPtr != null && fastPtr.next != null) {
-      prevPtr = slowPtr;
-      slowPtr = slowPtr.next;
-      fastPtr = fastPtr.next.next;
+    public TreeNode sortedListToBST(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        if (head.next == null) {
+            return new TreeNode(head.val);
+        }
+        ListNode mid = findMid(head);
+        // The mid becomes the root of the BST.
+        TreeNode node = new TreeNode(mid.val);
+        
+        node.left = sortedListToBST(head);
+        node.right = sortedListToBST(mid.next);
+        
+        return node;
     }
-
-    // Handling the case when slowPtr was equal to head.
-    if (prevPtr != null) {
-      prevPtr.next = null;
+    public ListNode findMid(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        ListNode prev = null;
+        while (fast != null && fast.next != null) {
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if (prev != null) {
+            prev.next = null;  // 把mid之后断开，成为一个一半的单独的list.  从这里head->...>mid, mid->.. >end
+        }
+        return slow;
     }
-
-    return slowPtr;
-  }
-
-  public TreeNode sortedListToBST(ListNode head) {
-
-    // If the head doesn't exist, then the linked list is empty
-    if (head == null) {
-      return null;
-    }
-
-    // Find the middle element for the list.
-    ListNode mid = this.findMiddleElement(head);
-
-    // The mid becomes the root of the BST.
-    TreeNode node = new TreeNode(mid.val);
-
-    // Base case when there is just one element in the linked list
-    if (head == mid) {
-      return node;
-    }
-
-    // Recursively form balanced BSTs using the left and right halves of the original list.
-    node.left = this.sortedListToBST(head);
-    node.right = this.sortedListToBST(mid.next);
-    return node;
-  }
 }
