@@ -1,0 +1,45 @@
+1. my solution, based on Word search I, 直接用DFS， visited数组，时间复杂度较高， 但是很开心终于自己做对了！
+class Solution {
+    HashSet<String> set = new HashSet<>();
+    public List<String> findWords(char[][] board, String[] words) {
+        List<String> res = new ArrayList<String>();
+        if (board == null || board.length == 0 || words == null || words.length == 0) {
+            return res;
+        }
+        
+        int m = board.length;
+        int n = board[0].length;
+        boolean[][] visited = new boolean[m][n];
+        for (String word: words) {
+            for (int i = 0; i < m ; i++) {
+                for (int j = 0; j < n; j++) {
+                    dfs(board, i, j, 0, word, visited, res);
+                }
+            }
+        }
+        
+        return res;
+    }
+    public void dfs(char[][] board, int i, int j, int index, String word, boolean[][] visited, List<String> res) {
+        if (index == word.length()) {
+            if (set.contains(word)) {
+                return;
+            } else {
+                set.add(word);
+                res.add(word);
+                return;
+            }
+        }
+        int m = board.length;
+        int n = board[0].length;
+        if (i < 0 || j < 0 || i >= m || j >= n || visited[i][j] || word.charAt(index) != board[i][j]) {
+            return;
+        }
+        visited[i][j] = true;
+        dfs(board, i-1, j, index+1, word, visited, res);
+        dfs(board, i+1, j, index+1, word, visited, res);
+        dfs(board, i, j-1, index+1, word, visited, res);
+        dfs(board, i, j+1, index+1, word, visited, res);
+        visited[i][j] = false;
+    }
+}
