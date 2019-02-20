@@ -17,7 +17,7 @@ public class Solution {
             return map.get(node);
         }
         UndirectedGraphNode copyNode = new UndirectedGraphNode(node.label);
-        map.put(node, copyNode);
+        map.put(node, copyNode);  // 这句必须放在这，如果放在最后，每次call function的时候map总是空的，会stackoverflow.
         copyNode.neighbors = new ArrayList<>();
         for (int i = 0; i < node.neighbors.size(); i++) {
             UndirectedGraphNode item = cloneGraph(node.neighbors.get(i));
