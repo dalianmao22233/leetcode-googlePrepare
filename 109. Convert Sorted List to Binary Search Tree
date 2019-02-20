@@ -1,6 +1,6 @@
 因为是转化为balance BST， 所以root一定是中点！
 
-1. 中序遍历反推  time: O(n), space: O(logn)
+1. 中序遍历反推  time: O(n), space: O(logn)  
 /**
  * Definition for singly-linked list. public class ListNode { int val; ListNode next; ListNode(int
  * x) { val = x; } }
@@ -60,7 +60,10 @@ class Solution {
 
 
 
-2. 单纯recursion， time: O(nlogn), space: O(logn)
+2. 单纯recursion， time: O(nlogn), space: O(logn)  
+
+复杂度分析看：https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/solution/
+
 class Solution {
     public TreeNode sortedListToBST(ListNode head) {
         if (head == null) {
