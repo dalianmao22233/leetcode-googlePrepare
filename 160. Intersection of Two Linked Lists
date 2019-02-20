@@ -11,6 +11,8 @@ So if two linkedlist intersects, the meeting point in second iteration must be t
 If the two linked lists have no intersection at all, 
 then the meeting pointer in second iteration must be the tail node of both lists, which is null
 
+用环的想法
+
 
 public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
     //boundary check
@@ -29,7 +31,7 @@ public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
     return a;
 }
 
-2. 
+2.  这道题的结构是intersection node之后是同一个sublist, 4->1->8  || 2->1->8。。。 我理解的不对所以没做出来  所以用长度差值是可行的！
 1) Get the length of the two lists.
 
 2) Align them to the same start point.
