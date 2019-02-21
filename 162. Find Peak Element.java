@@ -1,3 +1,6 @@
+题目要求是o(logn)的时间。 
+有个test case: [1,2] 返回1
+
 class Solution {
     public int findPeakElement(int[] nums) {
         if (nums == null || nums.length == 0) {
