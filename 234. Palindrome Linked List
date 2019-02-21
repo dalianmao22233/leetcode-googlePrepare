@@ -36,7 +36,7 @@ class Solution {
         ListNode fast = head;
         ListNode prev = null;
         while (fast != null && fast.next != null) {  //取中间两个点中靠后的一个，保证偶数个点的list能均匀分成2个list.
-            prev = slow;
+            prev = slow;    // 用prev保存slow， 到最后其实就是前面一半list的tail. 用于收尾。
             slow = slow.next;
             fast = fast.next.next;
         }
