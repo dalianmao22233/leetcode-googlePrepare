@@ -25,10 +25,10 @@ class Solution {
 
         for(int i=0; i<n-m; i++)
         {
-            start.next = then.next;
-            then.next = prev.next;
-            prev.next = then;
-            then = start.next;
+            start.next = then.next;  // round2: 2->5
+            then.next = prev.next;   // round2: 4->3
+            prev.next = then;        // round2: 1->4
+            then = start.next;       // round2: then point at 5
         }
 
         // first reversing : dummy->1 - 3 - 2 - 4 - 5; pre = 1, start = 2, then = 4
