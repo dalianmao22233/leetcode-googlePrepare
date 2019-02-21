@@ -1,5 +1,6 @@
 题目要求是o(logn)的时间。 
-有个test case: [1,2] 返回1
+有个test case: [1,2] 返回1  ->2
+[1,10,2,3,4,5,6] 返回6   -> 6
 
 class Solution {
     public int findPeakElement(int[] nums) {
