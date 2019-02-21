@@ -15,9 +15,11 @@ class Solution {
     // Move first to the end, maintaining the gap
     while (first != null) {
         first = first.next;
-        second = second.next;
+        second = second.next;  
     }
        // System.out.println( second.val);  second.val = 6
+       
+       // 此时second指向的是要被删除的node的前一个，所以才能直接移除node.
     second.next = second.next.next;
     return dummy.next;
 }
