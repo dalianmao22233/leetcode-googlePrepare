@@ -26,7 +26,7 @@ class Solution {
         for(int i=0; i<n-m; i++)
         {
             start.next = then.next;  // round2: 2->5
-            then.next = prev.next;   // round2: 4->3
+            then.next = prev.next;   // round2: 4->3   不能先走下一步 不然会lost  prev.next
             prev.next = then;        // round2: 1->4
             then = start.next;       // round2: then point at 5
         }
