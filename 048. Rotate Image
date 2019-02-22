@@ -4,7 +4,7 @@ class Solution {
             return;
         }
         int len = matrix.length;
-        for (int i = 0; i < len/2; i++) {  
+        for (int i = 0; i < len/2; i++) {  //每次其实都是处理4条边 2行 2 列 所以这俩都得/2
             for (int j = 0; j < (len+1)/2; j++) {
                 int temp = matrix[i][j];
                 matrix[i][j] = matrix[len-j-1][i];
@@ -15,5 +15,5 @@ class Solution {
         }
     }
 }
-
+http://javabypatel.blogspot.com/2016/11/rotate-matrix-by-90-degrees-inplace.html  清楚！！！
 https://leetcode.com/problems/rotate-image/discuss/18895/Clear-Java-solution 这个回答里的图解释的很清楚@ondrej-kvasnovsky
