@@ -1,3 +1,30 @@
+1. sort : O(nlogn) 先答这种，cycle detection 可能面试官会觉得我见过这个题
+
+class Solution {
+    public int findDuplicate(int[] nums) {
+        Arrays.sort(nums);
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] == nums[i-1]) {
+                return nums[i];
+            }
+        }
+
+        return -1;
+    }
+}
+
+2. cycle detection
+对于数组 A = [2,6,4,1,3,1,5]
+index 0 , 1, 2, 3, 4, 5, 6
+value:2, 6, 4, 1, 3, 1, 5
+
+索引是什么？ 索引是指针的相对位置/偏移量
+那么value 是什么？ 下一个位置的地址
+那么这个数组就可以转换为 : 0 - > 2 - > 4 -> 3 -> 1 -> 6 -> 5-> [1- >6-> 5 ->1 链表环] 可以看到这就是一个有环的链表
+slow = nums[slow] 的含义就是指针向右移动一步 等价于slow = slow.next
+fast = nums[nums[fast]] 就是移动两步 等价于fast = fast.next.next
+
+
 class Solution {
     public int findDuplicate(int[] nums) {
         // Find the intersection point of the two runners.
