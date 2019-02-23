@@ -1,6 +1,3 @@
-package GoldmanSaks;
-import java.util.*;
-
 public class trappingRainWater {
 	public static void main(String[] args) {
 
@@ -9,7 +6,7 @@ public class trappingRainWater {
 		System.out.println(trap2(height));
 	}
 
-	// O(n) time, O(1) space, 2 pointers
+	1.// O(n) time, O(1) space, 2 pointers   最优！
 	public static int trap(int[] height) {
 		if (height == null || height.length == 0) {
 			return 0;
@@ -38,7 +35,7 @@ public class trappingRainWater {
 		return res;
 	}
 	
-	// O(n) time, O(n) space, DP twice.
+	2.// O(n) time, O(n) space, DP twice.
 	public static int trap2(int[] height) {
 		if (height == null || height.length == 0) {
 			return 0;
@@ -48,11 +45,11 @@ public class trappingRainWater {
 		int[] M2 = new int[len]; // right max
 
 		M1[0] = height[0];
-		for (int i = 1; i < len; i++) {
+		for (int i = 1; i < len; i++) {      //站在左边看，对于左边的柱子来说，当前最大值
 			M1[i] = Math.max(M1[i-1], height[i]);
 		}
 		M2[len-1] = height[len-1];
-		for (int i = len-2; i >= 0; i--) {
+		for (int i = len-2; i >= 0; i--) {   //站在右边看，对于右边的柱子来说，当前最大值
 			M2[i] = Math.max(M2[i+1], height[i]);
 		}
 
