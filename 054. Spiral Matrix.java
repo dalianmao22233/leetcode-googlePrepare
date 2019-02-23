@@ -1,3 +1,4 @@
+1. 就按照顺序打印，注意边界， 先定好4条边的界限，然后循环打印，更新4个边界
 class Solution {
     public List<Integer> spiralOrder(int[][] matrix) {
         List<Integer> result = new ArrayList<Integer>();
@@ -41,5 +42,45 @@ class Solution {
             left++;
         }
         return result;
+    }
+}
+
+
+2. recursive--来offer
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return res;
+        }
+        int m = matrix.length;
+        int n = matrix[0].length;
+        spiralOrder(matrix, m, n, 0, res);
+        return res;  
+    }
+    
+     public void spiralOrder(int[][] matrix, int m, int n, int offset, List<Integer> res) {
+        if (m <= 0 || n <= 0) {
+            return;
+        }
+         
+        for (int i = 0; i < n - 1; i++) {
+            res.add(matrix[offset][offset + i]);
+        }
+         
+        for (int i = 0; i < m - 1; i++) {
+            res.add(matrix[offset + i][offset + n - 1]);
+        }
+         
+        for (int i = 0; i < (m == 1 ? 1 : n - 1); i++) {
+            res.add(matrix[offset + m - 1][offset + n - 1 - i]);
+        }
+         
+        for (int i = 0; i < (n == 1 && m != 1 ? 1 : m - 1); i++) {
+            
+            res.add(matrix[offset + m - 1 - i][offset]);
+        }
+         
+        spiralOrder(matrix, m - 2, n - 2, offset + 1, res);
     }
 }
