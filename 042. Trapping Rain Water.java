@@ -1,3 +1,10 @@
+//终于懂了！
+原来题意理解的不对。 输入是个array，里面每一项是当前bar多高。
+[0,1,0,2,1,0,1,3,2,1,2,1]
+对应LeetCode的图看，A[0]=0代表第0个bar高度为0. 
+所以就很好理解了，实际上关系就是min(leftmax, rightmax)-A[i] = water. 
+leftmax是当前bar左边最高能hold住多高， rightmax同理。  两个取最小的就是肯定能hold住的最低高度了，减去当前Bar高度，就是能存的水。
+
 public class trappingRainWater {
 	public static void main(String[] args) {
 
@@ -9,30 +16,24 @@ public class trappingRainWater {
 	1.// O(n) time, O(1) space, 2 pointers   最优！
 	public static int trap(int[] height) {
 		if (height == null || height.length == 0) {
-			return 0;
+		    return 0;
 		}
 		int len = height.length;
-		int low = 0, high = len-1, maxLeft = 0, maxRight = 0;
-		int res = 0;
-
-		while (low <= high) {
-			if (height[low] <= height[high]) {
-				if (height[low] < maxLeft) {
-					res += maxLeft - height[low];
-				} else {
-					maxLeft = height[low];
-				}
-				low++;
-			} else {
-				if (height[high] < maxRight) {
-					res += maxRight - height[high];
-				} else {
-					maxRight = height[high];
-				}
-				high--;
-			}
+		int sum = 0;
+		int leftmax = 0, rightmax = 0;
+		int i = 0, j = len-1;
+		while (i < j) {
+		    leftmax = Math.max(leftmax, height[i]);
+		    rightmax = Math.max(rightmax, height[j]);
+		    if (leftmax < rightmax) {
+			sum += leftmax-height[i];
+			i++;
+		    } else {
+			sum += rightmax-height[j];
+			j--;
+		    }
 		}
-		return res;
+		return sum;
 	}
 	
 	2.// O(n) time, O(n) space, DP twice.
