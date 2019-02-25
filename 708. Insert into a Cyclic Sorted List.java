@@ -1,5 +1,42 @@
 https://leetcode.com/problems/insert-into-a-cyclic-sorted-list/discuss/149374/Java-5ms-One-Pass-and-Two-Pass-Traverse-With-Detailed-Comments-and-Edge-cases!
 https://leetcode.com/problems/insert-into-a-cyclic-sorted-list/discuss/163141/Share-my-concise-JAVA-one-pass-solution
+
+
+2. one pass:  http://www.cnblogs.com/grandyang/p/9981163.html
+记这种，比较清楚。
+
+class Solution {
+    public Node insert(Node head, int x) {
+        if (head == null) {
+            Node newNode = new Node(x, null);
+            head = newNode;
+            newNode.next = head;
+            return head;
+        }
+        
+        // 只有以下几种情况：
+        // 1. pre < x < cur, 这种直接break, 然后连接就完事了
+        // 2. pre > cur, 并且： pre < x or x < cur, 其实就是x小于最小值，或者大于最大值，直接break, 然后连接就完事了
+        // 1->2->3, pre指向3， cur指向1， x = 4.
+        // 3. 都不符合，往后移动指针。
+        Node pre = head;
+        Node cur = pre.next;
+        while (cur != head) {
+            if (pre.val <= x && cur.val >= x) {
+                break;
+            }
+            if (pre.val > cur.val && (pre.val <= x || cur.val >= x)) {
+                break;
+            }
+            pre = cur;
+            cur = cur.next;
+        }
+        pre.next = new Node(x, cur);
+        return head;
+    }
+}
+
+
 1. discussion 做法
 /*
 // Definition for a Node.
@@ -42,29 +79,3 @@ class Solution {
 }
 
 
-2. one pass:  http://www.cnblogs.com/grandyang/p/9981163.html
-
-class Solution {
-    public Node insert(Node head, int x) {
-        if (head == null) {
-            Node newNode = new Node(x, null);
-            head = newNode;
-            newNode.next = head;
-            return head;
-        }
-        Node pre = head;
-        Node cur = pre.next;
-        while (cur != head) {
-            if (pre.val <= x && cur.val >= x) {
-                break;
-            }
-            if (pre.val > cur.val && (pre.val <= x || cur.val >= x)) {
-                break;
-            }
-            pre = cur;
-            cur = cur.next;
-        }
-        pre.next = new Node(x, cur);
-        return head;
-    }
-}
