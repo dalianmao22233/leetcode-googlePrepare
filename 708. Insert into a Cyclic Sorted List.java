@@ -1,6 +1,6 @@
 https://leetcode.com/problems/insert-into-a-cyclic-sorted-list/discuss/149374/Java-5ms-One-Pass-and-Two-Pass-Traverse-With-Detailed-Comments-and-Edge-cases!
 https://leetcode.com/problems/insert-into-a-cyclic-sorted-list/discuss/163141/Share-my-concise-JAVA-one-pass-solution
-
+1. discussion 做法
 /*
 // Definition for a Node.
 class Node {
@@ -37,6 +37,34 @@ class Solution {
         cur.next = new Node(insertVal, cur.next);  // 插入新节点了！
         Node newMax = max.next == null ? max : max.next; // 重新连接为cycle  , max.next==null 意味着没插到最后(max)， 插在中间了。
         newMax.next = dummy.next;
+        return head;
+    }
+}
+
+
+2. one pass:  http://www.cnblogs.com/grandyang/p/9981163.html
+
+class Solution {
+    public Node insert(Node head, int x) {
+        if (head == null) {
+            Node newNode = new Node(x, null);
+            head = newNode;
+            newNode.next = head;
+            return head;
+        }
+        Node pre = head;
+        Node cur = pre.next;
+        while (cur != head) {
+            if (pre.val <= x && cur.val >= x) {
+                break;
+            }
+            if (pre.val > cur.val && (pre.val <= x || cur.val >= x)) {
+                break;
+            }
+            pre = cur;
+            cur = cur.next;
+        }
+        pre.next = new Node(x, cur);
         return head;
     }
 }
