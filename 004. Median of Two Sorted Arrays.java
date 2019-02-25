@@ -1,5 +1,7 @@
 http://www.cnblogs.com/grandyang/p/4465932.html  看这个帖子解释
 1. recursive做法：
+https://leetcode.com/problems/median-of-two-sorted-arrays/discuss/2499/Share-my-simple-O(log(m+n))-solution-for-your-reference 
+这个有更好的写法，我不懂以下这种。
 
 public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
 	int m = nums1.length, n = nums2.length, left = (m + n + 1) / 2, right = (m + n + 2) / 2;
