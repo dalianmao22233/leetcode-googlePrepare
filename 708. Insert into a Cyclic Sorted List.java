@@ -17,7 +17,8 @@ class Solution {
         // 只有以下几种情况：
         // 1. pre < x < cur, 这种直接break, 然后连接就完事了
         // 2. pre > cur, 并且： pre < x or x < cur, 其实就是x小于最小值，或者大于最大值，直接break, 然后连接就完事了
-        // 1->2->3, pre指向3， cur指向1， x = 4.
+        // 1->2->3, pre指向3， cur指向1， x = 4. 这种直接出了while, 因为cur == head了。。。
+        // 更好的例子：3->4->5->1->3, pre指向5， cur指向1， x = 6, 这种就break了。 直接连接。
         // 3. 都不符合，往后移动指针。
         Node pre = head;
         Node cur = pre.next;
