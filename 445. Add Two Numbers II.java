@@ -35,7 +35,7 @@ class Solution {
             ListNode head = new ListNode(sum/10); // carry
             head.next = dummy;
             dummy = head;   // dummy 始终指向最开始的头部。
-            sum = sum/10;
+            sum = sum/10;   // 把当前和 减去10，其实就是带着carry到下一个循环。
         }
         // dummy.val == 0 ： 例子： 1+2 = 3. 此时dummy.val = sum%10 = 3,  head.val = sum/10 = 0。 经过后面2步转换，最后dummy.val = 0. head.val = 3. 这种就是没有进位的情况。 反之就是carry = 1.
         return dummy.val == 0 ? dummy.next : dummy;
