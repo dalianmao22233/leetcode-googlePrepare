@@ -10,7 +10,8 @@ class Solution {
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (Character.isDigit(c)) {
-                number = 10*number + (int) (c-'0');
+                number = 10*number + (int) (c-'0'); 
+                //可能是个多位数，先输进来存着。如果不是的话number=0，会被后面的操作更新的，莫担心
             } else if (c == '+') {
                 res += sign * number;
                 number = 0;
