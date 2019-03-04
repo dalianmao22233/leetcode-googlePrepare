@@ -1,3 +1,5 @@
+和对BST操作的区别就是这道题可以用global variable 来跟踪顺序。BST那个题应该用BST结构特性来做
+    
 1. iterative: 很好理解，就是个BFS.  Time:O(n), Space:O(biggest level width)
 public class Codec {
 
