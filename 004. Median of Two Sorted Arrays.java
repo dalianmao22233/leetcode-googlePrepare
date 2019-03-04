@@ -1,3 +1,38 @@
+大致思路：
+1. trick：找2个数组的中间数，考虑了奇数偶数情况，最终用：
+找第 (m+n+1) / 2 个，和 (m+n+2) / 2 个，然后求其平均值即可，这对奇偶数均适用。
+if m+n 为奇数的话，那么其实 (m+n+1) / 2 和 (m+n+2) / 2 的值相等，相当于两个相同的数字相加再除以2，还是其本身
+
+2. 怎么找到kth元素？
+用i, j 分别记录两个数组的起点； k=1的时候比较起点就完事了
+用二分法：对K二分；在两个数组中分别找第 k/2 个数字。
+首先需要check 是否数组中存在k/2 th数字。 如果存在就取出来，否则赋值为max-int
+比较这两个数组的k/2 th 数字 mid1, mid2的大小。
+mid1 < mid2, 意味着数组1中前k/2个数里肯定没有我要找的第K个数。将这一部分淘汰， 数组1的起始位置i向后移动k/2个位置， k=k-k/2, 调用递归函数。
+否则， 对数组2做相同的事。	
+
+public class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int m = nums1.length, n = nums2.length, left = (m + n + 1) / 2, right = (m + n + 2) / 2;
+        return (findKth(nums1, nums2, left) + findKth(nums1, nums2, right)) / 2.0;
+    }
+    int findKth(int[] nums1, int[] nums2, int k) {
+        int m = nums1.length, n = nums2.length;
+        if (m == 0) return nums2[k - 1];
+        if (n == 0) return nums1[k - 1];
+        if (k == 1) return Math.min(nums1[0], nums2[0]);
+	
+        int i = Math.min(m, k / 2), j = Math.min(n, k / 2);
+        if (nums1[i - 1] > nums2[j - 1]) {
+            return findKth(nums1, Arrays.copyOfRange(nums2, j, n), k - j); // 舍弃nums2的前一半
+        } else {
+            return findKth(Arrays.copyOfRange(nums1, i, m), nums2, k - i);  // 舍弃nums1的前一半
+        }
+    }
+}
+
+
+
 http://www.cnblogs.com/grandyang/p/4465932.html  看这个帖子解释
 1. recursive做法：
 https://leetcode.com/problems/median-of-two-sorted-arrays/discuss/2499/Share-my-simple-O(log(m+n))-solution-for-your-reference 
