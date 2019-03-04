@@ -5,7 +5,7 @@ class Solution {
         Stack<Integer> stack = new Stack<>();
         int res = 0;
         int sign = 1;
-        int number = 0;
+        int number = 0;  // 相当于求一个中间量。
         
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
@@ -19,7 +19,7 @@ class Solution {
                 res += sign * number;
                 number = 0;
                 sign = -1;
-            } else if (c == '(') {
+            } else if (c == '(') {   
                 stack.push(res);
                 stack.push(sign);
                 sign = 1;
@@ -27,8 +27,8 @@ class Solution {
             } else if (c == ')') {
                 res += sign * number;
                 number = 0;
-                res *= stack.pop();
-                res += stack.pop();
+                res *= stack.pop();  // 对应左括号，这里是sign
+                res += stack.pop();  // 对应左括号，这里是res.
             }
             
         }
