@@ -39,3 +39,34 @@ class Solution {
         return left;  // 都不满足就放左边呗。。 就是target比nums[left]小
     }
 }
+
+
+2. 更简洁：但是我不懂 还是用第一种吧
+
+public int searchInsert(int[] nums, int target) {
+    int low = 0, high = nums.length;
+    while(low < high) {
+        int mid = low + (high - low) / 2;
+        if(nums[mid] < target)
+            low = mid + 1;
+        else
+            high = mid;
+    }
+    return low;
+}  
+    
+    
+3. recursive 做法：
+
+public int searchInsert(int[] nums, int target) {
+    return firstOccurrenceRecur(nums,target,0,nums.length-1);
+}
+public int firstOccurrenceRecur(int[] nums, int target, int low, int high) {
+    if (low > high) { return low; }
+    int mid = low + ( (high - low) >> 1 );
+    if (nums[mid] < target) {
+        return firstOccurrenceRecur(nums,target,mid + 1,high);
+    } else {
+        return firstOccurrenceRecur(nums,target,low,mid-1);
+    }
+}
