@@ -5,8 +5,9 @@ class Solution {
         if (arr == null || arr.length == 0) {
             return res;
         }
-        // left: index of largest element <= target
-	// right: left+1, 这两个是离target最近的
+	// left是小于target的最大值， right=left+1
+     	// 这两个就是离target最近的值了
+        
         int left = findIndex(arr, x);
         int right = left+1;
         
@@ -27,22 +28,28 @@ class Solution {
         }
         return res;
     }
-    private int findIndex(int[] arr, int target) {
-        int low = 0, high = arr.length-1;
-        while (low < high-1) {  // 提前一步停下来
-            int mid = low + (high-low)/2;
-            if (arr[mid] <= target) {
-                low = mid;
-            } else {
-                high = mid;
-            }
-        }
-        // for low == high-1,返回这个index
-        if (Math.abs(target-arr[low]) <= Math.abs(target-arr[high])) {
-            return low;
-        } else {
-            return high;
-        }
+    private int findIndex(int[] array, int target) {
+            // 用来找离target最近的 小于target的最大值。
+	    // 比如1,2,3, target=2, 返回的应是1.
+	    int left = 0;
+	    int right = array.length-1;
+	    while (left < right-1) {  // left right相邻的时候停下来，其实就是找一个界限
+	      int mid = left + (right-left)/2;
+
+	      if (array[mid] <= target) {
+		left = mid;
+	      } else {
+		right = mid;
+	      }
+	    }
+	    // 因为是sorted array, right肯定是需要先判断的
+	    if (array[right] <= target) {
+	      return right;
+	    }
+	    if (array[left] <= target) {
+	      return left;
+	    }
+	    return -1;
     }
     
     // 高票回答：O(logn)
