@@ -70,3 +70,25 @@ public int firstOccurrenceRecur(int[] nums, int target, int low, int high) {
         return firstOccurrenceRecur(nums,target,low,mid-1);
     }
 }
+
+如果有重复数字：就是改进了方法2， 加了一个dup的判断
+public int searchInsert(int[] input, int target) {
+    // Write your solution here
+
+    int left = 0, right = input.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (target == input[mid]) {
+            while (mid >= 0 && input[mid] == target) {
+                mid--;
+            }
+            return mid + 1;
+        } else if (target > input[mid]) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    return left;
+}
