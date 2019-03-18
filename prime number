@@ -1,0 +1,22 @@
+public class Solution {
+  public boolean isPrime(int n) {
+    // Write your solution here
+    if (n < 2) {
+      return false;
+    } else {
+      if (n % 2 == 0) {
+        return false;
+      }
+      for (int i = 2; i < n; i++) {
+        if (n % i == 0) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+}
+
+首先排除<2的情况，这些都不是质数；
+2是质数；
+然后就一个循环，要看是否有其他因子。循环要从2开始，到n-1结束。
