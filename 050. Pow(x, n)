@@ -36,7 +36,7 @@ double myPow(double x, int n){
         return 1;
     } else {  
         double half = myPow(x, n/2);
-        if (n%2 == 0){
+        if (n%2 == 0){   // 切记这里不能倒顺序，必须先判断这个，因为n可能为负数。 所以n%2有可能为-1. 于是会报错。
             return half*half;
         } else {
             if (n > 0){
