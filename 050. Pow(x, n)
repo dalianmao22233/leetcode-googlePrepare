@@ -47,3 +47,30 @@ double myPow(double x, int n){
         }   
     }
 }
+
+
+
+// 如果题里return 就是int. 注意最大值问题。
+
+public class Solution {
+  public int power(int a, int b) {
+    // Write your solution here
+    if (a == 0) {
+      return 0;
+    }
+    if (b == 0) {
+      return 1;
+    }
+    int half = power(a, b/2);
+    if (b % 2 == 0) {
+      return half * half > Integer.MAX_VALUE? 1 :  half * half;
+     
+    } else {
+      if (b < 0) {
+        return half * half / a > Integer.MAX_VALUE? 1 :  half * half/a;
+      } else {
+        return half * half * a > Integer.MAX_VALUE? 1 :  half * half * a;
+      }
+    }
+  }
+}
