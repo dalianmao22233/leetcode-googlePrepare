@@ -1,0 +1,25 @@
+
+可以用 HashSet 来记录所有出现过的数字，然后每出现一个新数字，在 HashSet 中查找看是否存在，
+若不存在则加入表中，若存在则跳出循环，并且判断此数是否为1，若为1返回true，不为1返回false，
+class Solution {
+    public boolean isHappy(int n) {
+        if (n <= 0) {
+            return false;
+        }
+        // put every number inside set, if meet same one then break and check whether equal to 1. 
+        Set<Integer> set = new HashSet<Integer>();
+        while (n != 1) {
+            int sum = 0;
+            while (n != 0) {
+                sum = sum + (n%10) * (n%10);
+                n = n/10;
+            }
+            n = sum;
+            if (set.contains(n)) {
+                break;
+            }
+            set.add(n);
+        }
+        return n == 1;
+    }
+}
