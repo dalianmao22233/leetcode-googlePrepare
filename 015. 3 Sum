@@ -5,30 +5,26 @@ class Solution {
         if (nums == null || nums.length == 0) {
             return res;
         }
+        int len = nums.length;
         HashSet<List<Integer>> set = new HashSet<>();
-        
-        Arrays.sort(nums); // 先排序
-        for (int i = 0; i < nums.length-2; i++) {
-            //为了保证不加入重复的 list,因为是有序的，所以如果和前一个元素相同，只需要继续后移就可以
-            if (i == 0 || (i > 0 && num[i] != num[i-1])) {
-              int low = i+1;
-              int high = nums.length-1;
-              while (low < high) {
-                  if (nums[i] + nums[low] + nums[high] == 0) {
-                      ArrayList<Integer> answer = new ArrayList<>();
-                      // 可以优化： res.add(Arrays.asList(nums[i],nums[low],nums[high]));
-                      answer.add(nums[i]);
-                      answer.add(nums[low]);
-                      answer.add(nums[high]);
-                      set.add(answer);
-                      low++;
-                      high--;
-                  } else if (nums[i] + nums[low] + nums[high] < 0){
-                      low++;
-                  } else {
-                      high--;
-                  }
-              }
+        Arrays.sort(nums);
+        for (int i = 0; i < len-2; i++) {
+            if (i == 0 || (i > 0 && nums[i] != nums[i-1])) {
+                int low = i+1;
+                int high = len-1;
+                while (low < high) {
+                    if (nums[i] + nums[low] + nums[high] == 0) {
+                        set.add(Arrays.asList(nums[i] , nums[low] , nums[high]));
+                        low++;
+                        high--;
+                        while (low < high && nums[low-1] == nums[low]) low++; // 防止dup, 没有也没事
+                        while (low < high && nums[high+1] == nums[high]) high--; // 防止dup, 没有也没事
+                    } else if (nums[i] + nums[low] + nums[high] > 0) {
+                        high--;
+                    } else {
+                        low++;
+                    }
+                }
             }
         }
         res.addAll(set);
