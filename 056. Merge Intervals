@@ -1,3 +1,29 @@
+leetcode换了输出格式：
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if (intervals == null || intervals.length == 0) {
+            return intervals;
+        }
+        Collections.sort(Arrays.asList(intervals), new IntervalComparator());
+        LinkedList<int[]> merged = new LinkedList<>();
+        for(int[] interval: intervals) {
+            if (merged.isEmpty() || merged.getLast()[1] < interval[0]) {
+                merged.add(interval);
+            } else {
+                merged.getLast()[1] = Math.max(merged.getLast()[1], interval[1]);
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);
+    }
+    private class IntervalComparator implements Comparator<int[]> {
+        @Override
+        public int compare(int[] a, int[] b) {
+            return a[0]<b[0] ? -1: a[0]==b[0] ? 0 : 1;
+        }
+    }
+}
+
+============================
 public class MergeInterval {
 	public static class Interval {
 		int start; int end;
