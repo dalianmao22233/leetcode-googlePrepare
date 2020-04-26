@@ -1,3 +1,41 @@
+So the basic idea is start from 4 boards, for the points in the first row and column, they are definitely connect with Pacific Ocean, and for the points in the last row and columnm, they are connected with A Ocean. Then, run dfs first time to mark these points that is able to connect with Pacifica Ocean as 'P', run dfs second time to find the points that has been already marked as "P", if its 'A' then we find a point is able to connect with both P and A. Thus the total time complexity will be O(2 * m * n)
+
+private static final int[][] directions = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public List<int[]> pacificAtlantic(int[][] matrix) {
+        List<int[]> res = new ArrayList<>();
+        if (matrix == null || matrix.length == 0) return res;
+        int m = matrix.length;
+        int n = matrix[0].length;
+        char[][] visited = new char[m][n];
+          for (int col = 0; col < n; col++) {
+            dfs(matrix, 0, col, visited, 'P', res);
+        }
+        for (int row = 0; row < m; row++) {
+            dfs(matrix, row, 0, visited, 'P', res);
+        }
+        
+        for (int col = 0; col < n; col++) {
+            dfs(matrix, m - 1, col, visited, 'A', res);
+        }
+        for (int row = 0; row < m; row++) {
+            dfs(matrix, row, n - 1, visited, 'A', res);
+        }
+        return res;
+    }
+    
+    private void dfs(int[][] matrix, int row, int col, char[][] visited, char ch, List<int[]> res) {
+        if (visited[row][col] == 'P' && ch == 'A') res.add(new int[]{row, col});
+        visited[row][col] = ch;
+        for (int[] dir : directions) {
+            int x = row + dir[0];
+            int y = col + dir[1];
+            if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length || matrix[row][col] > matrix[x][y] || visited[x][y] == ch) continue;
+            dfs(matrix, x, y, visited, ch, res);
+        }
+        
+    }
+    
+    
 https://leetcode.com/problems/pacific-atlantic-water-flow/discuss/90733/Java-BFS-and-DFS-from-Ocean
 Two Queue and add all the Pacific border to one queue; Atlantic border to another queue.
 Keep a visited matrix for each queue. In the end, add the cell visited by two queue to the result.
