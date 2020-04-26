@@ -1,133 +1,123 @@
-So the basic idea is start from 4 boards, for the points in the first row and column, they are definitely connect with Pacific Ocean, and for the points in the last row and columnm, they are connected with A Ocean. Then, run dfs first time to mark these points that is able to connect with Pacifica Ocean as 'P', run dfs second time to find the points that has been already marked as "P", if its 'A' then we find a point is able to connect with both P and A. Thus the total time complexity will be O(2 * m * n)
+思路是从海洋开始逆流 如果可以逆流到 就标记为1 然后检查两个海洋都可以逆流到的区域
 
-private static final int[][] directions = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    public List<int[]> pacificAtlantic(int[][] matrix) {
-        List<int[]> res = new ArrayList<>();
-        if (matrix == null || matrix.length == 0) return res;
+DFS
+
+    public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0) {
+            return new ArrayList<>();
+        }
+
         int m = matrix.length;
         int n = matrix[0].length;
-        char[][] visited = new char[m][n];
-          for (int col = 0; col < n; col++) {
-            dfs(matrix, 0, col, visited, 'P', res);
-        }
-        for (int row = 0; row < m; row++) {
-            dfs(matrix, row, 0, visited, 'P', res);
-        }
-        
-        for (int col = 0; col < n; col++) {
-            dfs(matrix, m - 1, col, visited, 'A', res);
-        }
-        for (int row = 0; row < m; row++) {
-            dfs(matrix, row, n - 1, visited, 'A', res);
-        }
-        return res;
-    }
-    
-    private void dfs(int[][] matrix, int row, int col, char[][] visited, char ch, List<int[]> res) {
-        if (visited[row][col] == 'P' && ch == 'A') res.add(new int[]{row, col});
-        visited[row][col] = ch;
-        for (int[] dir : directions) {
-            int x = row + dir[0];
-            int y = col + dir[1];
-            if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length || matrix[row][col] > matrix[x][y] || visited[x][y] == ch) continue;
-            dfs(matrix, x, y, visited, ch, res);
-        }
-        
-    }
-    
-    
-https://leetcode.com/problems/pacific-atlantic-water-flow/discuss/90733/Java-BFS-and-DFS-from-Ocean
-Two Queue and add all the Pacific border to one queue; Atlantic border to another queue.
-Keep a visited matrix for each queue. In the end, add the cell visited by two queue to the result.
 
+        int[][] pacific = new int[m][n];
+        int[][] atlantic = new int[m][n];
 
-BFS: Water flood from ocean to the cell. Since water can only flow from high/equal cell to low cell, add the neighboor cell with height larger or equal to current cell to the queue and mark as visited.
-public class Solution {
-    int[][]dir = new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
-    public List<int[]> pacificAtlantic(int[][] matrix) {
-        List<int[]> res = new LinkedList<>();
-        if(matrix == null || matrix.length == 0 || matrix[0].length == 0){
-            return res;
-        }
-        int n = matrix.length, m = matrix[0].length;
-        //One visited map for each ocean
-        boolean[][] pacific = new boolean[n][m];
-        boolean[][] atlantic = new boolean[n][m];
-        Queue<int[]> pQueue = new LinkedList<>();
-        Queue<int[]> aQueue = new LinkedList<>();
-        for(int i=0; i<n; i++){ //Vertical border
-            pQueue.offer(new int[]{i, 0});
-            aQueue.offer(new int[]{i, m-1});
-            pacific[i][0] = true;
-            atlantic[i][m-1] = true;
-        }
-        for(int i=0; i<m; i++){ //Horizontal border
-            pQueue.offer(new int[]{0, i});
-            aQueue.offer(new int[]{n-1, i});
-            pacific[0][i] = true;
-            atlantic[n-1][i] = true;
-        }
-        bfs(matrix, pQueue, pacific);
-        bfs(matrix, aQueue, atlantic);
-        for(int i=0; i<n; i++){
-            for(int j=0; j<m; j++){
-                if(pacific[i][j] && atlantic[i][j])
-                    res.add(new int[]{i,j});
+        //从海洋边界开始
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 || j == 0) {
+                    dfs(matrix, pacific, i, j, matrix[i][j]);
+                }
+                if (i == m - 1 || j == n - 1) {
+                    dfs(matrix, atlantic, i, j, matrix[i][j]);
+                }
             }
         }
-        return res;
-    }
-    public void bfs(int[][]matrix, Queue<int[]> queue, boolean[][]visited){
-        int n = matrix.length, m = matrix[0].length;
-        while(!queue.isEmpty()){
-            int[] cur = queue.poll();
-            for(int[] d:dir){
-                int x = cur[0]+d[0];
-                int y = cur[1]+d[1];
-                if(x<0 || x>=n || y<0 || y>=m || visited[x][y] || matrix[x][y] < matrix[cur[0]][cur[1]]){
-                    continue;
-                }
-                visited[x][y] = true;
-                queue.offer(new int[]{x, y});
-            } 
-        }
-    }
-}
-DFS version:
 
-public class Solution {
-    public List<int[]> pacificAtlantic(int[][] matrix) {
-        List<int[]> res = new LinkedList<>();
-        if(matrix == null || matrix.length == 0 || matrix[0].length == 0){
-            return res;
+        List<List<Integer>> res = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (pacific[i][j] == 1 && atlantic[i][j] == 1) {
+                    res.add(Arrays.asList(i, j));
+                }
+            }
         }
-        int n = matrix.length, m = matrix[0].length;
-        boolean[][]pacific = new boolean[n][m];
-        boolean[][]atlantic = new boolean[n][m];
-        for(int i=0; i<n; i++){
-            dfs(matrix, pacific, Integer.MIN_VALUE, i, 0);
-            dfs(matrix, atlantic, Integer.MIN_VALUE, i, m-1);
-        }
-        for(int i=0; i<m; i++){
-            dfs(matrix, pacific, Integer.MIN_VALUE, 0, i);
-            dfs(matrix, atlantic, Integer.MIN_VALUE, n-1, i);
-        }
-        for (int i = 0; i < n; i++) 
-            for (int j = 0; j < m; j++) 
-                if (pacific[i][j] && atlantic[i][j]) 
-                    res.add(new int[] {i, j});
+
         return res;
     }
-    
-    int[][]dir = new int[][]{{0,1},{0,-1},{1,0},{-1,0}};
-    
-    public void dfs(int[][]matrix, boolean[][]visited, int height, int x, int y){
-        int n = matrix.length, m = matrix[0].length;
-        if(x<0 || x>=n || y<0 || y>=m || visited[x][y] || matrix[x][y] < height)
+
+    private void dfs(int[][] matrix, int[][] aux, int i, int j, int pre) {
+        //判断边界
+        if (i < 0 || j < 0 || i > matrix.length - 1 || j > matrix[0].length - 1
+                //已经流到过了
+                || aux[i][j] == 1
+                //不能流动
+                || matrix[i][j] < pre) {
             return;
-        visited[x][y] = true;
-        for(int[]d:dir){
-            dfs(matrix, visited, matrix[x][y], x+d[0], y+d[1]);
+        }
+
+        aux[i][j] = 1;
+
+        dfs(matrix, aux, i - 1, j, matrix[i][j]);
+        dfs(matrix, aux, i + 1, j, matrix[i][j]);
+        dfs(matrix, aux, i, j - 1, matrix[i][j]);
+        dfs(matrix, aux, i, j + 1, matrix[i][j]);
+    }
+BFS
+
+public List<List<Integer>> pacificAtlantic(int[][] matrix) {
+
+        if (matrix.length == 0 || matrix[0].length == 0) {
+            return new ArrayList<>();
+        }
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        Queue<int[]> pacificQueue = new LinkedList<>();
+        Queue<int[]> atlanticQueue = new LinkedList<>();
+
+        int[][] pacificAux = new int[m][n];
+        int[][] atlanticAux = new int[m][n];
+
+        //从海洋边界开始
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 || j == 0) {
+                    pacificQueue.add(new int[]{i, j});
+                }
+                if (i == m - 1 || j == n - 1) {
+                    atlanticQueue.add(new int[]{i, j});
+                }
+            }
+        }
+
+        bfs(matrix, pacificAux, pacificQueue);
+        bfs(matrix, atlanticAux, atlanticQueue);
+
+        List<List<Integer>> res = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (pacificAux[i][j] == 1 && atlanticAux[i][j] == 1) {
+                    res.add(Arrays.asList(i, j));
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private void bfs(int[][] matrix, int[][] aux , Queue<int[]> queue) {
+        while (!queue.isEmpty()) {
+            int[] array = queue.remove();
+            int i = array[0];
+            int j = array[1];
+            //流到的区域就置为1
+            aux[i][j] = 1;
+            if (i - 1 >= 0 && matrix[i][j] <= matrix[i - 1][j] && aux[i - 1][j] != 1) {
+                queue.add(new int[]{i - 1, j});
+            }
+            if (i + 1 < matrix.length && matrix[i][j] <= matrix[i + 1][j] && aux[i + 1][j] != 1) {
+                queue.add(new int[]{i + 1, j});
+            }
+            if (j - 1 >= 0 && matrix[i][j] <= matrix[i][j - 1] && aux[i][j - 1] != 1) {
+                queue.add(new int[]{i, j - 1});
+            }
+            if (j + 1 < matrix[0].length && matrix[i][j] <= matrix[i][j + 1] && aux[i][j + 1] != 1) {
+                queue.add(new int[]{i, j + 1});
+            }
         }
     }
-}
