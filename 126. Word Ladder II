@@ -1,16 +1,17 @@
+https://leetcode.com/problems/word-ladder-ii/discuss/40475/My-concise-JAVA-solution-based-on-BFS-and-DFS
 class Solution {
     public List<List<String>> findLadders(String start, String end, List<String> wordList) {
-   HashSet<String> dict = new HashSet<String>(wordList);
-   List<List<String>> res = new ArrayList<List<String>>();         
-   HashMap<String, ArrayList<String>> nodeNeighbors = new HashMap<String, ArrayList<String>>();// Neighbors for every node
-   HashMap<String, Integer> distance = new HashMap<String, Integer>();// Distance of every node from the start node
-   ArrayList<String> solution = new ArrayList<String>();
+       HashSet<String> dict = new HashSet<String>(wordList);
+       List<List<String>> res = new ArrayList<List<String>>();         
+       HashMap<String, ArrayList<String>> nodeNeighbors = new HashMap<String, ArrayList<String>>();// Neighbors for every node
+       HashMap<String, Integer> distance = new HashMap<String, Integer>();// Distance of every node from the start node
+       ArrayList<String> solution = new ArrayList<String>();
 
-   dict.add(start);          
-   bfs(start, end, dict, nodeNeighbors, distance);                 
-   dfs(start, end, dict, nodeNeighbors, distance, solution, res);   
-   return res;
-}
+       dict.add(start);          
+       bfs(start, end, dict, nodeNeighbors, distance);                 
+       dfs(start, end, dict, nodeNeighbors, distance, solution, res);   
+       return res;
+    }
 
 // BFS: Trace every node's distance from the start node (level by level).
 private void bfs(String start, String end, Set<String> dict, HashMap<String, ArrayList<String>> nodeNeighbors, HashMap<String, Integer> distance) {
