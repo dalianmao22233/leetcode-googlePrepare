@@ -14,6 +14,7 @@ Compare the trees forming with root s-node and root t
 If the trees match(leetcode 100 logic) then return true
 Else go to step one and check for s->left || s->right
 
+注意根节点是包含在structure里面的。
 
 public class Solution {
     public boolean isSubtree(TreeNode s, TreeNode t) {
