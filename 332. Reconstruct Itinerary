@@ -1,4 +1,30 @@
 Just Eulerian path. Greedy DFS, building the route backwards when retreating.
+
+
+class Solution {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        Map<String, PriorityQueue<String>> map = new HashMap<>();
+        List<String> res = new LinkedList<String>();
+        for (List<String> s : tickets) {
+            map.computeIfAbsent(s.get(0), k -> new PriorityQueue<String>()).add(s.get(1));
+            
+        }
+
+        
+        Stack<String> st = new Stack<>();
+        st.push("JFK");
+        while(!st.isEmpty()){
+            String src = st.peek();
+            if(map.containsKey(src) && !map.get(src).isEmpty()){
+                st.push(map.get(src).poll());
+            }else{
+                res.add(0,st.pop());
+            }
+        }
+        return res;
+    }
+    
+}
 public List<String> findItinerary(String[][] tickets) {
     for (String[] ticket : tickets)
         targets.computeIfAbsent(ticket[0], k -> new PriorityQueue()).add(ticket[1]);
