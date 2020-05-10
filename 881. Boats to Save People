@@ -1,0 +1,10 @@
+class Solution {
+    //https://leetcode.com/problems/boats-to-save-people/discuss/156740/C%2B%2BJavaPython-Two-Pointers
+    public int numRescueBoats(int[] people, int limit) {
+        Arrays.sort(people);
+        int i, j;
+        for (i = 0, j = people.length - 1; i <= j; --j)
+            if (people[i] + people[j] <= limit) ++i;
+        return people.length - 1 - j;
+    }
+}
