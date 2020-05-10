@@ -1,0 +1,28 @@
+public int LengthOfLongestSubstringTwoDistinct(string s) 
+    {
+        int left1 = -1;
+        int left2 = -1;
+        int len = 0;
+        int max = 0;
+        for (int i = 0; i < s.Length; i++)
+        {
+            if (left1 == -1 || s[i] == s[left1]) 
+            {
+                left1 = i;
+                len++;
+                max = Math.Max(max, len);
+            }
+            else if (left2 == -1 || s[i] == s[left2]) 
+            {
+                left2 = i;
+                len++;
+                max = Math.Max(max, len);
+            }
+            else
+            {
+                if (left1 < left2) { len = i - left1; left1 = i; }
+                else { len = i - left2; left2 = i; }
+            }
+        }
+        return max;
+    }
