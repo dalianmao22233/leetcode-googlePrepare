@@ -1,0 +1,53 @@
+public class Solution {
+    public List<int[]> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        PriorityQueue<int[]> que = new PriorityQueue<>((a,b)->a[0]+a[1]-b[0]-b[1]);
+        List<int[]> res = new ArrayList<>();
+        if(nums1.length==0 || nums2.length==0 || k==0) return res;
+        for(int i=0; i<nums1.length && i<k; i++) que.offer(new int[]{nums1[i], nums2[0], 0});
+        while(k-- > 0 && !que.isEmpty()){
+            int[] cur = que.poll();
+            res.add(new int[]{cur[0], cur[1]});
+            if(cur[2] == nums2.length-1) continue;
+            que.offer(new int[]{cur[0],nums2[cur[2]+1], cur[2]+1});
+        }
+        return res;
+    }
+}
+
+https://leetcode.com/problems/find-k-pairs-with-smallest-sums/discuss/84551/simple-Java-O(KlogK)-solution-with-explanation
+
+
+class Solution { 
+    
+    //sol1 brute-force, O(m*n *log(m*n))
+    
+    //sol2 O(m+ klogm) or O(n+ klogn)
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+       
+        List<List<Integer>> ret = new ArrayList<>();
+        int m = nums1.length, n = nums2.length;
+        if (m ==0 || n ==0) return ret;
+        
+        PriorityQueue<Tuple> pq= new PriorityQueue<>((t1,t2)->t1.s-t2.s);
+        for(int i =0;i<m;i++) { // construct minheap O(m)
+            pq.add(new Tuple(i,0,nums1[i]+nums2[0]));
+        }
+        
+        for(int i =0;i<Math.min(k,m*n);i++) //O(klogm)
+            Tuple t = pq.poll(); //O(logm)
+            List<Integer> list = new ArrayList<>();
+            list.add(nums1[t.i]); list.add(nums2[t.j]);
+            ret.add(list);
+            if(t.j+1<nums2.length) 
+                pq.add(new Tuple(t.i,t.j+1,nums1[t.i]+nums2[t.j+1])); //O(logm)
+        }
+        return ret;
+    }
+    
+    class Tuple {
+        int i,j,s;
+        public Tuple(int i, int j, int s) {
+            this.i=i;this.j=j;this.s=s;
+        }
+    }
+}
