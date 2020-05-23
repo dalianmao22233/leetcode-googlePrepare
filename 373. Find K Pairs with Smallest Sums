@@ -17,6 +17,7 @@ public class Solution {
 https://leetcode.com/problems/find-k-pairs-with-smallest-sums/discuss/84551/simple-Java-O(KlogK)-solution-with-explanation
 
 
+
 class Solution { 
     
     //sol1 brute-force, O(m*n *log(m*n))
@@ -33,8 +34,8 @@ class Solution {
             pq.add(new Tuple(i,0,nums1[i]+nums2[0]));
         }
         
-        for(int i =0;i<Math.min(k,m*n);i++) //O(klogm)
-            Tuple t = pq.poll(); //O(logm)
+        for(int i =0;i<Math.min(k,m*n);i++) { //O(klogm)
+            Tuple t = pq.poll();  
             List<Integer> list = new ArrayList<>();
             list.add(nums1[t.i]); list.add(nums2[t.j]);
             ret.add(list);
