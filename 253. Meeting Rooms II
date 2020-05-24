@@ -1,3 +1,30 @@
+
+
+
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        TreeMap<Integer, Integer> map = new TreeMap<>(); // TreeMap sorts by key (time in this case)
+        for (int[] interval: intervals) {
+            int start = interval[0];
+            int end = interval[1];
+            
+            map.put(start, map.getOrDefault(start, 0) + 1);
+            map.put(end, map.getOrDefault(end, 0) - 1);
+        }
+        
+        int room = 0, min = 0;
+        for (int val: map.values()) {
+            room += val;
+            min = Math.max(room, min);
+        }
+        
+        return min;
+    }
+}
+
+
+
+
 1. min heap:
 Time: O(nlogn), space: O(n)
 
