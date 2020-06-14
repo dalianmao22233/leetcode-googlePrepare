@@ -1,0 +1,19 @@
+class Solution {
+    public int maxSumSubmatrix(int[][] matrix, int k) {
+        int res = Integer.MIN_VALUE;
+        for(int y1 = 0; y1 < matrix.length; y1++) {
+            int[][] sum = new int[matrix.length][matrix[0].length];
+            for(int y2 = y1; y2 < matrix.length; y2++) {
+                TreeSet<Integer> set = new TreeSet<>();
+                set.add(0);
+                for(int x = 0; x < matrix[y2].length; x++) {
+                    sum[y2][x] = matrix[y2][x] + (x < 1 ? 0 : sum[y2][x - 1]) + (y2 < 1 ? 0 : sum[y2 - 1][x]) - (y2 >= 1 && x >= 1 ? sum[y2 - 1][x - 1] : 0);
+                    Integer ceil = set.ceiling(sum[y2][x] - k);
+                    if(ceil != null) res = Math.max(res, sum[y2][x] - ceil);
+                    set.add(sum[y2][x]);
+                }
+            }
+        }
+        return res;
+    }
+}
