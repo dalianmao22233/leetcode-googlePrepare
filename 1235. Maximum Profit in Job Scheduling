@@ -1,0 +1,26 @@
+class Solution {
+    public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        int n = profit.length;
+        int []dp = new int[2*n];
+        int [][]a = new int[2*n][3];
+        for(int i=0;i<n;i++){
+            a[i] = new int[]{startTime[i],i,0};
+            a[n+i] = new int[]{endTime[i],i,1};
+        }
+        Arrays.sort(a, (a1, a2) -> a1[0] == a2[0] ? a2[2] - a1[2] : a1[0] - a2[0]);
+        Map<Integer, Integer> hm = new HashMap();
+        for(int i=0;i<2*n;i++){
+            if(a[i][2] == 0){
+                hm.put(a[i][0], i);
+            }
+        }
+        for(int i=1;i<2*n;i++){
+            dp[i] = dp[i-1];
+            if(a[i][2] == 1){
+                int ind = a[i][1];
+                dp[i] = Math.max(dp[i], dp[hm.get(startTime[ind])] + profit[ind]);
+            }
+        }
+        return dp[2*n-1];
+    }
+}
