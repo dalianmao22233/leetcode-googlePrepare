@@ -1,0 +1,85 @@
+class TreeNode {
+    int lo;
+    int hi;
+    int count = 0;
+    
+    TreeNode left;
+    TreeNode right;
+    
+    public TreeNode(int l, int h) {
+        lo = l;
+        hi = h;
+    }
+}
+
+class Solution {
+    public List<Integer> countSmaller(int[] nums) {
+        int maxVal = Integer.MIN_VALUE;
+        int minVal = Integer.MAX_VALUE;
+        
+        for (int x : nums) {
+            maxVal = Math.max(maxVal, x);
+            minVal = Math.min(minVal, x);
+        }
+        
+        TreeNode root = new TreeNode(minVal, maxVal);
+        
+        List<Integer> result = new ArrayList<>();
+        
+        for (int i = nums.length - 1; i >= 0; i--) {
+            int cnt = query(minVal, nums[i] - 1, root);
+            result.add(cnt);
+            add(nums[i], nums[i], root);
+        }
+                
+        Collections.reverse(result);
+        
+        return result;
+    }
+    
+    int query(int lo, int hi, TreeNode node) {
+        if (lo > hi)
+            return 0;
+        
+        if (node == null) {
+            return 0;
+        }
+        
+        if (node.lo >= lo && node.hi <= hi) {
+            return node.count;
+        }
+        
+        if (node.lo > hi || node.hi < lo) {
+            return 0;
+        }
+        
+        return query(lo, hi, node.left) + query(lo, hi, node.right);
+    }
+    
+    void add(int lo, int hi, TreeNode node) {
+        if (node.lo > hi || node.hi < lo) {
+            return;
+        }
+        
+        if (node.lo <= lo && node.hi >= hi) {
+            node.count++;
+        }
+        
+        if (node.lo >= node.hi) {
+            return;
+        }
+        
+        int mid = node.lo + (node.hi - node.lo) / 2;
+                
+        if (node.left == null) {
+            node.left = new TreeNode(node.lo, mid);
+        }
+        
+        if (node.right == null) {
+            node.right = new TreeNode(mid + 1, node.hi);
+        }
+        
+        add(lo, hi, node.left);
+        add(lo, hi, node.right);
+    }
+}
