@@ -54,7 +54,7 @@ class Solution {
                     if (colors[next] == 0) {          // If this node hasn't been colored;
                         colors[next] = -colors[cur];  // Color it with a different color;
                         queue.offer(next);
-                    } else if (colors[next] != -colors[cur]) {   // If it is colored and its color is different, return false;
+                    } else if (colors[next] == colors[cur]) {   // If it is colored and its color is same, return false;
                         return false;
                     }
                 }
