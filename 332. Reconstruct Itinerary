@@ -1,3 +1,46 @@
+1. BFS, queue
+class Solution {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        Map<String, PriorityQueue<String>> map = new HashMap<>();
+        List<String> res = new LinkedList<String>();
+        Queue<String> queue = new LinkedList<>();
+        
+        for (List<String> t: tickets) {
+            if (!map.containsKey(t.get(0))) {
+                map.put(t.get(0), new PriorityQueue<String>());           
+            }
+            map.get(t.get(0)).offer(t.get(1));
+        }
+        queue.offer("JFK");
+        
+        while (!queue.isEmpty()) {
+            String next = queue.peek();  // 注意这里先别poll, 因为要看map中的priorityqueue是否为空,如果是空，证明已经过河拆桥了，加到res中。
+            if (map.containsKey(next) && map.get(next).size() > 0) {
+                queue.offer(map.get(next).poll());
+            } else {
+                res.add(queue.poll());
+            }
+            System.out.println(map);
+        }
+        return res;
+    }
+    
+}
+input: [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]
+map:
+{LHR=[SFO], MUC=[LHR], SFO=[SJC], JFK=[]}
+{LHR=[SFO], MUC=[LHR], SFO=[SJC], JFK=[]}
+{LHR=[SFO], MUC=[], SFO=[SJC], JFK=[]}
+{LHR=[SFO], MUC=[], SFO=[SJC], JFK=[]}
+{LHR=[], MUC=[], SFO=[SJC], JFK=[]}
+{LHR=[], MUC=[], SFO=[SJC], JFK=[]}
+{LHR=[], MUC=[], SFO=[], JFK=[]}
+{LHR=[], MUC=[], SFO=[], JFK=[]}
+{LHR=[], MUC=[], SFO=[], JFK=[]}
+
+
+
+2.
 Just Eulerian path. Greedy DFS, building the route backwards when retreating.
 
 
