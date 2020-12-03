@@ -1,30 +1,33 @@
 https://blog.csdn.net/zjuPeco/article/details/78981634
 一个没有环的有向图
-public class Solution {
+BFS的算法思想是拓扑排序：从外围往核心进发。我们每次在图中找入度为0的点，然后移除。如果最后没有入度为0的点，但是图中仍有点存在，那么这些剩下来的点一定是交错成环的。
+https://github.com/wisdompeak/LeetCode/tree/master/BFS/207.Course-Schedule
+
+class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         int[] indegree = new int[numCourses];
-        Queue<Integer> queue = new LinkedList<Integer>();
-        for(int[] pair:prerequisites){
-            indegree[pair[1]]++;
+        for (int[] pair: prerequisites) {
+            indegree[pair[0]]++;
         }
-        for(int i=0;i<indegree.length;i++){
-            if(indegree[i]==0){
-                queue.add(i);
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < indegree.length; i++) {
+            if (indegree[i] == 0) {
+                queue.offer(i);
             }
         }
-        int select = 0;
-        while(!queue.isEmpty()){
+        
+        while (!queue.isEmpty()) {
             numCourses--;
-            int course = queue.poll();
-            for(int[] pair:prerequisites){
-                if(pair[0]==course){
-                    indegree[pair[1]]--;
-                    if(indegree[pair[1]]==0){
-                        queue.add(pair[1]);
+            int temp = queue.poll();
+            for (int[] pair: prerequisites) {
+                if (pair[1] == temp) {
+                    indegree[pair[0]]--;
+                    if (indegree[pair[0]] == 0) {
+                        queue.offer(pair[0]);
                     }
                 }
             }
-        }
-        return numCourses==0;
+        } 
+        return numCourses == 0;
     }
 }
