@@ -1,0 +1,64 @@
+Given an integer n, return the decimal value of the binary string formed by concatenating the binary representations of 1 to n in order, modulo 109 + 7.
+
+ 
+
+Example 1:
+
+Input: n = 1
+Output: 1
+Explanation: "1" in binary corresponds to the decimal value 1. 
+Example 2:
+
+Input: n = 3
+Output: 27
+Explanation: In binary, 1, 2, and 3 corresponds to "1", "10", and "11".
+After concatenating them, we have "11011", which corresponds to the decimal value 27.
+Example 3:
+
+Input: n = 12
+Output: 505379714
+Explanation: The concatenation results in "1101110010111011110001001101010111100".
+The decimal value of that is 118505380540.
+After modulo 109 + 7, the result is 505379714.
+ 
+
+Constraints:
+
+1 <= n <= 105
+
+
+
+class Solution {
+    public int concatenatedBinary(int n) {
+        int i=1;
+        int mod = (int)Math.pow(10,9) + 7;
+        StringBuilder sb = new StringBuilder();
+        while(i<=n){
+            sb.append(Integer.toBinaryString(i)); // Build string with integers
+            i++;
+        }
+        String binary = sb.toString();
+        int current = 0;
+        for(i=0; i<binary.length();i++){
+            current += binary.charAt(i) =='1'? 1:0; // add 1 if it is a 1
+            if(i+1 != binary.length()) // only multiply if it is not the last place or else it will be too big!
+                current = ((current % mod) * 2) % mod; // modular multiplication to avoid overflow
+        }
+        return current;
+    }
+}
+PROBLEM OVERVIEW
+Given an int, n, concatenate all numbers from 1 to n in binary. Convert this binary number into decimal. Numbers may be large so return the answer mod 10^9 + 7.
+
+SOLUTION ANALYSIS
+Use a StringBuilder for efficient String concatenation. For each decimal value 1 to n, we can use Java's inbuilt function Integer.toBinaryString(int i) to concatenate the binary representation.
+
+After that, we need to use modular multiplication to avoid overflow. To convert binary to decimal, we typically add 1 if it is a 1 at that place value and then multiply the sum by 2. However, bcause the number may be too large, we take the remainder of the current number and mod (10^9 + 7) before and after multiplying. By doing so, we prevent overflow.
+
+For modular multiplication, the typical code is like this :
+
+public int modularMultiplication(int a, int b, int mod){
+	return ((a%mod) * (b%mod)) % mod;
+}
+TIME COMPLEXITY
+O(N) since it takes O(N) to concatenate the string and O(N) to convert it back to decimal
