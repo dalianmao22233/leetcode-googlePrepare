@@ -39,34 +39,34 @@ public class Solution {
 //初始化：dp[i][i] = true (0 <= i <= n-1);  dp[i][i-1] = true (1 <= i <= n-1); 其余的初始化为false
 //dp[i][j] = (s[i] == s[j] && dp[i+1][j-1] == true)
 //在动态规划中保存最长回文的长度及起点即可
-public class Solution {
+https://leetcode.com/problems/longest-palindromic-substring/discuss/151144/Bottom-up-DP-Logical-Thinking
+class Solution {
     public String longestPalindrome(String s) {
-        if(s == null || s.length() == 0) {
-            return "";
-        }
-        int len = s.length();
-        if (len < 1) {
+        if (s.length() <= 1)
             return s;
-        }
-        boolean[][] dp = new boolean[len][len];
-        int resultLeft = 0, resultRight = 0;
-        dp[0][0] = true;
-        for (int i = 1; i < len; i++) {
+        
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        
+        for (int i = 0; i < s.length(); i++)
             dp[i][i] = true;
-            dp[i][i-1] = true;  //这个初始化容易忽略，当k=2时要用到
-        }
-        for (int k = 2; k <= len; k++) {   //枚举子串长度
-            for (int i = 0; i <= len-k; i++) {  //枚举子串起始位置
-                if (s.charAt(i) == s.charAt(i+k-1) && dp[i+1][i+k-2]) {
-                    dp[i][i+k-1] = true;
-                    if (resultRight-resultLeft+1 < k) {
-                        resultLeft = i;
-                        resultRight = i+k-1;
+        
+        int longestPalindromeStart = 0, longestPalindromeLength = 1;
+        for (int start = s.length() - 1; start >= 0; start--) {
+            for (int end = start + 1; end < s.length(); end++) {
+                if (s.charAt(start) == s.charAt(end)) {
+                    if (end - start == 1 || dp[start + 1][end - 1]) {
+                        dp[start][end] = true;
+                        if (longestPalindromeLength < end - start + 1) {
+                            longestPalindromeStart = start;
+                            longestPalindromeLength = end - start + 1;
+                        }
                     }
                 }
+
             }
         }
-        return s.substring(resultLeft, resultRight+1);
+        
+        return s.substring(longestPalindromeStart, longestPalindromeStart + longestPalindromeLength);
     }
 }
 
