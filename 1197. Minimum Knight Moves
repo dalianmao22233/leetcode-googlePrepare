@@ -1,4 +1,5 @@
-BFS:
+BFS保证了最短路径，因为能直接先visit 直接邻居， 和DFS对比。
+1. naive BFS:
 
 class Solution {
     private final int[][] DIRECTIONS = new int[][] {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
@@ -6,6 +7,7 @@ class Solution {
     public int minKnightMoves(int x, int y) {
         x = Math.abs(x);
         y = Math.abs(y);
+        // 这里全都放到第一象限，对称性
         
         Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[] {0, 0});
@@ -27,7 +29,11 @@ class Solution {
                 for (int[] d : DIRECTIONS) {
                     int newX = curX + d[0];
                     int newY = curY + d[1];
-                    if (!visited.contains(newX + "," + newY) && newX >= -1 && newY >= -1) {
+                    if (!visited.contains(newX + "," + newY) && newX >= -1 && newY >= -1) { 
+                        // 这步要注意加上>=-1的2个条件，面试官可能会给（1，1）这个test case来提示。
+                        // 我是这么想的： 画图就懂了，(1,1)是最小单位，以这个作为edge case, 
+                        // 那么路径是(0, 0)->(2,-1)->(1,1) 或者 (0, 0) ->(-1, 2)-> (1, 1)
+                        // 所以如果超出这个界限，就不用再看了，第一象限都可以解决。
                         queue.add(new int[] {newX, newY});
                         visited.add(newX + "," + newY);
                     }
@@ -36,5 +42,98 @@ class Solution {
             result++;
         }
         return -1;
+    }
+}
+
+2. 优化，bi-directional BFS.
+3. A*
+
+
+class Solution {
+    public int minKnightMoves(int x, int y) {
+        //naive BFS takes too long.
+        
+        //can use A*. Intuitively makes sense to give higher priority to nodes which are literally closer to (x,y).
+        
+        //In order for A* to return lowest cost path though, need at least an admissible heuristic: h(n) = cost from n to final goal of (x,y) <= actual cost from n to (x,y).
+        //That is to say, the heuristic never overestimates the cost from current position to end goal.
+        
+        //Another issue: how do we define "actual" cost? We could use cost = 1 for each knight move, but it's more elegant to define "actual" cost as the literal number of hops it takes.
+        //For example, (0,0) to (2,1) literally takes 3 hops.
+        
+        //Naturally, h(n) := euclidian distance. If (x,y) = (2,1), then h((0,0)) = sqrt(4+1) = 2.23, which we can underestimate to 2. 
+        
+        //Indeed, euclid distance is a good choice for admissible heuristic b/c no matter which coordinate you're at, the euclid distance to (x,y) should always be <= hops it takes to get to (x,y).
+        
+        //Furthermore, this heuristic is consistent too b/c for neighboring nodes, the heuristic always underestimates the actual cost. Consistent heuristic implies that never need to visit a node twice, hence it's useful to maintain a visited set -- to skip nodes we've already visited. 
+    
+        
+        int[][] dir = new int[][]{{1,2},{2,1},{1,-2},{2,-1},{-1,-2},{-2,-1},{-1,2},{-2,1}};
+        
+        PriorityQueue<int[]> pq = new PriorityQueue<>((p1, p2) -> {
+            //f(n) = g(n) + h(n)
+            //g(n) := cost from start to n
+            //h(n) := heuristic; cost from n to (x,y) using euclid distance
+            //we can have p[2] store g(n), and p[3] store h(n)
+            return (p1[2] + p1[3]) - (p2[2] + p2[3]);
+        });
+        
+        pq.add(new int[]{0,0,0,euclid(0,0,x,y)});
+        
+        HashSet<String> visited = new HashSet<>();
+        
+        
+        while(!pq.isEmpty()) {
+                        
+            int[] curr = pq.poll();
+            String currs = curr[0]+","+curr[1];
+                        
+            if(curr[0] == x && curr[1] == y) return curr[2] / 3; 
+            
+            if(visited.contains(currs)) continue;
+            visited.add(currs);
+            
+            //process this position, try all directions
+            for(int[] d: dir) {
+                int newx = curr[0]+d[0];
+                int newy = curr[1]+d[1];
+                int gn = curr[2] + 3; //g(n)
+                int hn = euclid(newx,newy,x,y);
+                
+                int[] newEntry = new int[]{newx,newy,gn,hn};
+                pq.add(newEntry);
+            }
+        }
+        
+        return -1; //should never get here
+    }
+    
+    private int euclid(int x1, int y1, int x2, int y2) {
+        int a = x1-x2;
+        int b = y1-y2;
+        return (int)Math.sqrt(a*a + b*b);
+    }
+}
+P.S: This is a lot faster if you do the visited check while processing children. Normally, it doesn't make a difference but b/c the branching gets pretty crazy and b/c you're going to re-encounter a lot of nodes, it's much faster to add a node to visited as soon as you add it to PQ.
+
+I left my code as is b/c it's easier to read imo if you just add everything to PQ, and then process visited when you poll from PQ.
+
+
+
+
+4. DFS
+
+class Solution {
+    HashMap<String, Integer> map = new HashMap<String, Integer>();
+    public int minKnightMoves(int x, int y) {
+        x = Math.abs(x);
+        y = Math.abs(y);
+        if(x + y == 0) return 0;
+        if(x + y == 2) return 2;
+        String key = x + "#" + y;
+        if(map.containsKey(key)) return map.get(key);
+        int count = Math.min(minKnightMoves(x - 2, y - 1), minKnightMoves(x-1, y-2)) + 1;
+        map.put(key, count);
+        return count;
     }
 }
