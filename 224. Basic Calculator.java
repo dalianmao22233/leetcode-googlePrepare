@@ -1,3 +1,18 @@
+Principle:
+
+(Sign before '+'/'-') = (This context sign);
+(Sign after '+'/'-') = (This context sign) * (1 or -1);
+Algorithm:
+
+Start from +1 sign and scan s from left to right;
+if c == digit: This number = Last digit * 10 + This digit;
+if c == '+': Add num to result before this sign; This sign = Last context sign * 1; clear num;
+if c == '-': Add num to result before this sign; This sign = Last context sign * -1; clear num;
+if c == '(': Push this context sign to stack;
+if c == ')': Pop this context and we come back to last context;
+Add the last num. This is because we only add number after '+' / '-'.
+   来自第一条评论： https://leetcode.com/problems/basic-calculator/discuss/62361/Iterative-Java-solution-with-stack
+
 public int calculate(String s) {
     if(s == null) return 0;
         
@@ -33,39 +48,7 @@ public int calculate(String s) {
 
 
 
-1. 我看有个recursion... 但是没用stack.    
-class Solution {
-    int i = 0;
-    public int calculate(String s) {
-        if(s == null || s.length() == 0){
-            return 0;
-        }
-        int current = 0;
-        int result = 0;
-        int sign = 1;
-        while(i < s.length()){  // for 也行。。
-            char c = s.charAt(i++);
-            if(c >= '0' && c <= '9'){  // 0-9之间
-                current = current * 10 + c - '0';
-            }else if(c == '+'){
-                result += current * sign;
-                current = 0;
-                sign = 1;
-            }else if(c == '-'){
-                result += current * sign;
-                current = 0;
-                sign = -1;
-            }else if(c == '('){
-                current = calculate(s);
-            }else if(c == ')'){
-                result += current * sign;
-                return result;
-            }
-        }
-        result += current * sign;
-        return result;
-    }
-}
+ 
 
 3. 和变种III思路一致：
 在做了Basic Calculator III之后，再反过头来看这道题，发现递归处理括号的方法在这道题也同样适用，
