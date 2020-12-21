@@ -1,48 +1,39 @@
-1. 用stack:
-
-class Solution {
-    public int calculate(String s) {
-        Stack<Integer> stack = new Stack<>();
-        int res = 0;
-        int sign = 1;
-        int number = 0;  // 相当于求一个中间量。
+public int calculate(String s) {
+    if(s == null) return 0;
         
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (Character.isDigit(c)) {
-                number = 10*number + (int) (c-'0'); 
-                //可能是个多位数，先输进来存着。如果不是的话number=0，会被后面的操作更新的，莫担心
-            } else if (c == '+') {
-                res += sign * number;
-                number = 0;
-                sign = 1;
-            } else if (c == '-') {
-                res += sign * number;
-                number = 0;
-                sign = -1;
-            } else if (c == '(') {   
-                stack.push(res);
-                stack.push(sign);
-                sign = 1;
-                res = 0;
-            } else if (c == ')') {
-                res += sign * number;
-                number = 0;
-                res *= stack.pop();  // 对应左括号，这里是sign
-                res += stack.pop();  // 对应左括号，这里是res.
-            }
+    int result = 0;
+    int sign = 1;
+    int num = 0;
             
+    Stack<Integer> stack = new Stack<Integer>();
+    stack.push(sign);
+            
+    for(int i = 0; i < s.length(); i++) {
+        char c = s.charAt(i);
+                
+        if(c >= '0' && c <= '9') {
+            num = num * 10 + (c - '0');
+            //如果有多位的数字，比如123， 那么一位一位放。
+        } else if(c == '+' || c == '-') {
+            result += sign * num;
+            sign = stack.peek() * (c == '+' ? 1: -1); 
+            num = 0;
+                    
+        } else if(c == '(') {
+            stack.push(sign);
+                    
+        } else if(c == ')') {
+            stack.pop();
         }
-        if (number != 0) {
-            res += sign * number;
-        }
-        return res;
     }
+            
+    result += sign * num;
+    return result;
 }
 
 
-2. 我看有个recursion... 但是没用stack.
-    
+
+1. 我看有个recursion... 但是没用stack.    
 class Solution {
     int i = 0;
     public int calculate(String s) {
