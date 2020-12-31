@@ -17,6 +17,21 @@ D, 4,1,3
 
 第二部分就是bfs/dfs了， visited set 作为记录，看是否重复计算了。
 
+https://www.jianshu.com/p/15a23f2833ca 这个解释很好：
+把出现在同一个account里面的email都跟该account的第一个email连接，连接的含义是双向的，
+就是说把彼此存入到自己的neighbors中，本解法里就是map里对应的HashSet<Strings>. 然后用一个visited来保存访问过的email. 
+遍历account, 每次取出第一个email, 先检查是不是visited, 因为它可能在别的account里不是第一个email而被访问过，
+如果是的话我们继续访问就会出现重复结果，因为email最后都会被merge到一个账号。
+如果没有访问过，我们就要做一个bfs, 从该email出发，找它的所有邻居，加到list里。最后要记得sort所有的emails.
+最后的最后才把名字加到最前面，构成一组答案。
+为什么从account的第一个email出发做BFS可以找到所有图中于这个email相连的emails呢？
+因为在该account中不用说，我们建图的时候就连接了所有的emails to 第一个email，
+那么我们宽搜很快就能得到这些同一个account的email. 同时，这个email可能出现在其他account的非首个email的位置上，
+而我们建图的时候，连接了它跟这个account的首个email，那么我们把这个首个email放进queue里面之后，
+一定能访问到所有跟它连接的在该account里的emails, 所以这个account里的所有emails也可以访问到。
+因此我们从这个account的第一个email出发做宽搜，一定是找得到所有跟它相连的emails的。
+
+
 class Solution {
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
         Map<String, Set<String>> graph = new HashMap<>();
