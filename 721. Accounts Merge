@@ -26,6 +26,8 @@ class Solution {
                 if (!graph.containsKey(ls.get(i))) {
                     graph.put(ls.get(i), new HashSet<String>());
                 }
+                //这两句少了谁也不行，如果少了这句，就会导致graph不全，当bfs/dfs时路径就会少走，导致ans不全，最后会变成：[[D, 0,1,4,3][D, 5]]
+                //一定要建立所有的联系，不然每个graph set会不全。
                 graph.get(ls.get(i)).add(ls.get(1)); 
                 graph.get(ls.get(1)).add(ls.get(i));
             }
