@@ -1,12 +1,26 @@
 https://leetcode.com/problems/accounts-merge/discuss/109158/Java-Solution-(Build-graph-%2B-DFS-search)
-{Name, 1, 2, 3} => Name -- 1 -- 2 -- 3
-{Name, 2, 4, 5} => Name -- 2 -- 4 -- 5 (The same graph node 2 appears)
-{Name, 6, 7, 8} => Name -- 6 -- 7 -- 8
 
+通过举例子可以得到算法的过程其实是把同一个人的email都用边联系起来， 然后无论用bfs/dfs,都是只拉出每个email 所连接的所有email，就能得到结果，bfs比dfs直观。
+举例：
+D, 0,4,3
+D, 5,5,0
+D, 1,4,0
+D, 0,1,3
+D, 4,1,3
+
+算法第一部分就是将每一个数组里第一个email和其他的email联系起来，运行之后graph就是：
+0=0,1,4,3,5
+5=5,0
+1=1,4,0
+4=4,1,3,0
+3=4,0
+
+第二部分就是bfs/dfs了， visited set 作为记录，看是否重复计算了。
 
 class Solution {
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
         Map<String, Set<String>> graph = new HashMap<>();
+        // 第一部分
         for (List<String> ls: accounts) {
             for (int i = 1; i < ls.size(); i++) {
                 if (!graph.containsKey(ls.get(i))) {
@@ -16,7 +30,7 @@ class Solution {
                 graph.get(ls.get(1)).add(ls.get(i));
             }
         }
-        
+        // 第二部分
         Set<String> visited = new HashSet<>();
         List<List<String>> res = new ArrayList<>();
         for (List<String> ls: accounts) {
