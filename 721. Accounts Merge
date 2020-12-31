@@ -36,10 +36,10 @@ class Solution {
         Set<String> visited = new HashSet<>();
         List<List<String>> res = new ArrayList<>();
         for (List<String> ls: accounts) {
-            if (!visited.contains(ls.get(1))) {
+            if (!visited.contains(ls.get(1))) {  // 这句容易忘，不然会有很多重复。
                 List<String> ans = new ArrayList<>();
                 bfs(graph, visited, ls.get(1), ans);   // bfs, dfs all works.
-                Collections.sort(ans);
+                Collections.sort(ans); // 注意排序！
                 ans.add(0, ls.get(0));
                 res.add(ans);
             }
