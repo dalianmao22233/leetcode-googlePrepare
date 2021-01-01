@@ -71,27 +71,33 @@ class Solution {
 
 2. dfs:
 Time: O(n^2), traverse all element.
-public class Solution {
-    public int findCircleNum(int[][] M) {
-        boolean[] visited = new boolean[M.length]; //visited[i] means if ith person is visited in this algorithm， 
-        //boolean占位更少。
-        int count = 0;
-        for(int i = 0; i < M.length; i++) {
-            if(!visited[i]) {
-                dfs(M, visited, i);
-                count++;
+ 
+
+class Solution {
+    public int findCircleNum(int[][] grid) {
+        int row = grid.length;
+        int col = grid[0].length;
+        int res = 0;
+        boolean[] visited = new boolean[grid.length]; //boolean占位更少。
+        for (int i = 0; i < row; i++) {
+            if (!visited[i]) {
+                dfs(grid, i , visited);
+                res++;
             }
         }
-        return count;
+        return res;
     }
-    private void dfs(int[][] M, boolean[] visited, int person) {
-        for(int other = 0; other < M.length; other++) {
-            if(M[person][other] == 1 && !visited[other]) {
-                //We found an unvisited person in the current friend cycle 
+    public void dfs(int[][] grid, int cur, boolean[] visited) {
+        // visited[cur] = true;
+        // 其实相当于只看对角线一半就够了，因为不是双向连接的关系，单边就可以证明是相连。
+        for (int other = 0; other <grid.length; other++) {
+            if (grid[cur][other] == 1 && !visited[other]) { 
+                // 没访问过other person, 继续深搜与之相连的person
                 visited[other] = true;
-                dfs(M, visited, other); //Start DFS on this new found person
+                dfs(grid, other, visited);
             }
         }
+        
     }
 }
 
