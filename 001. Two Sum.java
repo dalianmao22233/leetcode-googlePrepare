@@ -28,6 +28,7 @@ class Solution {
         }
         HashMap<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
+		// 思想： 每个index上距离target差多少值，作为map的key. 如果在搜索时找到这样的值， 就说明可以组成target。
             if (!map.containsKey(target-nums[i])) {
                 map.put(nums[i], i);
             } else {
