@@ -1,21 +1,34 @@
+1. 基本思想是设置三个指针：遍历mid指针，当遇到2号球时，便和right指针进行交换；遇到1号球时，继续前进；与到0号球时，便和left指针进行交换。  
 class Solution {
     public void sortColors(int[] nums) {
-        // 1-pass
-        int p1 = 0, p2 = nums.length - 1, index = 0;
-        while (index <= p2) {
-            if (nums[index] == 0) {
-                nums[index] = nums[p1];
-                nums[p1] = 0;
-                p1++;
+        if (nums.length == 1) {
+            return;
+        }
+        int l = 0;
+        int h = nums.length-1;
+        int mid = 0;
+        while (mid <= h) {
+            if (nums[mid] == 2) {
+                // swap(nums, h, mid);
+                nums[mid] = nums[h];
+                nums[h] = 2;
+                h--;
+                // 这里不能mid++;需要把mid指针保留在原地，因为从右指针换过来的数可能还需要进行比较（比如换来的是0），如果jump到下一个了，那么会错过这个数。
+            } else if (nums[mid] == 1) {
+                mid++;
+            } else if (nums[mid] == 0) {
+                // swap(nums, l, mid);
+                nums[mid] = nums[l];
+                nums[l] = 0;
+                l++;
+                mid++;
             }
-            if (nums[index] == 2) {
-                nums[index] = nums[p2];
-                nums[p2] = 2;
-                p2--;
-                index--;
-            }
-            index++;
         }
     }
-
 }
+
+2. 这道题的本质还是一道排序的题，题目中给出提示说可以用计数排序，需要遍历数组两遍，那么先来看这种方法，因为数组中只有三个不同的元素，所以实现起来很容易。
+
+- 首先遍历一遍原数组，分别记录 0，1，2 的个数。
+- 然后更新原数组，按个数分别赋上 0，1，2。
+但是有2个pass. 
