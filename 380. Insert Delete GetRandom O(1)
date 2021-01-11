@@ -10,6 +10,7 @@ map用于check value是否已经被插入。
 ArrayList remove method is O(n), 如果从random位置移除。
 为了克服这个问题，swap (尾部index, current index),再移除尾部。 之后需要update map中的值。map.put(swapVal, ind)
 
+有空看一下follow up: https://leetcode.com/problems/insert-delete-getrandom-o1/discuss/85401/Java-solution-using-a-HashMap-and-an-ArrayList-along-with-a-follow-up.-(131-ms)
 
 class RandomizedSet {
     HashMap<Integer, Integer> map; // key = val, value = index
