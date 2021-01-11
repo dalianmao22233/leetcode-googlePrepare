@@ -1,7 +1,14 @@
 用list存储数字， map key = number value, value = index in list.
 map用于check value是否已经被插入。
+插入是o(1)操作的，只有数组的push_back，否则用链表至少o(logn)，还得保证是有序的；
+
+同理，删除是o(1)操作的，只有数组的pop_back，否则至少o(logn)；
+
+查找是o(1)操作的只有哈希表。
+
+
 ArrayList remove method is O(n), 如果从random位置移除。
-为了克服这个问题，swap (尾部index, current index),再移除尾部。 之后需要update map中的值。
+为了克服这个问题，swap (尾部index, current index),再移除尾部。 之后需要update map中的值。map.put(swapVal, ind)
 
 
 class RandomizedSet {
