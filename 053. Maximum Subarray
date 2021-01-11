@@ -1,3 +1,29 @@
+follow up要求divide and conquer做法，更精妙。 time: O(nlogn), space: O(logn)
+
+public class Solution {
+    public int maxSubArray(int[] nums) {
+        if (nums.length == 0) return 0;
+        return helper(nums, 0, nums.length - 1);
+    }
+    public int helper(int[] nums, int left, int right) {
+        if (left >= right) return nums[left];
+        int mid = left + (right - left) / 2;
+        int lmax = helper(nums, left, mid - 1);
+        int rmax = helper(nums, mid + 1, right);
+        int mmax = nums[mid], t = mmax;
+        for (int i = mid - 1; i >= left; --i) {
+            t += nums[i];
+            mmax = Math.max(mmax, t);
+        }
+        t = mmax;
+        for (int i = mid + 1; i <= right; ++i) {
+            t += nums[i];
+            mmax = Math.max(mmax, t);
+        }
+        return Math.max(mmax, Math.max(lmax, rmax));
+    }
+}
+
 // my solution: 1D dp
 class Solution {
     public int maxSubArray(int[] nums) {
@@ -8,6 +34,9 @@ class Solution {
         int max = nums[0];
         M[0] = nums[0]; // base case
         for (int i = 1; i < nums.length; i++) {
+            // 如果当前sum已经<0, 就不要往上累积了，直接从当前元素开始累积
+            // num[i] > 0: sum < 0, 此时num[i]可能直接成为最大
+            // num[i] < 0: sum < 0, 此时sum会越来越小，没必要，所以从num[i]开始重新累积。
             if (M[i-1] >= 0) {
                 M[i] = M[i-1] + nums[i];  // induction rule
             } else {
@@ -16,5 +45,18 @@ class Solution {
             max = Math.max(max, M[i]);
         }
         return max;
+    }
+}
+
+
+// 容易理解，不是dp, O(n)
+public class Solution {
+    public int maxSubArray(int[] nums) {
+        int res = Integer.MIN_VALUE, curSum = 0;
+        for (int num : nums) {
+            curSum = Math.max(curSum + num, num);
+            res = Math.max(res, curSum);
+        }
+        return res;
     }
 }
