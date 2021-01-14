@@ -1,3 +1,7 @@
+个人理解：
+举例：3,4,7,2,-3,1,4,2 （k=7）
+根据以下算法，map中会有(20, 1)(13, 1)这2个键值对.  基本思想：sum[i]-sum[j]=k，那么他们之间的元素可以形成k的总和。
+如果map中存在20-7这个key,说明可以有对应value的方法形成20-7，也就有相同数量方法能形成7. 
 class Solution {
     public int subarraySum(int[] nums, int k) {
         int count = 0;
