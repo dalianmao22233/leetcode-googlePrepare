@@ -1,4 +1,4 @@
-1. 答案中的：
+1. 主要练习这个，和347基本一样。
 class Solution {
     public List<String> topKFrequent(String[] words, int k) {
         Map<String, Integer> count = new HashMap();
@@ -7,7 +7,7 @@ class Solution {
         }
         PriorityQueue<String> heap = new PriorityQueue<String>(
                 (w1, w2) -> count.get(w1).equals(count.get(w2)) ?
-                w2.compareTo(w1) : count.get(w1) - count.get(w2) );  //这是小顶堆
+                w2.compareTo(w1) : count.get(w1) - count.get(w2) );  //这是小顶堆,if count相等，则比较词序，否则按照小顶堆顺序。
 
         for (String word: count.keySet()) {
             heap.offer(word);
@@ -16,7 +16,7 @@ class Solution {
 
         List<String> ans = new ArrayList();
         while (!heap.isEmpty()) ans.add(heap.poll());
-        Collections.reverse(ans);
+        Collections.reverse(ans); //注意小顶堆顺序反过来。
         return ans;
     }
 }
