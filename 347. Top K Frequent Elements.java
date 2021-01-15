@@ -1,47 +1,48 @@
 1. My solution:
 小顶堆，size=k,最后一个一个拿出来，O(nlogk)
-
+  
 class Solution {
-    public List<Integer> topKFrequent(int[] nums, int k) {
-        List<Integer> res = new ArrayList<Integer>();
-        if (nums == null || nums.length == 0) {
-            return res;
-        }
+    public int[] topKFrequent(int[] nums, int k) {
+        int[] res = new int[k];
         int len = nums.length;
-        if (len == 1) {
-            res.add(nums[0]);
-            return res;
-        }
         if (k > len) {
-            k = k % len;  
+            k = k % len;
+        
         }
-
         HashMap<Integer, Integer> map  = new HashMap<>();
-        for (int i = 0; i < len; i++) {
+        for (int i = 0 ; i < len ; i++) {
             map.put(nums[i], map.getOrDefault(nums[i], 0)+1);
         }
-        
         // 此处可以直接用integer作为pq类型，因为只需要根据count排序数组元素。
-        // 这种更好。省空间。PriorityQueue<Integer> heap =
-            new PriorityQueue<Integer>((n1, n2) -> map.get(n1) - map.get(n2));
-        
-        PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>(){
-            @Override
-            public int compare(int[] i1, int[] i2) {
-                return i1[1]-i2[1];
-            }
-        });
-        // 小顶堆， size=k
+        // 这种更好。省空间。
+        PriorityQueue<Integer> heap = new PriorityQueue<Integer> ((n1, n2) -> map.get(n1)-map.get(n2));
+        // PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>(){
+        //     @Override
+        //     public int compare(int[] i1, int[] i2) {
+        //         return i1[1]-i2[1];
+        //     }
+        // });
+//         for (Map.Entry<Integer, Integer> entry: map.entrySet()) {
+//             pq.offer(new int[]{entry.getKey(), entry.getValue()});
+//             if (pq.size() > k)
+//                 pq.poll();
+            
+//         }
         for (Map.Entry<Integer, Integer> entry: map.entrySet()) {
-            pq.offer(new int[]{entry.getKey(), entry.getValue()});
-            if (pq.size() > k) {
-                pq.poll();
+            heap.offer(entry.getKey());
+            if (heap.size() > k) {
+                heap.poll();
             }
         }
-        while (!pq.isEmpty()) {
-            res.add(pq.poll()[0]);
+        int count = 0;
+        // while (!pq.isEmpty()) {
+        //     res[count++] = pq.poll()[0];
+         
+        // } 
+        while (!heap.isEmpty()) {
+            res[count++] = heap.poll();
         }
-        Collections.reverse(res);  // 这步不写也没事。
+        
         return res;
     }
 }
