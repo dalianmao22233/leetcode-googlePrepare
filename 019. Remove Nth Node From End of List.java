@@ -43,5 +43,5 @@ public ListNode removeNthFromEnd(ListNode head, int n) {
         first = first.next;
     }
     first.next = first.next.next;
-    return dummy.next;
+    return dummy.next; // eg: [1], n=1, after operation it is [], then return head is wrong.
 }
