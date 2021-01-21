@@ -1,0 +1,28 @@
+本题有很明显的滑窗的特征，所以基本思路是用双指针。保证一个乘积小于k的最大窗口，这个窗口内可以构成subarray的数目就是j-i+1;
+
+本题需要注意的一点是，当nums[i]>k时，右指针动不了，而左指针依然会顺移，所以可能会出现j<i的情况，此时只需要重置这两个指针即可：
+
+class Solution {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if (k <=1) {
+            return 0;
+        }
+        int product = 1;
+        int res = 0;
+        int left = 0;
+        //维持一个窗口，记录左边右边的位置，左边位置记录方便删除左边（如果乘积>=k）
+        for (int right = 0; right < nums.length; right++) {
+            if (left > right) {
+              left = right;
+              product = 1;
+            }
+            product = product * nums[right];
+            while (product >= k) {
+                product = product / nums[left];
+                left++;
+            }
+            res = res + (right-left+1);  // right-let+1 是产生结果数组的个数，举例能看懂， 比如[5,2,6]
+        }
+        return res;
+    }
+}
