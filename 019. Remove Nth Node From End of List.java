@@ -1,4 +1,5 @@
 1、 1 pass，不用都遍历一遍。 保证first和second指针之间有n个节点就可以了
+这样first走到头，和second之间差n个，然后删除second之后的一个就可以了。
 1,2,3,4,5,6,7,8   n=2
 
 class Solution {
