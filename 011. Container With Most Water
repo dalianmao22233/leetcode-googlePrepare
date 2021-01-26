@@ -1,5 +1,5 @@
 2 pointer:  O(n):
-证明：a10-a20之间有最大面积，证明当左边界为a10的时候，右边界为a21的时候，下一步必须是a21移动到a20：即a10>a21.
+（可以不看）证明：a10-a20之间有最大面积，证明当左边界为a10的时候，右边界为a21的时候，下一步必须是a21移动到a20：即a10>a21.
 画个图就懂了，如果a10 < a21, water至少 = h[a10] * 11, 如果移动到a20的时候，water至少 = h[a10] * 10. 则不满足前提：a10-a20之间最大。
 所以必然是a10>a21.
 class Solution {
@@ -19,6 +19,21 @@ class Solution {
             }
         }
         return water;
+    }
+}
+
+小幅度优化：遇到相同高度就不计算容量。 
+
+public class Solution {
+    public int maxArea(int[] height) {
+        int res = 0, i = 0, j = height.length - 1;
+        while (i < j) {
+            int h = Math.min(height[i], height[j]);
+            res = Math.max(res, h * (j - i));
+            while (i < j && h == height[i]) ++i;
+            while (i < j && h == height[j]) --j;
+        }
+        return res;
     }
 }
 
