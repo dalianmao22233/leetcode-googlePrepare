@@ -1,0 +1,34 @@
+1. 滑动窗口
+2 pointer + 1 hashmap
+eg: 76, 3, 159
+public class Solution {
+    public String minWindow(String s, String t) {
+        if (s == null || t == null || t.length() > s.length()) {
+            return "";
+        }
+        int[] map = new int[256];
+        for (int i = 0; i < t.length(); i++) {
+            char c = t.charAt(i);
+            map[c]++;
+        }
+        int l = 0, r = 0, match = 0; 
+        int minLeft = -1, minLen = Integer.MAX_VALUE;
+        while (r < s.length()) {
+            char cr = s.charAt(r);
+            if (--map[cr] >= 0) {
+				      match++;
+			      }
+            while (match == t.length()) {
+                if (r - l + 1 < minLen) {
+                    minLeft = l;
+                    minLen = Math.min(minLen, r - l + 1);
+                }
+                char cl = s.charAt(l);
+                if (++map[cl] > 0) match--;
+                ++l;
+            }
+            ++r;
+        }
+        return minLeft == -1 ? "" : s.substring(minLeft, minLeft + minLen);
+    }
+}
