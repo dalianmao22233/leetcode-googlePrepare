@@ -1,7 +1,51 @@
-1. 
-//用java中的Pair class，https://docs.oracle.com/javase/8/javafx/api/javafx/util/Pair.html
-//https://www.geeksforgeeks.org/pair-class-in-java/
-//内置的binary search:https://www.geeksforgeeks.org/collections-binarysearch-java-examples/ 这里有自定义pair的写法，可以看看
+好理解，数据结构用的很好：
+class Data {  //这是自己定义的
+    String val;
+    int time;
+    Data(String val, int time) {
+        this.val = val;
+        this.time = time;
+    }
+}
+class TimeMap {
+
+    /** Initialize your data structure here. */
+    Map<String, List<Data>> map;
+    public TimeMap() {
+        map = new HashMap<String, List<Data>>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        if (!map.containsKey(key)) map.put(key, new ArrayList<Data>());
+        map.get(key).add(new Data(value, timestamp));
+    }
+    
+    public String get(String key, int timestamp) {
+        if (!map.containsKey(key)) return "";
+        return binarySearch(map.get(key), timestamp);
+    }
+    
+    protected String binarySearch(List<Data> list, int time) {
+        int low = 0, high = list.size() - 1;
+        while (low < high) {
+            int mid = (low + high) >> 1;
+            if (list.get(mid).time == time) return list.get(mid).val;
+            if (list.get(mid).time < time) {
+                if (list.get(mid+1).time > time) return list.get(mid).val;  //这里mid+1的比较别忘记。因为要取的timestamp_prev <= timestamp
+                low = mid + 1;
+            }
+            else high = mid -1;
+        }
+        return list.get(low).time <= time ? list.get(low).val : "";
+    }
+}
+
+
+
+
+
+
+
 
 Arrays.binarysearch() works for arrays which can be of primitive data type also. 
 Collections.binarysearch() works for objects Collections like ArrayList and LinkedList.
