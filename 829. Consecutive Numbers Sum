@@ -1,0 +1,72 @@
+public int consecutiveNumbersSum(int N) {
+        //we dont want any even factors, so squeeze all 2 factors first
+        while(N%2==0) N/=2;        
+        int ans =1;              
+        //iterate 3,5,7,9... note: when oddNum get to 9, it will just skip because factor 3 already removed.
+        for(int oddNum = 3; oddNum*oddNum<=N; oddNum+=2){            
+            int exponent =0;
+            while(N%oddNum==0){
+                exponent ++;
+                N/=oddNum;
+            }
+            ans*= (exponent +1);
+        }
+        
+        //Suppose initial N = P1^e1.P2^e2...Pn^en,  Pi is in assending order
+        
+        //so for the last iteration in the above for loop, the oddNum is Pn and N is Pn^en
+        if(N==1){ // en>=2 so oddNum*oddNum <= N (which is Pn^en)
+          return ans;  
+        }else{//en==1 so oddNum*oddNum > N (Pn*Pn > Pn^1)
+            //why 2 ?: last N is the largest prime number and its exponent is 1
+            return ans*2;
+        }
+    }
+    
+    
+https://leetcode.com/problems/consecutive-numbers-sum/discuss/128947/JavaC%2B%2BPython-Fastest-Count-Odd-Factors-O(logN)    
+Basic Math
+N = (x+1) + (x+2) + ... + (x+k)
+N = kx + k(k+1)/2
+N * 2 = k(2x + k + 1),where x >= 0, k >= 1
+
+Either k or 2x + k + 1 is odd.
+
+It means that, for each odd factor of N,
+we can find a consecutive numbers solution.
+
+Now this problem is only about counting odd numbers!
+I believe you can find many solutions to do this.
+Like O(sqrt(N)) solution used in all other post.
+
+Here I shared my official solution.
+
+
+Some Math about Counting Factors
+If N = 3^a * 5^b * 7*c * 11*d ...., the number of factors that N has equals
+N_factors = (a + 1) * (b + 1) * (c + 1) * (d + 1) .....
+
+
+Explanantion:
+Discard all factors 2 from N.
+Check all odd number i if N is divided by i.
+Calculate the count of factors i that N has.
+Update res *= count.
+If N==1, we have found all primes and just return res.
+Otherwise, N will be equal to P and we should do res *= count + 1 where count = 1.
+
+Complexity:
+To be more accurate, it's O(biggest prime factor).
+Because every time I find a odd factor, we do N /= i.
+This help reduce N faster.
+
+Assume P is the biggest prime factor of a odd number N .
+If N = 3^x * 5^y ...* P, Loop on i will stop at P^0.5
+If N = 3^x * 5^y ...* P^z, Loop on i will stop at P.
+In the best case, N = 3^x and our solution is O(log3N)
+In the worst case, N = P^2 and our solution is O(P) = O(N^0.5)
+
+Though in my solution, we didn't cache our process of finding odd factor.
+Moreover, if we prepare all prime between [3，10^4.5].
+it will be super faster because there are only 3400 primes in this range.
+This complexity will be O(P/logP) with P < sqrt(N)
