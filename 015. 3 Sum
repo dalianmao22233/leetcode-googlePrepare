@@ -1,4 +1,41 @@
 1. sort + 2 pointer： O(n^2)
+优化：
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        HashSet<List<Integer>> set = new HashSet<>();
+        Arrays.sort(nums);
+        
+        for (int i = 0; i < nums.length-2; i++) {
+            int low = i+1, high = nums.length-1;
+            while (low < high) {
+                if (nums[low] + nums[high] + nums[i] == 0) {
+                    set.add(Arrays.asList(nums[low], nums[high], nums[i]));
+                    low++;
+                    high--;
+                    
+                    //为了避免重复，仅在确认发现了一组解之后再移动left和right指针略过重复项。不要先略过重复项再判断是否解成立。
+                    while (low < high && nums[low] == nums[low-1]) low++;  //这里为啥是low-1, high+1, 因为上面已经low++ high--了，运行过后相当于当前（low-1）的和下一个(low)比较。
+                    while (low < high && nums[high] == nums[high+1]) high--;
+                    
+                } else if (nums[low] + nums[high] + nums[i] > 0) {
+                    high--;
+                } else {
+                    low++;
+                }
+            }
+            while (i+1 < nums.length && nums[i] == nums[i+1]) i++;  //确定了以上的loop之后，再略过最外层的重复项。i没有变化（像low high++--）所以就是正常的逻辑，当前的（i）和下一个(i+1)比较。
+        }
+        res.addAll(set);
+        return res;
+    }
+}
+
+
+
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
@@ -9,7 +46,7 @@ class Solution {
         HashSet<List<Integer>> set = new HashSet<>();
         Arrays.sort(nums);
         for (int i = 0; i < len-2; i++) {
-            if (i == 0 || (i > 0 && nums[i] != nums[i-1])) {
+            if (i == 0 || (i > 0 && nums[i] != nums[i-1])) { //最外层循环也注意去重。
                 int low = i+1;
                 int high = len-1;
                 while (low < high) {
@@ -17,8 +54,8 @@ class Solution {
                         set.add(Arrays.asList(nums[i] , nums[low] , nums[high]));
                         low++;
                         high--;
-                        while (low < high && nums[low-1] == nums[low]) low++; // 防止dup, 没有也没事
-                        while (low < high && nums[high+1] == nums[high]) high--; // 防止dup, 没有也没事
+                        while (low < high && nums[low-1] == nums[low]) low++; // 防止dup  
+                        while (low < high && nums[high+1] == nums[high]) high--; // 防止dup 
                     } else if (nums[i] + nums[low] + nums[high] > 0) {
                         high--;
                     } else {
