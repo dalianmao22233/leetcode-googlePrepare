@@ -22,6 +22,18 @@ class Solution {
         while (i >= 0 && nums[i + 1] <= nums[i]) {
             i--; //i--之后的num[i]是升序的第一个了。
         }
+// 另一种写法：    
+//         int i = nums.length-1;
+         
+//         while (i > 0 && nums[i-1] >= nums[i]) {
+//                 i--;
+//         }
+         
+//         i--;
+//         System.out.println(i);
+//      以上两种写法的区别，
+//      第一种，i是指向倒数第二个数，根据逻辑，最后能正好指向第一个转折点。 第二种写法，i指向倒数第一个数，最后指向最大的那个数（升序的最后一个），所以要再i--,才能找到转折点。
+     
         // 2. 从后往前找比num[i]大的数字，和num[i]交换。
         if (i >= 0) {
             int j = nums.length - 1;
