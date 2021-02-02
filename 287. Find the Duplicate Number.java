@@ -75,26 +75,25 @@ fast = nums[nums[fast]] 就是移动两步 等价于fast = fast.next.next
 
 
 class Solution {
-    public int findDuplicate(int[] nums) {
-        // Find the intersection point of the two runners.
-        int tortoise = nums[0];
-        int hare = nums[0];
-        do {
-            tortoise = nums[tortoise];
-            hare = nums[nums[hare]];
-        } while (tortoise != hare);
-
-        // Find the "entrance" to the cycle.
-        int ptr1 = nums[0];
-        int ptr2 = tortoise;
-        while (ptr1 != ptr2) {
-            ptr1 = nums[ptr1];
-            ptr2 = nums[ptr2];
+public:
+    int findDuplicate(vector<int>& nums) 
+    {
+        int slow = nums[0];
+        int fast = nums[nums[0]];
+        while (slow!=fast)
+        {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
         }
-
-        return ptr1;
+        fast = 0;
+        while (slow!=fast)
+        {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return slow;
     }
-}
+};
 https://leetcode.com/problems/find-the-duplicate-number/solution/
 类似于Linked List Cycle II的思路
 满足了所有条件，time O(n), space O(1)
