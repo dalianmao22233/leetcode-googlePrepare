@@ -1,4 +1,6 @@
-// long max and min, not int. Test case contains long.
+// long max and min, not int. Test case : 只有一个node, val= Int max. 此时如果边界都是int会返回false, but expect true.
+按照逻辑，应该把边界扩充，用long。
+
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
