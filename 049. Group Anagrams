@@ -1,4 +1,5 @@
-import java.util.*;
+首选这个：用stringbuilder建立字符串aa#cc#ddddd ，以此作为map key. 
+
 public class groupAnagram {
 	// O(NK), where N is the length of strs, and K is the maximum length of a string in strs. space: O(NK) for map
 	public static List<List<String>> groupAnagrams(String[] strs) {
@@ -26,6 +27,9 @@ public class groupAnagram {
 		}
 		return new ArrayList(ans.values());
 	}
+
+
+这个也不错，很简洁，就是用了内置的Arrays.sort（）先给每个字符串的字母排序，放map的时候如果遇到相同的就加入List，不同的就put new.
 // O(NKlogK), where N is the length of strs, and K is the maximum length of a string in strs. space: O(NK) for map
 
 
