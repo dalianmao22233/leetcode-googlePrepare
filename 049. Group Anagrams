@@ -1,4 +1,4 @@
-首选这个：用stringbuilder建立字符串aa#cc#ddddd ，以此作为map key. 
+首选这个：用stringbuilder建立字符串sb: #1#0#0#0#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0 ，以此作为map key. 
 
 public class groupAnagram {
 	// O(NK), where N is the length of strs, and K is the maximum length of a string in strs. space: O(NK) for map
