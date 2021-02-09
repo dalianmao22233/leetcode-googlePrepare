@@ -47,38 +47,3 @@ public boolean canAttendMeetings(Interval[] intervals) {
     return true;
 }
 
-2. brute force: Time: O(n^2), space: O(1)
-compare every two meetings in the array, and see if they conflict with each other (i.e. if they overlap). 
-Two meetings overlap if one of them starts while the other is still taking place.
-
-
-/**
- * Definition for an interval.
- * public class Interval {
- *     int start;
- *     int end;
- *     Interval() { start = 0; end = 0; }
- *     Interval(int s, int e) { start = s; end = e; }
- * }
- */
-class Solution {
-    public boolean canAttendMeetings(Interval[] intervals) {
-        if (intervals == null || intervals.length == 0) {
-            return true;
-        }
-        int len = intervals.length;
-        for (int i = 0; i < len; i++) {
-            for (int j = i+1; j < len; j++) {
-                if (overlap(intervals[i], intervals[j])) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    private boolean overlap(Interval i1, Interval i2) {
-        return (i1.start >= i2.start && i1.start < i2.end) ||  
-            //[[13,15],[1,13]]  i1.start <= i2.end will return overlap is true;
-            (i2.start >= i1.start && i2.start < i1.end);
-    }
-}
