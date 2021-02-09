@@ -1,0 +1,35 @@
+扫描线做法，和056完全一样 （一刷做出来了）
+class Solution {
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        // like merge interval 056: add newInterval in the intervals, sort 
+        
+        // tmp sorted list
+        LinkedList<int[]> list = new LinkedList<>();
+       
+        for (int[] interval: intervals) {
+            list.add(interval); 
+        }
+
+        list.add(newInterval);
+        Collections.sort(list, (a, b) -> Integer.compare(a[0], b[0]));
+        
+        // res list
+        LinkedList<int[]> res = new LinkedList<>();
+        
+        // sweep line
+        int start = list.get(0)[0];
+        int end = list.get(0)[1];
+        for (int[] interval: list) {
+            if (interval[0] <= end) {
+                // overlap, reset end
+                end = Math.max(end, interval[1]);
+            } else {
+                res.add(new int[]{start, end});
+                start = interval[0];
+                end = interval[1];
+            }
+        } 
+        res.add(new int[]{start, end});
+        return res.toArray(new int[res.size()][]);
+    }
+}
