@@ -1,3 +1,36 @@
+my solution, 和56， 57一样，扫描线：
+class Solution {
+    public boolean canAttendMeetings(int[][] intervals) {
+        if (intervals.length == 0) {
+            return true;
+        }
+        // sort intervals
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        // sweep line
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        for (int i = 1; i < intervals.length; i++) {
+            // need to start from i=1, example [[7, 10], [2, 4]], if from i=0, in the 1st round will return false;
+            if (intervals[i][0] < end) {
+                // note: cannot use <=, example [[1, 13], [13, 15]], if use= will output false;
+                return false;
+            } else {
+                start = intervals[i][0];
+                end = intervals[i][1];
+            }
+        }
+        return true;
+                
+    }
+}
+
+==============================================================================================================
+
+
+
+
+
+
 1. sorting: sort the meetings by starting time, 
 go through the meetings one by one and make sure that each meeting ends before the next one starts.
 Time: O(nlogn+n) = O(nlogn), space: O(1)
