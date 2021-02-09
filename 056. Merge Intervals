@@ -1,26 +1,37 @@
+首选：
 扫描线做法：配合新的输入输出形式int[][], comparator 重写。
+1. 先排序。
+2. 两个指针start, end先指向第一个interval[0]和[1]
+3. for, 比较当前interval[1]和end, 大于就说明不重叠，结果中直接加入当前interval，更新start和end; 小于说明重叠，更新end为两者较大的那个。
+4. 最后别忘记把start end这个interval 加入结果数组。容易漏掉。因为有可能最后一个interval是不重叠的，举例。如果重叠的，那早就已经被合并加入结果了。
+
 class Solution {
     public int[][] merge(int[][] intervals) {
-        if (intervals == null || intervals.length == 0) {
-            return intervals;
-        }
-        Collections.sort(Arrays.asList(intervals), new IntervalComparator());
-        
-        LinkedList<int[]> merged = new LinkedList<>();
-        for(int[] interval: intervals) {
-            if (merged.isEmpty() || merged.getLast()[1] < interval[0]) {
-                merged.add(interval);
+        // sort
+        Arrays.sort(intervals, new Comparator<int[]>() {
+           @Override
+            public int compare(int[] a1, int[] a2) {
+                if (a1[0] == a2[0]) {
+                    return 0;
+                }
+                return a1[0] < a2[0] ? -1 : 1;
+            }
+        });
+        LinkedList<int[]> list = new LinkedList<>();
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        // sweep line
+        for (int[] interval: intervals) {
+            if (interval[0] <= end) {
+                end = Math.max(end, interval[1]);
             } else {
-                merged.getLast()[1] = Math.max(merged.getLast()[1], interval[1]);
+                list.add(new int[]{start, end});
+                start = interval[0];
+                end = interval[1];
             }
         }
-        return merged.toArray(new int[merged.size()][]);
-    }
-    private class IntervalComparator implements Comparator<int[]> {
-        @Override
-        public int compare(int[] a, int[] b) {
-            return a[0]<b[0] ? -1: a[0]==b[0] ? 0 : 1;
-        }
+        list.add(new int[]{start, end});
+        return list.toArray(new int[list.size()][]);
     }
 }
 
