@@ -1,5 +1,31 @@
+1. 小顶堆：
+class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        Arrays.sort(intervals, (int[] a, int[] b) -> 
+                   a[0] != b[0] ? a[0]-b[0] : a[1]-b[1]));
+        PriorityQueue<Integer> queue = new PriorityQueue<>();  // 默认升序
+        int res = 0;
+        for (int[] interval: intervals) {
+            while (!queue.isEmpty() && queue.peek() <= interval[0]) {
+            //此时已经空出会议室，弹出一个
+                queue.poll();
+            }
+            queue.offer(interval[1]);
+            res = Math.max(res, queue.size());
+        }
+        return res;
+    }
+}
+2. 扫描线：
+具体的解法，就是假设时间点都是排序的，那么从左到右扫描，如果遇到一个会议的开始，会议室的个数就加一个，如果遇到一个会议的结束，
+会议室的个数就减一个（相当于释放了一个会议室出来）, 然后取这个过程中的最大值就好了。
+扫描的过程，不需要先排序，直接用一个TreeMap<Integer, Integer>记录每一个时刻的count就可以， 如果是开始的时间就+1, 如果是结束的时间就-1, 最后从左到右计数一下就好
 
+时间复杂度
+O(N*logN)
 
+空间复杂度
+O(N)
 
 class Solution {
     public int minMeetingRooms(int[][] intervals) {
@@ -24,7 +50,7 @@ class Solution {
 
 
 
-
+============================================================================
 1. min heap:
 Time: O(nlogn), space: O(n)
 
