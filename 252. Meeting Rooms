@@ -6,6 +6,12 @@ class Solution {
         }
         // sort intervals
         Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        // or like this:
+        // Arrays.sort(intervals, new Comparator<int[]>(){
+            public int compare(int[] a, int[] b) {
+                return a[0]-b[0];
+            }
+        });
         // sweep line
         int start = intervals[0][0];
         int end = intervals[0][1];
