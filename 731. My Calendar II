@@ -16,6 +16,7 @@ class MyCalendarTwo {
             k = Math.max(k, count);
             if (k > 2) {
                 // 因为这个题是最后看序列的结果，不是单一的结果，所以也要对map进行操作而不是简单return false;
+                // 因为此时是不合法的，需要还原 （一进book function就操作了map,还原就是反过来。）
                 map.put(start, map.get(start)-1);
                 map.put(end, map.get(end)+1);
                 return false;
