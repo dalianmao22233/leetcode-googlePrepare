@@ -1,0 +1,30 @@
+扫描线：
+class MyCalendar {
+    private TreeMap<Integer, Integer> map = new TreeMap<>();
+    public MyCalendar() {
+        
+    }
+    
+    public boolean book(int start, int end) {
+        map.put(start, map.getOrDefault(start, 0)+1);
+        map.put(end, map.getOrDefault(end, 0)-1);
+        int count = 0;
+        
+        for (int v : map.values()) {
+            count += v;
+            if (count > 1) {
+                // 记得还原，因为是序列的题。这一步的结果会影响下一个action的输入。
+                map.put(start, map.get(start)-1);
+                map.put(end, map.get(end)+1);
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar obj = new MyCalendar();
+ * boolean param_1 = obj.book(start,end);
+ */
