@@ -1,0 +1,33 @@
+扫描线：
+class MyCalendarTwo {
+    private TreeMap<Integer, Integer> map = new TreeMap<>();
+    public MyCalendarTwo() {
+        
+    }
+    
+    public boolean book(int start, int end) {
+        map.put(start, map.getOrDefault(start, 0)+1);
+        map.put(end, map.getOrDefault(end, 0)-1);
+        
+        int count = 0;
+        int k = 0;
+        for (int v: map.values()) {
+            count += v;
+            k = Math.max(k, count);
+            if (k > 2) {
+                // 因为这个题是最后看序列的结果，不是单一的结果，所以也要对map进行操作而不是简单return false;
+                map.put(start, map.get(start)-1);
+                map.put(end, map.get(end)+1);
+                return false;
+            }
+        }
+        return true;
+    }
+    
+}
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo obj = new MyCalendarTwo();
+ * boolean param_1 = obj.book(start,end);
+ */
