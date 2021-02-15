@@ -12,14 +12,15 @@ class Solution {
             if (count == 0) {
                 start = e.getKey();
             }
-	    // if count is 0, that means a full interval has been completed.
-            if ((count += e.getValue()) == 0) {
+            count += e.getValue();
+            if (count == 0) {
                 res.add(new int[]{start, e.getKey()});
             }
         }
         return res.toArray(new int[res.size()][]);
     }
 }
+
 贪心做法：配合新的输入输出形式int[][], comparator 重写。
 1. 先排序。
 2. 两个指针start, end先指向第一个interval[0]和[1]
