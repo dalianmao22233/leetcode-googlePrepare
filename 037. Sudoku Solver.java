@@ -41,6 +41,7 @@ class Solution {
         // cube不能有c
         int i=m/3*3;
         int j=n/3*3;
+        // 先用i, j 找到对应的cube，然后在cube里traverse
         for (int p=i; p<i+3; p++)
          for (int q=j; q<j+3; q++)
          {
