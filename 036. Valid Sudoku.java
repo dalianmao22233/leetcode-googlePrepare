@@ -1,40 +1,32 @@
 1. 这个很好懂，参考：https://leetcode.com/problems/valid-sudoku/solution/， 看图就行了
-time:O(1) space:O(1),我觉得不是。。应该是三个hashmap数组
+time:O(1) space:O(1)
+
+判断标准是看各行各列是否有重复数字，以及每个小的 3x3 的小方阵里面是否有重复数字，如果都无重复，
+则当前矩阵是数独矩阵，但不代表待数独矩阵有解，只是单纯的判断当前未填完的矩阵是否是数独矩阵。
+根据数独矩阵的定义，在遍历每个数字的时候，就看看包含当前位置的行和列以及 3x3 小方阵中是否已经出现该数字，
+这里需要三个 boolean 型矩阵，大小跟原数组相同，分别记录各行，各列，各小方阵是否出现某个数字，其中行和列标志下标很好对应，就是小方阵的下标需要稍稍转换一下
 
 class Solution {
-  public boolean isValidSudoku(char[][] board) {
-    // init data
-    HashMap<Integer, Integer> [] rows = new HashMap[9];
-    HashMap<Integer, Integer> [] columns = new HashMap[9];
-    HashMap<Integer, Integer> [] boxes = new HashMap[9];
-    for (int i = 0; i < 9; i++) {
-      rows[i] = new HashMap<Integer, Integer>();
-      columns[i] = new HashMap<Integer, Integer>();
-      boxes[i] = new HashMap<Integer, Integer>();
-    }
-
-    // validate a board
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        char num = board[i][j];
-        if (num != '.') {
-          int n = (int)num;
-          int box_index = (i / 3 ) * 3 + j / 3;
-
-          // keep the current cell value
-          rows[i].put(n, rows[i].getOrDefault(n, 0) + 1);
-          columns[j].put(n, columns[j].getOrDefault(n, 0) + 1);
-          boxes[box_index].put(n, boxes[box_index].getOrDefault(n, 0) + 1);
-
-          // check if this value has been already seen before
-          if (rows[i].get(n) > 1 || columns[j].get(n) > 1 || boxes[box_index].get(n) > 1)
-            return false;
+    public boolean isValidSudoku(char[][] board) {
+        boolean[][] row = new boolean[9][9];
+        boolean[][] col = new boolean[9][9];
+        boolean[][] cell = new boolean[9][9];
+        
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.') continue;
+                
+                int c = board[i][j] - '1';
+                if (row[i][c] || col[c][j] || cell[i/3*3 + j/3][c]) {
+                    return false;
+                }
+                row[i][c] = true;
+                col[c][j] = true;
+                cell[i/3*3 + j/3][c] = true;
+            }
         }
-      }
+        return true;
     }
-
-    return true;
-  }
 }
 
 
