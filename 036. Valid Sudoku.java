@@ -8,9 +8,9 @@ time:O(1) space:O(1)
 
 class Solution {
     public boolean isValidSudoku(char[][] board) {
-        boolean[][] row = new boolean[9][9];
-        boolean[][] col = new boolean[9][9];
-        boolean[][] cell = new boolean[9][9];
+        boolean[][] row = new boolean[9][9]; // row[i][c]: 第i行是否出现过c
+        boolean[][] col = new boolean[9][9]; // col[c][j]: 第j列是否出现过c
+        boolean[][] cell = new boolean[9][9]; // cell[x][c]: 第x个cube是否出现过c
         
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
