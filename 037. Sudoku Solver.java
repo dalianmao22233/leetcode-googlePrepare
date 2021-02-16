@@ -1,51 +1,52 @@
 class Solution {
-    // 可以参考：https://github.com/bephrem1/backtobackswe/blob/master/Dynamic%20Programming%2C%20Recursion%2C%20%26%20Backtracking/sudokuSolver.java， 解释很清楚
-    
-    // 时间复杂度： 9 ^ m (m represents the number of blanks to be filled in), 每个空格有9种选择
-    // 这道题是np complete. 时间复杂度不好分析，我也不清楚
-    
     public void solveSudoku(char[][] board) {
         if (board == null || board.length == 0) {
             return;
         }
-        dfs(board);
+        dfs(board, 0, 0);
     }
-    public boolean dfs(char[][] board) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (board[i][j] == '.') {
-                    for (char c = '1'; c <= '9'; c++) { // 试验，从1-9都试一遍
-                        if (isValid(board, i, j, c)) {
-                            board[i][j] = c;       // 把c放到cell中
-                            if (dfs(board)) {
-                                return true;
-                            } else {
-                                board[i][j] = '.';  // 原来就是空格，dfs失败之后要回复状态， 再去找新的唯一解。
-                            }
-                        }
-                    }
-                    return false;
-                }
+    public boolean dfs(char[][] board, int i, int j) {
+        // 剪枝：列->行
+        // 9行都遍历完了
+        if (i == 9) return true;
+        // 9列都遍历完了，走下一行
+        if (j == 9) return dfs(board, i+1, 0);
+        // 这一列都没有空缺，去下一列
+        if (board[i][j] != '.')  return dfs(board, i, j+1);
+        
+        for (char c = '1'; c <= '9'; c++) {
+            board[i][j] = c;
+            // 如果当前放进去的c是合适的，并且下一列的dfs结果为true,则证明找到了结果，类似于dp的思想
+            if (isValid(board, i, j, c) && dfs(board, i, j+1)) {
+                return true;
             }
         }
-        return true;
+        board[i][j] = '.';
+        return false;
     }
     public boolean isValid(char[][] board, int m, int n, char c) {
+        // 行不能有c
         for (int i = 0; i < 9; i++) {
-            if (board[i][n] == c) {   // 此col上不能出现c
+            // 注意加上i!=m, 非m行的如果有c，就invalid.
+            if (i != m && board[i][n] == c) {
+                return false;
+            }
+        } 
+        // 列不能有c
+        for (int j = 0;j < 9; j++) {
+            if (j != n && board[m][j] == c) {
                 return false;
             }
         }
-        for (int j = 0; j < 9; j++) {
-            if (board[m][j] == c) {   // 此row上不能出现c
-                return false;
-            }
-        }
-        for (int i = 0; i < 9; i++) {   //此cube中不能出现c
-            if (board[m/3*3 + i/3][n/3*3 + i%3] == c) {
-                return false;
-            }
-        }
+        // cube不能有c
+        int i=m/3*3;
+        int j=n/3*3;
+        for (int p=i; p<i+3; p++)
+         for (int q=j; q<j+3; q++)
+         {
+             if ((p!=m||q!=n) && board[p][q]==c)
+                 return false;
+         }
         return true;
     }
 }
