@@ -1,26 +1,29 @@
 1. recursive: 我第一次写只能写对一多半。加油
-// time: O(n)
+// time: O(N^2)， visit each node -> O(n), and  copy numbers to a new list, which can take up to O(n) time.
+
 class Solution {
-    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
-        if (root == null) {
-            return res;
-        }
-        path(root, sum, new ArrayList<>(), res);
+        if (root == null) return res;
+        dfs(res, new ArrayList<Integer>(), root, targetSum);
         return res;
     }
-    public void path(TreeNode root, int sum, List<Integer> ans, List<List<Integer>> res) {
+    public void dfs(List<List<Integer>> res, List<Integer> ans, TreeNode root, int targetSum) {
         if (root == null) {
             return;
         }
-        ans.add(root.val);  // 这句顺序我放后面了，错误。要和后面的remove pair起来。
-        if (root.val == sum && root.left == null && root.right == null) {  // 和path sum I 相同。 
-            res.add(new ArrayList<>(ans));   // 我之前在这个后面加了个return,最后报错了。为什么不能有return: 可以跑一遍， 如果有return, 那么ans的最后一个点就没有机会被移除。
+        ans.add(root.val);
+        if (root.left == null && root.right == null && targetSum == root.val) {
+            res.add(new ArrayList<>(ans));
+            // 如果在这里就return了，会导致没复原，影响其他解结果。
+        } else {
+            // 还不是根节点，或者没满足sum，继续看左边右边
+            dfs(res, ans, root.left, targetSum-root.val);
+            dfs(res, ans, root.right, targetSum-root.val);
         }
-        
-        path(root.left, sum-root.val, ans, res);
-        path(root.right, sum-root.val, ans, res);
-        ans.remove(ans.size()-1);  
+        // 复原
+        // We need to pop the node once we are done processing ALL of its subtrees
+        ans.remove(ans.size()-1);
     }
 }
 
