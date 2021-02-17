@@ -1,0 +1,38 @@
+其实不需要记录每个Q的位置，
+class Solution {
+    public int totalNQueens(int n) {
+        int res = 0;
+        if (n == 0) return 0;
+        return dfs(n, new ArrayList<>(), res, 0);
+    }
+    public int dfs(int n, List<Integer> queens, int res, int row) {
+        if (row == n) {  //不用处理，直接count++;
+        // 停止条件就是过了最后一行
+            List<String> ans = new ArrayList<>();
+            res++;
+            return res;
+        }
+        for (int col = 0; col < n ; col++) {  
+            if (!queens.contains(col)) { // no conflict in row/col
+                if (!isDiagnoticAttack(queens, col)) {
+                    queens.add(col);
+                    //下一行
+                    res = dfs(n, queens, res, row+1);
+                    queens.remove(queens.size()-1);
+                }
+            }
+        }
+        return res;
+    }
+    public boolean isDiagnoticAttack(List<Integer> queens, int col) {
+        int current_row = queens.size();
+        int current_col = col;
+        // queen 坐标: index, queens.get(index)
+        for (int index = 0; index < queens.size(); index++) {
+            if (Math.abs(current_row - index) == Math.abs(current_col - queens.get(index))) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
