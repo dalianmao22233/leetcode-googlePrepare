@@ -39,11 +39,11 @@ class Solution {
             }
         }
         // cube不能有c
-        int i=m/3*3;
-        int j=n/3*3;
+        int start_row=m/3*3;
+        int start_col=n/3*3;
         // 先用i, j 找到对应的cube，然后在cube里traverse
-        for (int p=i; p<i+3; p++)
-         for (int q=j; q<j+3; q++)
+        for (int p=start_row; p<start_row+3; p++)
+         for (int q=start_col; q<start_col+3; q++)
          {
              if ((p!=m||q!=n) && board[p][q]==c)
                  return false;
