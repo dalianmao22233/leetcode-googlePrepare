@@ -15,14 +15,12 @@ class Solution {
         }
         ans.add(root.val);  // 这句顺序我放后面了，错误。要和后面的remove pair起来。
         if (root.val == sum && root.left == null && root.right == null) {  // 和path sum I 相同。 
-            res.add(new ArrayList<>(ans));   // 我之前在这个后面加了个return,最后报错了。
-            // 必须要new一个，因为如果没有建立一个新的copy,所有加入res的reference都指向同一个Object，ans的所有变化都会影响到res.
+            res.add(new ArrayList<>(ans));   // 我之前在这个后面加了个return,最后报错了。为什么不能有return: 可以跑一遍， 如果有return, 那么ans的最后一个点就没有机会被移除。
         }
         
         path(root.left, sum-root.val, ans, res);
         path(root.right, sum-root.val, ans, res);
-        ans.remove(ans.size()-1);  // 忘记这步
-        // size() -1 is the last element in the array list. Remove it so that we can go back one step and traverse other branches.
+        ans.remove(ans.size()-1);  
     }
 }
 
