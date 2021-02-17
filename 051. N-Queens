@@ -63,7 +63,7 @@ class Solution {
         dfs(n, new ArrayList<>(), res, 0);
         return res;
     }
-    public void dfs(List<Integer> queens, List<List<String>> res, int row) {
+    public void dfs(int n, List<Integer> queens, List<List<String>> res, int row) {
         if (row == n) {
         // 停止条件就是过了最后一行
             List<String> ans = new ArrayList<>();
@@ -78,7 +78,7 @@ class Solution {
         }
         for (int col = 0; col < n ; col++) {  
             if (!queens.contains(col)) { // no conflict in row/col
-                if (!isDiagnoticAttack(n, queens, res, col)) {
+                if (!isDiagnoticAttack(queens, res, col)) {
                     queens.add(col);
                     //下一行
                     dfs(n, queens, res, row+1);
