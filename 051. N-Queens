@@ -54,3 +54,48 @@ public class Solution {
         return false;
     }
 }
+
+二刷：
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> res = new ArrayList<List<String>>();
+        if (n == 0) return res;
+        dfs(n, new ArrayList<>(), res, 0);
+        return res;
+    }
+    public void dfs(List<Integer> queens, List<List<String>> res, int row) {
+        if (row == n) {
+        // 停止条件就是过了最后一行
+            List<String> ans = new ArrayList<>();
+            for (int i  = 0; i< n; i++) {
+                char[] t = new char[n];
+                Arrays.fill(t, '.');
+                t[queens.get(i)] = 'Q';
+                ans.add(new String(t));
+            }
+            res.add(ans);
+            return;
+        }
+        for (int col = 0; col < n ; col++) {  
+            if (!queens.contains(col)) { // no conflict in row/col
+                if (!isDiagnoticAttack(n, queens, res, col)) {
+                    queens.add(col);
+                    //下一行
+                    dfs(n, queens, res, row+1);
+                    queens.remove(queens.size()-1);
+                }
+            }
+        }
+    }
+    public boolean isDiagnoticAttack(List<Integer> queens, List<List<String>> res, int col) {
+        int current_row = queens.size();
+        int current_col = col;
+        // queen 坐标: index, queens.get(index)
+        for (int index = 0; index < queens.size(); index++) {
+            if (Math.abs(current_row - index) == Math.abs(current_col - queens.get(index))) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
