@@ -41,7 +41,12 @@ class Solution {
         // cube不能有c
         int start_row=m/3*3;
         int start_col=n/3*3;
-        // 先用i, j 找到对应的cube，然后在cube里traverse
+        
+        // 先用start_row , start_col找到对应的cube，然后在cube里traverse
+        // ie: m=4, n=4, 
+        // for p in (4-6)
+        //     for q in (4-6)
+        // can traverse 9 cells.
         for (int p=start_row; p<start_row+3; p++)
          for (int q=start_col; q<start_col+3; q++)
          {
