@@ -1,3 +1,44 @@
+看一个图：
+https://leetcode-cn.com/problems/subsets-ii/solution/hot-100-90zi-ji-ii-python3-hui-su-kao-lu-zhong-fu-/
+能够看出来灰色部分就是重复答案，红色框起来的部分就是重复答案的条件，也就是我们要提前就剪枝的部分，依然类似于47.全排列II，发现当遇到重复元素，且上一个元素未被使用过，就需要剪枝【回溯三要素之3.剪枝条件】，依然可以用一个check变量来保存元素是否有被使用过
+ 
+当当前元素和前一个元素值相同（此处隐含这个元素的index>0），并且前一个元素还没有被使用过的时候，我们要剪枝
+但是有一个注意的地方：
+对于选或不选：只有选的时候才需要判断是否剪枝，如果根本不选，那么就不需要剪枝了
+ if i > 0 and nums[i] == nums[i-1] and check[i-1] == 0:
+    continue
+    
+    
+    
+class Solution {
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> res =  new ArrayList<List<Integer>>();
+        if (nums == null || nums.length == 0) return res;
+        Arrays.sort(nums); // 不然没法在dfs中比较重复元素。
+        dfs(nums, res, new ArrayList<Integer>(), 0, new boolean[nums.length]);
+        return res;
+    }
+    public void dfs(int[] nums, List<List<Integer>> res, List<Integer> ans, int level, boolean[] visited) {
+        if (level == nums.length) {
+            res.add(new ArrayList<>(ans));
+            return;
+        }
+        if (!(level-1 >= 0 && nums[level] == nums[level-1] && !visited[level-1])) {
+            visited[level] = true;
+            ans.add(nums[level]); 
+        
+            dfs(nums, res, ans, level+1, visited);
+            ans.remove(ans.size()-1); 
+            visited[level] = false;
+        } 
+        // 不选这个元素就不用操心了，直接下一个Level
+        dfs(nums, res, ans, level+1, visited);
+       
+    }
+}
+===========================================================================================================================================
+
+
 1. dfs + backtracking:
 class Solution {
     public List<List<Integer>> subsetsWithDup(int[] nums) {
