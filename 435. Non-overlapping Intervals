@@ -1,4 +1,5 @@
 贪心：
+https://github.com/wisdompeak/LeetCode/tree/master/Greedy/435.Non-overlapping-Intervals
 我们将所有的区间按照starting point排序之后，依次遍历它们。我们维护一个当前能到达的最远点far。如果
 
 新区间的左端点在far的右边，那么新区间就不会与之前的任何区间重合，计数器加1
