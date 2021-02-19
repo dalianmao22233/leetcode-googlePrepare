@@ -1,0 +1,45 @@
+Sort events increased by start time.
+Priority queue pq keeps the current open events.
+
+Iterate from the day 1 to day 100000,
+Each day, we add new events starting on day d to the queue pq.
+Also we remove the events that are already closed.
+
+Then we greedily attend the event that ends soonest.
+If we can attend a meeting, we increment the result res.
+
+
+Complexity
+Time O(d + nlogn), where D is the range of A[i][1]
+Space O(N)
+我们将所有的events按照开始时间来排序。然后维护一个按照时间结束时间从早到晚顺序的PQ。
+
+我们遍历所有的日期day（从1到最大的100000）。对于每一天，我们将所有起始日期在day的事件加入PQ，同时将PQ里已经过期的时间排除掉。
+
+此时PQ里面的所有events就是当天可以参加的。我们选择今天参加哪一个呢？我们自然是“贪心地”选择结束时间最早的那个，把机会用在“刀刃”上；
+至于deadline晚的事件都可以“拖一拖”，说不定以后总有机会去参加的。
+
+
+class Solution {
+    public int maxEvents(int[][] events) {
+        Arrays.sort(events, (a, b) -> Integer.compare(a[0], b[0]));
+        PriorityQueue<Integer> pq = new PriorityQueue<>(); //默认小顶堆
+        int i = 0; 
+        int res = 0;
+        for (int day = 1; day <= 100000; day++) {
+            while (!pq.isEmpty() && pq.peek() < day) {
+                pq.poll();
+            }
+            while (i < events.length && events[i][0] == day) {
+                pq.offer(events[i][1]);  //pq里放的是end day
+                i++;
+            }
+            
+            if (!pq.isEmpty()) {
+                pq.poll(); // 选择结束时间最早的那个参加。小顶堆堆顶就是结束时间最早的。
+                res++;
+            }
+        }
+        return res;
+    }
+}
