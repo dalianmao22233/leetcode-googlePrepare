@@ -1,67 +1,37 @@
-1. recursive: DFS
-Time: O(n), space: O(logn) if it's balanced tree, worst case: O(n)
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
 class Solution {
+    // recursive
+    public List<Integer> inorderTraversal2(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null) return res;
+        dfs(root, res);
+        return res;
+    }
+    public void dfs(TreeNode root, List<Integer> res) {
+        if (root == null) return;
+        dfs(root.left, res);
+        res.add(root.val);
+        dfs(root.right, res);
+    }
+    // iterative
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<Integer>();
-        if (root == null) {
-            return res;
+        if (root == null) return res;
+        Stack<TreeNode> stack = new Stack<>();
+        while (!stack.isEmpty() || root != null) {
+            if (root != null) {
+                stack.push(root);
+                root = root.left;
+            } else {
+                root = stack.pop();
+                res.add(root.val);
+                root = root.right;
+            }
+            
         }
-        res.addAll(inorderTraversal(root.left));
-        res.add(root.val);
-        res.addAll(inorderTraversal(root.right));
         return res;
     }
 }
-
-2. iterative: BFS : https://leetcode.com/problems/binary-tree-inorder-traversal/solution/  图很好
-Time: O(n), space: O(n)
-// laioffer
-	// 1. when helper node (cur) != null, we should traverse 所有子树,
-	// 	  push cur node and go left.
-	// 2. when cur node == null, 证明已经到左边的底了，遍历右子树
-	public List<Integer> inOrder(TreeNode root) {
-		List<Integer> res = new ArrayList<>();
-		if (root == null) {
-			return res;
-		}
-		// we need a stack and a helper node
-		Deque<TreeNode> stack = new LinkedList<>();
-		TreeNode cur = root;
-
-		while (cur != null || !stack.isEmpty()) {
-			// stack 为空，还能继续while，此时只是代表左子树遍历完了，右子树还没开始。如果不加cur!=null会漏掉
-			if (cur != null) {
-				stack.offerFirst(cur);
-				cur = cur.left;
-			} else {
-				cur = stack.pollFirst();
-				res.add(cur.val);
-				cur = cur.right;
-			}
-		}
-		return res;
-	}
-    
-    
-// leetcode discussion
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
+或者用这个，会省掉很多次while循环次数
 class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> res = new ArrayList<Integer>();
@@ -72,7 +42,7 @@ class Solution {
         TreeNode cur = root;
 
         while (cur != null || !stack.isEmpty()) {
-            while (cur != null) {
+            while (cur != null) { // 在这里先直接通到最底，比上面那个痛快， 其他都一样。
                 stack.push(cur);
                 cur = cur.left;
             }
