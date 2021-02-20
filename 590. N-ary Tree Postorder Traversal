@@ -1,40 +1,53 @@
-same as post order traversal
-/*
-// Definition for a Node.
-class Node {
-    public int val;
-    public List<Node> children;
+类似post order traversal:
 
-    public Node() {}
-
-    public Node(int _val,List<Node> _children) {
-        val = _val;
-        children = _children;
-    }
-};
-*/
+O(N)
 class Solution {
     public List<Integer> postorder(Node root) {
-        List<Integer> res = new ArrayList<>();
-		if (root == null) {
-			return res;
-		}
-		// post-order traversal
-		Deque<Node> stack = new LinkedList<Node>();
-		// store result
-		Deque<Node> temp = new LinkedList<>();
-		stack.offerFirst(root);
-		while (!stack.isEmpty()) {
-			Node cur = stack.pollFirst();
-			temp.offerFirst(cur);
-            for (int i = 0; i < cur.children.size(); i++) {
-                stack.offerFirst(cur.children.get(i));
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null) {
+            return res;
+        }
+        Stack<Node> stack = new Stack<>();
+        Set<Node> set = new HashSet<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Node node = stack.peek();
+            if (!set.contains(node)) {
+                for (int i = node.children.size(); i > 0; i--) {
+                    Node child = node.children.get(i-1);
+                    stack.push(child);
+                }
+                set.add(node);
+            } else {
+                stack.pop();
+                
+                res.add(node.val);
+              
             }
-		}
-		// reverse temp = res.
-		while (!temp.isEmpty()) {
-			res.add(temp.pollFirst().val);
-		}
-		return res;
+        }
+        return res;
     }
+}
+
+=====================================================
+class Solution {
+  public List<Integer> postorder(Node root) {
+    LinkedList<Node> stack = new LinkedList<>();
+    LinkedList<Integer> output = new LinkedList<>();
+    if (root == null) {
+      return output;
+    }
+
+    stack.add(root);
+    while (!stack.isEmpty()) {
+      Node node = stack.pollLast();
+      output.addFirst(node.val);
+      for (Node item : node.children) {
+        if (item != null) {
+          stack.add(item);    
+        } 
+      }
+    }
+    return output;
+  }
 }
