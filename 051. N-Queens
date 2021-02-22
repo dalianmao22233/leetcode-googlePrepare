@@ -2,6 +2,13 @@ dfs+backtracking:
 用一维数组或者List表示queen的位置：
 queen list:[1,3,0,2] 含义：
 在index=0 （row=0）， col=1处， 有一个queen。坐标(0, 1). 以此类推 (1,3) (2,0) (3,2)
+1 不同行：这个自然满足，数组board下标不同
+
+2 不同列：这个只要使board中各元素值不相同就行了。即board[i]!=board[j]
+
+3 不在同一条斜线：这个只要使board中元素相应的横纵坐标差的绝对值不等就行了。即|board[i]-board[j]|!=|i-j|
+
+
 
 public class Solution {
     public List<List<String>> solveNQueens(int n) {
