@@ -1,4 +1,5 @@
- class MyHashMap {
+https://leetcode.com/problems/design-hashmap/discuss/225312/hashmaparraylinkedlistcollision
+class MyHashMap {
         final ListNode[] nodes = new ListNode[10000];
 // linkedlist 解决碰撞。
         public void put(int key, int value) {
