@@ -27,45 +27,54 @@ if (nums[h1]+nums[h2]+2*nums[right]<target) continue;
 if (h1>0 && nums[h1]==nums[h1-1]) continue;
 
 =================================================================
-
-1. add a for loop outside 3 sum. 注意avoid dup
+以上思想实现：
 class Solution {
     public List<List<Integer>> fourSum(int[] nums, int target) {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
-        if (nums == null || nums.length == 0) {
-            return res;
-        }
+        if (nums == null || nums.length < 4) return res;
         Arrays.sort(nums);
-        HashSet<List<Integer>> set=  new HashSet<>();
-        int len = nums.length;
-        for (int i = 0; i < len-3; i++) {
-            if (i > 0 && nums[i] == nums[i-1]) continue; // 防止dup
-            // if (i == 0 || (i > 0 && nums[i] != nums[i-1])) { // 防止dup, same as above line
-                for (int j = i+1; j < len-2; j++) {
-                    if (j > i+1 && nums[j] == nums[j-1]) continue; // 防止dup
-                    // if (j == i+1 || (j > i+1 && nums[j] != nums[j-1])) { // same as above line
-                        System.out.println("test!");
-                        int high = len-1;
-                        int low = j+1;
-                        while (low < high) {
-                            if (nums[j] + nums[low] + nums[high] == target-nums[i]) {
-                                set.add(Arrays.asList(nums[i], nums[j] , nums[low] , nums[high]));
-                                high--;
-                                low++;
-                                while (low < high && nums[low-1] == nums[low]) low++; // 防止dup, 没有也没事
-                                while (low < high && nums[high+1] == nums[high]) high--; // 防止dup, 没有也没事
-                            } else if (nums[j] + nums[low] + nums[high] > target-nums[i]){
-                                high--;
-                            } else {
-                                low++;
-                            }
-                        }
-                    // }
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] * 4 > target) break;
+            if (nums[i] + nums[nums.length-1] * 3 < target) continue;
+            if (i > 0 && nums[i] == nums[i-1]) {
+                continue;
+            }
+	    // 以上三个都是去重
+            for (int j = i+1; j < nums.length; j++) {
+                if (nums[i] + nums[j]*3 > target) break;
+                if (nums[i] + nums[j] + nums[nums.length-1] * 2 < target) continue;
+                if (j > i+1 && nums[j] == nums[j-1]) {
+                    continue;
                 }
-            // }
+                // 以上三个都是去重
+                int low = j+1;
+                int high = nums.length-1;
+                
+                if (low < nums.length) {
+                    if (nums[i] + nums[j] + nums[low] * 2 > target) break;
+		    // 以上是去重
+                    while (low < high) {
+
+                        if (nums[i] + nums[j] + nums[low] +  nums[high] == target) {
+                            res.add(Arrays.asList(nums[i], nums[j], nums[low], nums[high]));
+                            low++;
+                            high--;
+
+                            while (low < high && nums[low] == nums[low-1]) low++;
+                            while (low < high && nums[high] == nums[high+1]) high--;
+			    // 以上2个都是去重
+                        } else if (nums[i] + nums[j] + nums[low] +  nums[high] < target) {
+                            low++;
+                        } else   {
+                            high--;
+                        }
+
+                    }
+                }
+            }
         }
-        res.addAll(set);
         return res;
+        
     }
 }
 
