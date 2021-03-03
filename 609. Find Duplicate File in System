@@ -1,21 +1,21 @@
 class Solution {
-    public List<List<String>> findDuplicate(String[] paths) {
-        Map<String, List<String>> map = new HashMap<>();
-        for(String str : paths){
-            String[] strs = str.split(" ");
-            String path = strs[0];
-            for(int i = 1; i < strs.length; i++){
-                int pos = strs[i].indexOf("(");
-                String file = strs[i].substring(0, pos);
-                String content = strs[i].substring(pos + 1, strs[i].length() - 1);
-                if(!map.containsKey(content)) map.put(content, new ArrayList<>());
-                map.get(content).add(path + "/" + file);
+    public List < List < String >> findDuplicate(String[] paths) {
+        HashMap < String, List < String >> map = new HashMap < > ();
+        for (String path: paths) {
+            String[] values = path.split(" ");
+            for (int i = 1; i < values.length; i++) {
+                String[] name_cont = values[i].split("\\(");  // 注意\\， 我忘记加了报错。不然就用substring
+                name_cont[1] = name_cont[1].replace(")", "");
+                List < String > list = map.getOrDefault(name_cont[1], new ArrayList < String > ());
+                list.add(values[0] + "/" + name_cont[0]);
+                map.put(name_cont[1], list);
             }
         }
-        List<List<String>> res = new ArrayList<>();
-        for(Map.Entry<String, List<String>> e : map.entrySet()){
-            if(e.getValue().size() > 1)
-                res.add(e.getValue());
+        System.out.println(map);
+        List < List < String >> res = new ArrayList < > ();
+        for (String key: map.keySet()) {
+            if (map.get(key).size() > 1)   // 至少有2个重复的文件，如果list size<=1就不存了。
+                res.add(map.get(key));
         }
         return res;
     }
