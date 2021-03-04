@@ -1,31 +1,21 @@
-1和2会做了，这个就会了，很简单。
-
 class Solution {
     public List<List<Integer>> combinationSum3(int k, int n) {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
-        if (k <= 0) {
-            return res;
-        }
-        if (k > n) {
-            return res;
-        }
-        dfs(k, n, res, new ArrayList<>(), 1);
+     
+        dfs(res, new ArrayList<Integer>(), k, n, 1);
         return res;
     }
-    public void dfs(int k, int n, List<List<Integer>> res, List<Integer> ans, int level) {
-        if (k == ans.size()) {
-            int sum = 0;
-            for (int m : ans) {
-                sum += m;
-            }
-            if (sum == n) {
+    public void dfs(List<List<Integer>> res, List<Integer> ans, int count, int sum, int start) {
+        if (ans.size() == count) {
+            if (sum == 0) {
                 res.add(new ArrayList<>(ans));
             }
             return;
         }
-        for (int i = level; i <= 9; i++) {
+        
+        for (int i = start; i <= 9; i++) {      // 从start开始 确保了么有重复使用的数字，而且是一共之后9个分叉，不会是81个。
             ans.add(i);
-            dfs(k, n, res, ans, i+1);
+            dfs(res, ans, count, sum-i, i+1);
             ans.remove(ans.size()-1);
         }
     }
