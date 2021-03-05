@@ -60,3 +60,38 @@ public:
         }
     }
 };
+
+二刷：
+class Solution {
+    int count = 0;
+    public int totalNQueens(int n) {
+        dfs(new ArrayList<>(), n);
+        return count;
+    }
+    public void dfs(List<Integer> queens,  int n) {
+        if (queens.size() == n) {
+            count++;
+            return;
+        }
+        for (int i = 0; i < n ;i++) {
+            if (!queens.contains(i)) { 
+                if (isAttack(queens, i)) continue;
+                queens.add(i);
+                dfs(queens, n);
+                queens.remove(queens.size()-1);
+                
+            }
+        }
+    }
+    public boolean isAttack(List<Integer> queens, int i) {
+        int row = queens.size();
+        int col = i;
+        
+        for (int j = 0; j < queens.size(); j++) {
+            if (Math.abs(row-j) == Math.abs(col-queens.get(j))) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
