@@ -36,31 +36,46 @@ class Solution {
         return false;
     }
 }
-2. 并不需要知道每一行皇后的具体位置，只需要知道会不会产生冲突即可。于每行要新加的位置，需要看跟之前的列，对角线，及逆对角线之间是否有冲突，所以我们需要三个布尔型数组，
+2. 最快的！
+并不需要知道每一行皇后的具体位置，只需要知道会不会产生冲突即可。于每行要新加的位置，需要看跟之前的列，对角线，及逆对角线之间是否有冲突，所以我们需要三个布尔型数组，
 分别来记录之前的列 cols，对角线 diag，及逆对角线 anti_diag 上的位置，其中 cols 初始化大小为n，diag 和 anti_diag 均为 2n。列比较简单，是哪列就直接去 cols 中查找，
 而对角线的话，需要处理一下，如果我们仔细观察数组位置坐标的话，可以发现所有同一条主对角线的数，其纵坐标减去横坐标再加n，一定是相等的。
 同理，同一条逆对角线上的数字，其横纵坐标之和一定是相等的，根据这个，就可以快速判断主逆对角线上是否有冲突。
 任意一个有冲突的话，直接跳过当前位置，否则对于新位置，三个数组中对应位置都赋值为 true，然后对下一行调用递归，递归返回后记得还要还原状态：
-class Solution {
-public:
-    int totalNQueens(int n) {
-        int res = 0;
-        vector<bool> cols(n), diag(2 * n), anti_diag(2 * n);
-        helper(n, 0, cols, diag, anti_diag, res);
-        return res;
-    }
-    void helper(int n, int row, vector<bool>& cols, vector<bool>& diag, vector<bool>& anti_diag, int& res) {
-        if (row == n) ++res;
-        for (int col = 0; col < n; ++col) {
-            int idx1 = col - row + n, idx2 = col + row;
-            if (cols[col] || diag[idx1] || anti_diag[idx2]) continue;
-            cols[col] = diag[idx1] = anti_diag[idx2] = true;
-            helper(n, row + 1, cols, diag, anti_diag, res);
-            cols[col] = diag[idx1] = anti_diag[idx2] = false;
-        }
-    }
-};
+https://www.bookstack.cn/read/wind-liang-eetcode/6d2fbe0f2dd60200.md 讲得很清楚
 
+class Solution {
+    public int totalNQueens(int n) {
+        boolean[] cols = new boolean[n]; // 列
+        boolean[] d1 = new boolean[2 * n]; // 主对角线 
+        boolean[] d2 = new boolean[2 * n]; // 副对角线
+        return backtrack(0, cols, d1, d2, n, 0);
+    }
+    private int backtrack(int row, boolean[] cols, boolean[] d1, boolean[] d2, int n, int count) { 
+        if (row == n) {
+            count++;
+            return count;
+        } 
+    
+        for (int col = 0; col < n; col++) {
+            int id1 = row - col + n; //对角线加 n, 因为可能会出现负数
+            int id2 = row + col;
+            if (cols[col] || d1[id1] || d2[id2])
+                continue;
+            cols[col] = true;
+            d1[id1] = true;
+            d2[id2] = true;
+            count = backtrack(row + 1, cols, d1, d2, n, count);
+            cols[col] = false;
+            d1[id1] = false;
+            d2[id2] = false;
+        }
+        
+        return count;
+    }
+
+     
+}
 二刷：
 class Solution {
     int count = 0;
