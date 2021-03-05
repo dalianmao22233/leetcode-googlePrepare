@@ -1,4 +1,4 @@
-//可能有重复元素，但是结果一定是唯一的，每个元素只能被用1次
+//可能有重复元素，但是结果一定是唯一的，每个元素只能被用1次， 用visited数组来标记
 Input: candidates = [2,5,2,1,2], target = 5,
 A solution set is:
 [
@@ -6,7 +6,7 @@ A solution set is:
   [5]
 ]
 
-
+time: O(n*n!), space: O(n*n!)
 class Solution {
     public List<List<Integer>> combinationSum2(int[] nums, int target) {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
