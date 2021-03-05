@@ -1,0 +1,35 @@
+子问题就是如果从start-i为palindrome,那么看下一个子问题dfs(i+1)
+
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<List<String>>();
+        if (s == null || s.length() == 0) return res;
+        dfs(s, res, new ArrayList<String>(), 0);
+        return res;
+    }
+    
+    public void dfs(String s, List<List<String>> res, List<String> ans, int start) {
+        if (start == s.length()) {
+            res.add(new ArrayList<>(ans));
+            return;
+        }
+        for (int i = start; i < s.length(); i++) {
+            if (isPalindrome(s.substring(start, i+1))) {
+                ans.add(s.substring(start, i+1));
+                dfs(s, res, ans, i+1);
+                ans.remove(ans.size()-1);
+            }
+        }
+    }
+    public boolean isPalindrome(String s) {
+        if (s == null || s.length() == 0) return true;
+        char[] arr = s.toCharArray();
+        int low = 0, high =  arr.length-1;
+        while (low < high) {
+            if (arr[low] != arr[high]) return false;
+            low++;
+            high--;
+        }
+        return true;
+    }
+}
