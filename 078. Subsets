@@ -40,7 +40,7 @@ public static List<List<Integer>> subsets(int[] nums) {
 	private static void dfs(int[] nums, List<List<Integer>> res, List<Integer> answer, int level) {
 		if (answer.size() <= nums.length) {
 			res.add(new ArrayList<>(answer));
-		}
+		} // 隐藏一个else分支，return;
 		for (int i = level; i < nums.length; i++) { // remember i starts from level.
 			answer.add(nums[i]);
 			//System.out.println("after add:"+answer + ", i:" + i);
