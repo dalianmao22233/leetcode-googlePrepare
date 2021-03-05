@@ -39,7 +39,7 @@ class Solution {
 ===========================================================================================================================================
 
 
-1. dfs + backtracking:
+1. dfs + backtracking: 二刷我也用了这个，比subset I多了一个 num[i] == nums[i-1]判断，是否是值相同的元素，如果相等就已经处理过子问题了，可以进入下一个循环。
 class Solution {
     public List<List<Integer>> subsetsWithDup(int[] nums) {
         List<List<Integer>> res = new ArrayList<List<Integer>>();
@@ -55,7 +55,7 @@ class Solution {
             res.add(new ArrayList<>(ans));
         }
         for (int i = pos; i < nums.length; i++) {
-            if (i > pos && nums[i] == nums[i-1]) {
+            if (i > pos && nums[i] == nums[i-1]) {  // here
                 continue;
             }
             ans.add(nums[i]);
