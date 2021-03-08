@@ -1,3 +1,43 @@
+二刷，这个比较清楚，从中心向两边expand, 2种情况，奇数偶数长度的palindrome， 长度为：r-l-1, 因为是计算[l-1, r+1]的长度。 
+1. 奇数， l=i-1, r=i+1   （r-l+1 = 3，是奇数的）
+2. 偶数， l=i, r=i+1     （r-l+1 = 2，是偶数的）
+时间：O(n^2)
+空间：O（1）
+class Solution {
+    public String longestPalindrome(String s) {
+        String res = "";
+        if (s == null || s.length() == 0) return res;
+    
+        
+        for (int i = 0; i< s.length(); i++) {
+            // odd
+            int l = i-1, r = i+1;
+            while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+                l--;
+                r++;
+		// 遇到相等的，先扩展，那么[l+1, r-1]（也就是扩展之前的字符串）就是palindrome.
+            }
+            if ( res.length() < r-l-1) {
+	    // 更新结果，如果当前长度小于现在的长度，取[l+1, r-1]
+                res = s.substring(l+1, r);
+            }
+            
+            // even
+            l = i;
+            r = i+1;
+            while (l >= 0 && r < s.length() && s.charAt(l) == s.charAt(r)) {
+                l--;
+                r++;
+            }
+            if ( res.length() < r-l-1) {
+                res = s.substring(l+1, r);
+            }
+            
+        }
+        return res;
+    }
+}
+==============================================================================
 求回文子串，一般有两种方法。 第一种方法比较直接，基本思路是对于每个子串的中心
 （可以是一个字符，或者是两个字符的间隙，比如串abc,中心可以是a,b,c,或者是ab的间隙，bc的间隙）往两边同时进行扫描，直到不是回文串为止。
 假设字符串的长度为n,那么中心的个数为2*n-1(字符作为中心有n个，间隙有n-1个）。对于每个中心往两边扫描的复杂度为O(n),
