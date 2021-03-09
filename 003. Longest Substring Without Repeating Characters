@@ -1,19 +1,21 @@
 // sliding window: Time: O(n) space: min(m, n)
+s: -----j------------i---
+
 class Solution {
     public int lengthOfLongestSubstring(String s) {
-        int n = s.length();
-        Set<Character> set = new HashSet<>();
-        int res = 0, start = 0, end = 0;
-        while (start < n && end < n) {
-            // try to extend the range [i, j]  需要举个例子才能懂 我总是忘记先看右边界是否在set中
-            if (!set.contains(s.charAt(end))){
-                set.add(s.charAt(end));
-                res = Math.max(res, end - start+1);
-                end++;
-            } else {
-                set.remove(s.charAt(start));
-                start++;
+        HashMap<Character, Integer> map = new HashMap<>();
+        
+        int res = 0;
+        
+        for (int i = 0, j = 0; i < s.length(); i++) {
+            int count = map.getOrDefault(s.charAt(i), 0);
+            map.put(s.charAt(i), count+1);
+            while (map.get(s.charAt(i))  > 1) {   // s.charAt(i)就是那个重复的字母
+                int count_j = map.get(s.charAt(j));
+                map.put(s.charAt(j), count_j-1); // 更新s.charAt(j) 在map中的记录，就是移除s.charAt(j)
+                j++;
             }
+            res = Math.max(res, i-j+1);
         }
         return res;
     }
