@@ -20,26 +20,7 @@ class Solution {
         return false;
 
     }
-    public boolean dfs2(char[][] board, int i, int j) {
-        // 剪枝：列->行
-        // 9行都遍历完了
-        if (i == 9) return true;
-        // 9列都遍历完了，走下一行
-        if (j == 9) return dfs(board, i+1, 0);
-        // 这一列都没有空缺，去下一列
-        if (board[i][j] != '.')  return dfs(board, i, j+1);
-        
-        for (char c = '1'; c <= '9'; c++) {
-            board[i][j] = c;
-            // 如果当前放进去的c是合适的，并且下一列的dfs结果为true,则证明找到了结果，类似于dp的思想
-            if (isValid(board, i, j, c) && dfs(board, i, j+1)) {
-                return true;
-            }
-        }
-        board[i][j] = '.';
-        return false;
-    }
-    public boolean isValid2(char[][] board, int m, int n, char c) {
+    public boolean isValid(char[][] board, int m, int n, char c) {
         // 行不能有c
         for (int i = 0; i < 9; i++) {
             // 注意加上i!=m, 非m行的如果有c，就invalid.
@@ -68,32 +49,6 @@ class Solution {
              if ((p!=m||q!=n) && board[p][q]==c)
                  return false;
          }
-        return true;
-    }
-    public boolean isValid(char[][] board, int m, int n, char c) {
-        // row
-        for (int row = 0; row < 9; row++) {
-            if (row != m && board[row][n]  == c) {
-                return false;
-            }
-        }
-        
-        // col 
-        for (int col = 0; col < 9; col++) {
-            if ( col != n && board[m][col]  == c) {
-                return false;
-            }
-        }
-        // 3*3
-        int row = m/3*3;
-        int col = n/3*3;
-        for (int p = row; p < row+3; p++) {
-            for (int q = col; q < col+3; q++) {
-                if ((m != p || n != q) && board[p][q] == c) {
-                    return false;
-                }
-            }
-        }
         return true;
     }
 }
