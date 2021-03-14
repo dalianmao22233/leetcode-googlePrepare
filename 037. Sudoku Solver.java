@@ -1,3 +1,56 @@
+acwing: 这种好理解，用三个数组
+class Solution {
+    boolean[][] row = new boolean[9][9];   // 9行，每行数字为1-9的true/false
+    boolean[][] col = new boolean[9][9];   // 9列，每列数字为1-9的true/false
+    boolean[][][] cell = new boolean[3][3][9];  // 9个cell，每个cell数字为1-9的true/false
+    public void solveSudoku(char[][] board) {
+        if (board == null || board.length == 0) return;
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] != '.') {
+                    int t = board[i][j]-'1';
+                    row[i][t] = true;
+                    col[j][t] = true;
+                    cell[i/3][j/3][t] = true;
+                }
+            }
+        }
+        dfs(board, 0, 0);
+        
+    }
+    public boolean dfs(char[][] board, int x, int y) {
+        if (x == 9) return true;
+
+        if (y == 9) return dfs(board, x+1, 0);
+        
+        if (board[x][y] != '.') {return dfs(board, x, y+1);}
+        
+        
+        for (int i = 0; i < 9; i++) {
+            if (!row[x][i] && !col[y][i] && !cell[x/3][y/3][i]){
+                char c = (char)(i + '1');
+                board[x][y] = c;
+                row[x][i] = true;
+                col[y][i] = true;
+                cell[x/3][y/3][i] = true;
+                
+                if (dfs(board, x, y+1)) return true;
+                
+                // 还原
+                board[x][y] = '.';
+                row[x][i] = false;
+                col[y][i] = false;
+                cell[x/3][y/3][i] = false;
+            }
+        }
+        return false;
+
+    }
+   
+}
+
+LeetCode：
+
 class Solution {
     public void solveSudoku(char[][] board) {
         if (board == null || board.length == 0) return;
