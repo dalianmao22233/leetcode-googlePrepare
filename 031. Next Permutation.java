@@ -1,3 +1,51 @@
+acwing:
+
+class Solution {
+    public void nextPermutation(int[] nums) {
+        if (nums == null || nums.length == 0) return;
+        int k = nums.length-1;
+        while (k > 0 && nums[k-1] >= nums[k]) {
+            k--;
+        }
+        // 先找转折点，此时k指向顶峰
+        
+        if (k <= 0) {
+            reverse(nums, 0);
+            // 整个序列都是降序，翻转即可
+        } else {
+            int t = k;
+            //比较顶峰前一个点，与降序的所有点，直到找到<的, swap(顶峰前一个点，min(降序中比这个点大的))
+            while (t < nums.length && nums[t] > nums[k-1]) {
+                t++;
+            }
+            swap(nums, t-1, k-1);
+            reverse(nums, k);
+        }
+        
+    }
+    
+    private void reverse(int[] nums, int start) {
+        int end = nums.length-1;
+        while (start < end) {
+            swap(nums, start, end);
+            start++;
+            end--;
+        }
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+
+
+
+
+
+
+==========================================================================
 class Solution {
     
     //1. dfs 找所有permutation  O(n!), 求min, 不满足constant space要求而且很慢
