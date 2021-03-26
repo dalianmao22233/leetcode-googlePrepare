@@ -12,7 +12,7 @@ queen list:[1,3,0,2] 含义：
 
 三刷：acwing: 正负对角线推理见笔记，就是计算截距，截距相等，说明在同一条对角线上。
 
-第一种搜索方法：每一列都尝试放queen，剪枝。
+第一种搜索方法：每一列都尝试放queen，剪枝。 time:N * N!  树形结构，类似于permutation的思路，N个皇后，每个皇后都会尝试N!次排列。
 class Solution {
     
     public List<List<String>> solveNQueens(int n) {
@@ -54,7 +54,7 @@ class Solution {
         }
     }
 }
-第二种搜索方法： 类似0-1背包，要或者不要
+第二种搜索方法： 类似0-1背包，要或者不要 time: 2 ^(n^2) 因为是每一个格子问要or不要
 class Solution {
     
     public List<List<String>> solveNQueens(int n) {
