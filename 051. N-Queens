@@ -11,6 +11,8 @@ queen list:[1,3,0,2] 含义：
 
 
 三刷：acwing: 正负对角线推理见笔记，就是计算截距，截距相等，说明在同一条对角线上。
+
+第一种搜索方法：每一列都尝试放queen，剪枝。
 class Solution {
     
     public List<List<String>> solveNQueens(int n) {
@@ -19,7 +21,7 @@ class Solution {
         boolean[] col = new boolean[n];
         boolean[] dg = new boolean[2*n];  //正对角线，存储截距。因为后面加了偏移量，保证数组数值都是正数。所以扩容
         boolean[] udg = new boolean[2*n]; //副对角线
-
+        //dg, udg的行列对应数写反了也没事，只要保持一致就行。
         dfs(n, new ArrayList<>(), res, 0, col, dg, udg);
         return res;
     }
@@ -52,6 +54,65 @@ class Solution {
         }
     }
 }
+第二种搜索方法： 类似0-1背包，要或者不要
+class Solution {
+    
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> res = new ArrayList<List<String>>();
+        if (n == 0) return res;
+        boolean[] row = new boolean[n];
+        boolean[] col = new boolean[n];
+        boolean[] dg = new boolean[2*n];
+        boolean[] udg = new boolean[2*n];
+
+        dfs(n, new ArrayList<>(), res, 0, 0, row, col, dg, udg);
+        return res;
+    }
+    public void dfs(int n, List<Integer> queens, List<List<String>> res, int x, int y, boolean[] row, boolean[] col, boolean[] dg, boolean[] udg) {
+        if (y == n) {
+            y = 0;
+            x++;
+        }
+        if (x == n) {
+           
+            if (queens.size() == n) {
+                List<String> ans = new ArrayList<>();
+                for (int i  = 0; i< n; i++) {
+                    char[] t = new char[n];
+                    Arrays.fill(t, '.');
+                    t[queens.get(i)] = 'Q';
+                    ans.add(new String(t));
+                }
+                res.add(ans);            
+            }
+            return;
+        }
+        // if not put queen on this col， 当前格子（列）放不放queen
+        dfs(n, queens, res, x, y+1, row, col, dg, udg);
+        
+        // if put queen on this col
+        if (!row[x] && !col[y] && !dg[n-x+y] && !udg[x+y]) {
+            queens.add(y);
+            row[x] = true;
+            col[y] = true;
+            dg[n-x+y] = true;
+            udg[x+y] = true;
+            dfs(n, queens, res, x, y+1, row, col, dg, udg);
+
+            queens.remove(queens.size()-1);
+            row[x] = false;
+            col[y] = false;
+            dg[n-x+y] = false;
+            udg[x+y] = false;
+        }
+        
+    }
+}
+
+
+
+
+
 
 一刷：
 public class Solution {
