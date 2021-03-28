@@ -1,0 +1,49 @@
+1. bfs, 做法和maze1相同。 用dists数组记录start到当前格子的最短距离，初始化为最大值，不断更新。
+class Solution {
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        int row = maze.length;
+        int col = maze[0].length;
+        int res = 0;
+        Queue<int[]> q = new LinkedList<>();
+        int[][] dists = new int[row][col];
+        for (int[] dist: dists) {
+            Arrays.fill(dist, Integer.MAX_VALUE);
+        }
+
+        dists[start[0]][start[1]] = 0;
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        
+        q.offer(start);
+        
+        while (!q.isEmpty()){
+            int[] cur = q.poll();
+            //if (cur[0] == destination[0] && cur[1] == destination[1]) return res; 这个不需要了，因为queue里面的都不是终点。
+            visited[cur[0]][cur[1]] = true;
+            
+            for (int[] dir: dirs) {
+                
+                int x = cur[0];
+                int y = cur[1];
+                int dist = dists[cur[0]][cur[1]];
+                while (x >= 0 && y >= 0 && x < row && y < col && maze[x][y] == 0) {
+                    x += dir[0];
+                    y += dir[1];
+                    dist++;   
+                }
+                
+                x -= dir[0];
+                y -= dir[1];
+                dist--;
+                if (dists[x][y] > dist) {
+                    dists[x][y] = dist;
+                    if (x != destination[0] || y != destination[1]) {  //只有不是终点的才会被加入queue.
+                        q.offer(new int[]{x, y});
+                    }
+                }
+            }
+            
+        }
+        res = dists[destination[0]][destination[1]];
+        return res==Integer.MAX_VALUE? -1: res;
+    }
+}
