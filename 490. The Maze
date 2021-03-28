@@ -1,3 +1,4 @@
+1. BFS
 class Solution {
     public boolean hasPath(int[][] maze, int[] start, int[] destination) {
         int m = maze.length;
@@ -12,7 +13,9 @@ class Solution {
           }
           if (visited[cur[0]][cur[1]])
             continue;
+            
           visited[cur[0]][cur[1]] = true;
+          // 4个方向
           int[][] move = new int[][] {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};
           for (int[] mo : move) {
             int x = cur[0], y = cur[1];
@@ -20,9 +23,11 @@ class Solution {
               x += mo[0];
               y += mo[1];
             }
+            
             // Back to validate point.
             x -= mo[0];
             y -= mo[1];
+            
             // Adding new start point.
             queue.offer(new int[] {x, y});
           }
