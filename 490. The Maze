@@ -1,3 +1,5 @@
+这道题就是在每个方向上走到底（越界或者遇到墙），然后回退到valid的点上进行expand或者dfs
+
 1. BFS
 class Solution {
     public boolean hasPath(int[][] maze, int[] start, int[] destination) {
@@ -33,5 +35,68 @@ class Solution {
           }
         }
         return false;
+    }
+}
+
+
+2. DFS: 
+第一种，空间优化，不用visited 数组，直接修改maze
+class Solution {
+    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        return dfs(maze, start, destination);
+    }
+    int[][] dirs = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+    public boolean dfs(int[][] maze, int[] s, int[] t) {
+        if (s[0] == t[0] && s[1] == t[1]) return true;
+        boolean res = false;
+        maze[s[0]][s[1]] = -1;
+        int row = maze.length;
+        int col = maze[0].length;
+        for (int[] dir: dirs) {
+            int x = s[0];
+            int y = s[1];
+            while (x >= 0 && y >= 0 && x < row && y < col && maze[x][y] != 1) {
+                x += dir[0];
+                y += dir[1];
+            }
+            // back to validate point
+            x = x - dir[0];
+            y = y - dir[1];
+            if (maze[x][y] != -1) {
+                res = res || dfs(maze, new int[]{x, y}, t);
+            }
+        }
+        return res; 
+    }
+}
+
+第二种，用visited数组:
+
+class Solution {
+    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        return dfs(maze, start, destination, new boolean[maze.length][maze[0].length]);
+    }
+    int[][] dirs = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+    public boolean dfs(int[][] maze, int[] s, int[] t, boolean[][] visited) {
+        if (s[0] == t[0] && s[1] == t[1]) return true;
+        boolean res = false;
+        visited[s[0]][s[1]] = true;
+        int row = maze.length;
+        int col = maze[0].length;
+        for (int[] dir: dirs) {
+            int x = s[0];
+            int y = s[1];
+            while (x >= 0 && y >= 0 && x < row && y < col && maze[x][y] == 0) {
+                x += dir[0];
+                y += dir[1];
+            }
+            // back to validate point
+            x = x - dir[0];
+            y = y - dir[1];
+            if (!visited[x][y]) {
+                res = res || dfs(maze, new int[]{x, y}, t, visited);
+            }
+        }
+        return res; 
     }
 }
