@@ -133,3 +133,60 @@ public class Solution {
         }
     }
 }
+
+
+========================================
+我一直疑惑要不要visited数组，加上之后运行结果和速度也没变化，面试时还是加上吧
+class Solution {
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        int row = maze.length;
+        int col = maze[0].length;
+        int res = 0; 
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b) -> a[2]-b[2]);
+        pq.offer(new int[]{start[0], start[1], 0});
+        
+        int[][] dists = new int[row][col];
+        for (int[] dist: dists) {
+            Arrays.fill(dist, Integer.MAX_VALUE);
+        }
+
+        dists[start[0]][start[1]] = 0;
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        boolean[][] visited = new boolean[row][col];
+         
+        
+        while (!pq.isEmpty()){
+            int[] cur = pq.poll();
+            if (dists[cur[0]][cur[1]] < cur[2]) {
+                continue;
+            } 
+            visited[cur[0]][cur[1]] = true;
+            for (int[] dir: dirs) {
+                
+                int x = cur[0];
+                int y = cur[1];
+                 
+                int dist = dists[cur[0]][cur[1]];
+                while (x >= 0 && y >= 0 && x < row && y < col && maze[x][y] == 0) {
+                    x += dir[0];
+                    y += dir[1];
+                    dist++;   
+                }
+                
+                x -= dir[0];
+                y -= dir[1];
+                dist--;
+                if (dists[x][y] > dist) {
+                    dists[x][y] = dist;
+                    if ((x != destination[0] || y != destination[1]) && !visited[x][y]) {
+                        pq.offer(new int[]{x, y, dist});
+                    }
+                }
+            }
+            
+        }
+        res = dists[destination[0]][destination[1]];
+        return res==Integer.MAX_VALUE? -1: res;
+    }
+    
+}
