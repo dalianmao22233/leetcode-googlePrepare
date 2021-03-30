@@ -1,0 +1,38 @@
+思路(类似二分)
+1.快速排序可将数组划分成<=x在左边，>=x在右边的两个区间
+
+2.因此第k个小的数不是在左边，就是在右边
+
+3.第k个小的数下标为k-1，通过和临界坐标比较每次只需递归一边
+
+4.答案总在区间里，最后的最小区间就是答案
+
+import java.util.Scanner;
+public class Main{
+    public static int findK(int[] q, int l, int r, int k) {
+        if(l >= r) return q[l];
+        int i = l-1, j = r+1, x = q[l+r>>1];
+        while (i < j) {
+            do i++; while (q[i] < x);
+            do j--; while (q[j] > x);
+            if (i < j) {
+                int tmp = q[i];
+                q[i] = q[j];
+                q[j] = tmp;
+            }
+        }
+        if (k <= j) return findK(q, l, j, k); // 每次只要看半边就够了
+        return findK(q, j+1, r, k);
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int k = sc.nextInt();
+        int[] nums = new int[n];
+        for (int i = 0; i < n; i++) {
+            nums[i] = sc.nextInt();
+        }
+        System.out.printf("%d ", findK(nums, 0, n-1, k-1));
+        
+    }
+}
