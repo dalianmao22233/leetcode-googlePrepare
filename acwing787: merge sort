@@ -1,0 +1,49 @@
+import java.util.*;
+
+public class Main{
+    private static int N = 100010;
+    private static int[] q= new int[N];
+    private static int[] tmp= new int[N];
+    
+    public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        for(int i = 0;i < n;i++){
+            q[i] = scanner.nextInt();
+        }
+        int l = 0,r = n-1;
+        mergeSort(q,l,r);
+        for(int i = 0;i < n;i++){
+            System.out.print(q[i] + " ");
+        }
+    }
+    public static void mergeSort(int[] q,int l,int r){
+        if(l >= r){
+            return;
+        }
+        int mid = l + r >> 1;
+        mergeSort(q, l, mid);
+        mergeSort(q, mid+1, r);
+
+        //i和j指针谁小动谁
+        int i = l,j = mid + 1,k = 0;
+        while(i <= mid && j <= r){
+            if (q[i] <= q[j]) {
+                tmp[k++] = q[i++];
+            } else {
+                tmp[k++] = q[j++];
+            }
+        }
+        while(i <= mid){
+            tmp[k++] = q[i++];    
+        }
+        while(j <= r){
+            tmp[k++] = q[j++];
+        }
+        //辅助数组重新填充回原数组l,r区间
+        for(i = l,k = 0;i <= r;i++,k++){
+            q[i] = tmp[k];
+        }
+    }
+}
+ 
