@@ -1,61 +1,118 @@
 class TrieNode {
-    public boolean isWord;
-    public TrieNode[] children;
-    public TrieNode() {
-        children = new TrieNode[26];
-    }   
+    public char val;
+    public boolean isWord; 
+    public TrieNode[] children = new TrieNode[26];
+    public TrieNode() {}
+    TrieNode(char c){
+        TrieNode node = new TrieNode();
+        node.val = c;
+    }
 }
-class Trie {
+
+public class Trie {
     private TrieNode root;
-    /** Initialize your data structure here. */
     public Trie() {
         root = new TrieNode();
+        root.val = ' ';
     }
-    
-    /** Inserts a word into the trie. */
+
     public void insert(String word) {
-        TrieNode prev = root;
-        for (int i = 0; i < word.length(); i++) {
-            if (prev.children[word.charAt(i)-'a'] == null) {
-                prev.children[word.charAt(i)-'a'] = new TrieNode();
+        TrieNode ws = root;
+        for(int i = 0; i < word.length(); i++){
+            char c = word.charAt(i);
+            if(ws.children[c - 'a'] == null){
+                ws.children[c - 'a'] = new TrieNode(c);
             }
-            
-            prev = prev.children[word.charAt(i)-'a'];
+            ws = ws.children[c - 'a'];
         }
-        prev.isWord = true;
+        ws.isWord = true;
     }
-    
-    /** Returns if the word is in the trie. */
+
     public boolean search(String word) {
-        TrieNode cur = root;
-        for (int i = 0; i < word.length(); i++) {
-            if (cur.children[word.charAt(i)-'a'] == null) {
-                return false;
-            } else {
-                cur = cur.children[word.charAt(i)-'a'];
-            }
+        TrieNode ws = root; 
+        for(int i = 0; i < word.length(); i++){
+            char c = word.charAt(i);
+            if(ws.children[c - 'a'] == null) return false;
+            ws = ws.children[c - 'a'];
         }
-        return cur.isWord;
+        return ws.isWord;
     }
-    
-    /** Returns if there is any word in the trie that starts with the given prefix. */
+
     public boolean startsWith(String prefix) {
-        TrieNode cur = root;
-        for (int i = 0; i < prefix.length(); i++) {
-            if (cur.children[prefix.charAt(i)-'a'] == null) {
-                return false;
-            } else {
-                cur = cur.children[prefix.charAt(i)-'a'];
-            }
+        TrieNode ws = root; 
+        for(int i = 0; i < prefix.length(); i++){
+            char c = prefix.charAt(i);
+            if(ws.children[c - 'a'] == null) return false;
+            ws = ws.children[c - 'a'];
         }
         return true;
     }
 }
 
-/**
- * Your Trie object will be instantiated and called as such:
- * Trie obj = new Trie();
- * obj.insert(word);
- * boolean param_2 = obj.search(word);
- * boolean param_3 = obj.startsWith(prefix);
- */
+acwing:
+思路
+1.Trie树是将一个字符串拆分成字符数组一个个插入
+
+2.当插入第一个字符时判断空节点下有无第一个节点，有则指针往下移，无就创建一个（赋地址值），
+
+因此需要全局变量c[N][26]:n节点的下一个0~26节点， idx：唯一地址值
+
+3.统计字符串数量时只需字符串最后一个字符(节点地址)的数量，
+
+因此需要全局变量k[]:存储最后一个字符(节点地址)的数量
+
+import java.util.*;
+
+public class Main{
+    private static int N = 100010;
+    private static int[] k =new int[N];           //以该节点结尾的字符串的个数
+    private static int[][] c = new int[N][26];    //c['a']['b']:a节点的下一个b节点
+    private static int idx = 1;               //节点地址,0位置为空节点所以从1开始
+
+    public static void insert(char[] arr){
+        //p一开始指向空节点
+        int p = 0;
+        for(int i = 0;i < arr.length;i++){
+            int s = arr[i] - 'a';
+            if(c[p][s] == 0){
+                //p的下一个s节点为空，就赋值地址
+                c[p][s] = idx++;
+            }
+            //p指向下一个节点
+            p = c[p][s];
+        }
+        //以p节点结尾的字符串+1
+        k[p]++;
+    }
+    public static int query(char[] arr){
+        int p = 0;
+        for(int i = 0;i < arr.length;i++){
+            int s = arr[i] - 'a';
+            if(c[p][s] == 0){
+                //p的下一个s节点为空，则无此字符串
+                return 0;
+            }
+            p = c[p][s];
+        }
+        return k[p];
+    }
+
+    public static void main(String[] args){
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        while(n-- > 0){
+            String opt = scanner.next();
+            String str = scanner.next();
+            if("I".equals(opt)){
+                insert(str.toCharArray());
+            }else if("Q".equals(opt)){
+                System.out.println(query(str.toCharArray()));
+            }
+        }
+    }
+}
+
+作者：wide
+链接：https://www.acwing.com/solution/content/19179/
+来源：AcWing
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
