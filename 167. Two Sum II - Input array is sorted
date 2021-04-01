@@ -1,0 +1,14 @@
+acwing:双指针模板题
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+         for (int i = 0, j = nums.length-1; i < j; i++) {
+             while (i < j && nums[i] + nums[j] > target) {
+                 j--;
+             }
+             if (i < j && nums[i] + nums[j] == target) {
+                 return new int[]{i+1, j+1};
+             }
+         }
+        return new int[]{-1, -1};
+    }
+}
