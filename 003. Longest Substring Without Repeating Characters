@@ -1,3 +1,24 @@
+acwing:双指针，用数组来存储每个字符出现的次数，因为存在空格，用int[128] / int[256]
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        if (s == null || s.length() == 0) return 0;
+        char[] a = s.toCharArray();
+        int n = s.length();
+        int[] st = new int[256];
+        int res = 0;
+        for (int i = 0, j = 0; i < n; i++) {
+            st[a[i]]++;
+            while (st[a[i]] > 1) {
+                st[a[j]]--;
+                j++;
+            }
+            res  = Math.max(res, i-j+1);
+        }
+        return res;
+    }
+}
+
+
 // sliding window: Time: O(n) space: min(m, n)
 s: -----j------------i---
 
