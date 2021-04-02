@@ -1,3 +1,4 @@
+Time： O(n)
 https://leetcode.com/problems/sliding-window-maximum/discuss/65884/Java-O(n)-solution-using-deque-with-explanation comment:
 1. public class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
