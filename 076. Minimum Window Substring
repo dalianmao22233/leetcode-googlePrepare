@@ -1,244 +1,78 @@
-public class MinWindowSubstring {
-//	Input: S = "ADOBECODEBANC", T = "ABC"
-//	Output: "BANC"
+acwing: 2个hashmap, hs存储s中的字符-出现次数，ht存储t中的字符-出现次数, count 存储计数，如果是有效的字符（满足t中出现的）就++
+考虑窗口左右两个端点j, i
+i: 如果hs[s[i]] < ht[s[i]]， 说明此时的字符是有效的，count++
+j: 如果hs[s[j]] > ht[s[j]], 说明此时s[j]多余，hs[s[j]]--, j++.
 
-	// Time Complexity: O(|S| + |T|) where |S| and |T| represent the lengths of strings S and T.
-	// In the worst case we might end up visiting every element of string S twice,
-	// once by left pointer and once by right pointer.
-	// ∣T∣ represents the length of string T.
-
-	// Space Complexity: O(|S| + |T|)
-	// |S| when the window size is equal to the entire string S. |T| when T has all unique characters.
-
-思路： sliding window
-1. 两个指针，left,right. 初始的时候都指在S的第一位上。
-2. 用right指针来扩展window,直到window里面包含T的所有字符。
-3. 一旦window有了所有T字符，可以移动left指针，如果window里还是有T的所有字符，那么更新最小窗口的size.
-4. 如果window里不再满足T中所有字符，那么重复2.
-
-	public static String minWindow(String s, String t) {
-
-		if (s.length() == 0 || t.length() == 0) {
-			return "";
-		}
-
-		// Dictionary which keeps a count of all the unique characters in t.计算T中所有字符频率。
-		Map<Character, Integer> dictT = new HashMap<Character, Integer>();
-		for (int i = 0; i < t.length(); i++) {
-			int count = dictT.getOrDefault(t.charAt(i), 0);
-			dictT.put(t.charAt(i), count + 1);
-		}
-
-		// Number of unique characters in t, which need to be present in the desired window.T中有多少个不重复的字符。
-		int required = dictT.size();
-
-		// Left and Right pointer 左右指针
-		int l = 0, r = 0;
-
-		// formed is used to keep track of how many unique characters in t
-		// are present in the current window in its desired frequency.
-		// e.g. if t is "AABC" then the window must have two A's, one B and one C.
-		// Thus formed would be = 3 when all these conditions are met. 用于看是否满足含有  所有T字符（频率也相等）
-		int formed = 0; 
-
-		// Dictionary which keeps a count of all the unique characters in the current window.  当前窗口中的char频率
-		Map<Character, Integer> windowCounts = new HashMap<Character, Integer>();
-
-		// ans list of the form (window length, left, right)  
-		int[] ans = {-1, 0, 0};
-
-		while (r < s.length()) {
-			// Add one character from the right to the window
-			char c = s.charAt(r);
-			int count = windowCounts.getOrDefault(c, 0);
-			windowCounts.put(c, count + 1);
-
-			// If the frequency of the current character added equals to the
-			// desired count in t then increment the formed count by 1.
-			if (dictT.containsKey(c) && windowCounts.get(c).intValue() == dictT.get(c).intValue()) {
-				formed++;
-			}
-
-			// Try and contract the window till the point where it ceases to be 'desirable'.
-			while (l <= r && formed == required) {
-				c = s.charAt(l);
-				// Save the smallest window until now.
-				if (ans[0] == -1 || r - l + 1 < ans[0]) {
-					ans[0] = r - l + 1;
-					ans[1] = l;
-					ans[2] = r;
-				}
-
-				// The character at the position pointed by the
-				// `Left` pointer is no longer a part of the window.
-				windowCounts.put(c, windowCounts.get(c) - 1);
-				if (dictT.containsKey(c) && windowCounts.get(c).intValue() < dictT.get(c).intValue()) {
-					formed--;
-				}
-
-				// Move the left pointer ahead, this would help to look for a new window.
-				// 缩小窗口，移动左边指针，看是否依然满足当前窗口含有所有T字符
-				l++;
-			}
-
-			// Keep expanding the window once we are done contracting. 扩展窗口
-			r++;
-		}
-
-		return ans[0] == -1 ? "" : s.substring(ans[1], ans[2] + 1);
-	}
-}
-
-// 优化第一种：如果S太长了，只含有少数的T字符，那么预处理一下：
-// 用Pair，只记录在S中出现过的 T中的字符，存成一个list : filteredS
-// 这样能减少搜索时间。
-import javafx.util.Pair;
-
+1. hashmap写法：
 class Solution {
     public String minWindow(String s, String t) {
-
-        if (s.length() == 0 || t.length() == 0) {
-            return "";
+        HashMap<Character, Integer> hs = new HashMap<>();
+        HashMap<Character, Integer> ht = new HashMap<>();
+        
+        for (Character c: t.toCharArray()) {
+            ht.put(c, ht.getOrDefault(c, 0)+1);
         }
-
-        Map<Character, Integer> dictT = new HashMap<Character, Integer>();
-
-        for (int i = 0; i < t.length(); i++) {
-            int count = dictT.getOrDefault(t.charAt(i), 0);
-            dictT.put(t.charAt(i), count + 1);
-        }
-
-        int required = dictT.size();
-
-        // Filter all the characters from s into a new list along with their index.
-        // The filtering criteria is that the character should be present in t.
-	// 用Pair，只记录在S中出现过的 T中的字符，存成一个list : filteredS
-        List<Pair<Integer, Character>> filteredS = new ArrayList<Pair<Integer, Character>>();
-        for (int i = 0; i < s.length(); i++) {
+                  
+        String res = "";
+        int cnt = 0;
+        for (int i = 0, j = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            if (dictT.containsKey(c)) {
-                filteredS.add(new Pair<Integer, Character>(i, c));
+            hs.put(c, hs.getOrDefault(c, 0)+1);
+                       
+            if (ht.containsKey(c) && hs.get(c) <= ht.get(c)) {
+                cnt++;
+            }
+            
+             
+            while (j <= i && ht.containsKey(s.charAt(j)) && hs.get(s.charAt(j)) > ht.get(s.charAt(j))) {
+                
+                hs.put(s.charAt(j), hs.get(s.charAt(j))-1);
+                System.out.println(hs);
+                j++;
+                
+            }   
+            if (cnt == t.length()) {
+                if (res.isEmpty() || i-j+1 < res.length()) {
+                    res = s.substring(j, i+1);
+                }
             }
         }
-
-        int l = 0, r = 0, formed = 0;
-        Map<Character, Integer> windowCounts = new HashMap<Character, Integer>();  
-        int[] ans = {-1, 0, 0};
-
-        // Look for the characters only in the filtered list instead of entire s.
-        // This helps to reduce our search.
-        // Hence, we follow the sliding window approach on as small list.
-        while (r < filteredS.size()) {
-            char c = filteredS.get(r).getValue();
-            int count = windowCounts.getOrDefault(c, 0);
-            windowCounts.put(c, count + 1);
-
-            if (dictT.containsKey(c) && windowCounts.get(c).intValue() == dictT.get(c).intValue()) {
-                formed++;
-            }
-
-            // Try and contract the window till the point where it ceases to be 'desirable'.
-            while (l <= r && formed == required) {
-                c = filteredS.get(l).getValue();
-
-                // Save the smallest window until now.
-                int end = filteredS.get(r).getKey();
-                int start = filteredS.get(l).getKey();
-                if (ans[0] == -1 || end - start + 1 < ans[0]) {
-                    ans[0] = end - start + 1;
-                    ans[1] = start;
-                    ans[2] = end;
-                }
-
-                windowCounts.put(c, windowCounts.get(c) - 1);
-                if (dictT.containsKey(c) && windowCounts.get(c).intValue() < dictT.get(c).intValue()) {
-                    formed--;
-                }
-                l++;
-            }
-            r++;   
-        }
-        return ans[0] == -1 ? "" : s.substring(ans[1], ans[2] + 1);
+        return res;
     }
+    
+    2. 更清楚， 两个int[128] 因为有大写字母，思想一样
+    public String minWindow2(String s, String t) {
+        int[] hs = new int[128];
+        int[] ht = new int[128];
+        
+        
+        for (Character c: t.toCharArray()) {
+            ht[c]++;
+        }
+                  
+        String res = "";
+        int cnt = 0;
+        for (int i = 0, j = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            hs[c]++;
+
+            if (hs[c] <= ht[c]) {
+                cnt++;
+            }
+            
+            // j<= i, 防止越界
+            while (j <= i && hs[s.charAt(j)] > ht[s.charAt(j)]) {
+                hs[s.charAt(j)]--;
+                j++;
+            }   
+            if (cnt == t.length()) {
+                // i-j+1 是window
+                if (res.isEmpty() || i-j+1 < res.length()) {
+                    res = s.substring(j, i+1);
+                }
+            }
+        }
+        return res;
+    }
+    
 }
-
-
-
-
-
-
-
-
-
-快！
-// version 2: two pointers + one int[]
-// array access is much faster than hashmap: 9s  VS 55s
-public class Solution {
-    public String minWindow(String s, String t) {
-        if (s == null || t == null || t.length() > s.length()) {
-            return "";
-        }
-        int[] map = new int[256];
-        for (int i = 0; i < t.length(); i++) {
-            char c = t.charAt(i);
-            map[c]++;
-        }
-        int l = 0, r = 0, match = 0; 
-        int minLeft = -1, minLen = Integer.MAX_VALUE;
-        while (r < s.length()) {
-            char cr = s.charAt(r);
-            if (--map[cr] >= 0) {
-				match++;
-			}
-            while (match == t.length()) {
-                if (r - l + 1 < minLen) {
-                    minLeft = l;
-                    minLen = Math.min(minLen, r - l + 1);
-                }
-                char cl = s.charAt(l);
-                if (++map[cl] > 0) match--;
-                ++l;
-            }
-            ++r;
-        }
-        return minLeft == -1 ? "" : s.substring(minLeft, minLeft + minLen);
-    }
-}
-
-
-
-
-
-
-// version 1, two pointers + one hashmap
-// General template like Problems 3, 159, ....
-/*public class Solution {
-    public String minWindow(String s, String t) {
-        if (s == null || t == null || t.length() > s.length()) {
-            return "";
-        }
-        Map<Character, Integer> tMap = new HashMap<>();
-        for (int i = 0; i < t.length(); i++) {
-            char c = t.charAt(i);
-            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
-        }
-        int left = 0, right = 0, count = 0; 
-        int minStart = -1, minLen = Integer.MAX_VALUE;
-        while (right < s.length()) {
-            char cr = s.charAt(right);
-            tMap.put(cr, tMap.getOrDefault(cr, 0) - 1);
-            if (tMap.get(cr) >= 0) count++;
-            while (count == t.length()) {
-                if (right - left + 1 <= minLen) {
-                    minStart = left;
-                    minLen = right - left + 1; 
-                }
-                char cl = s.charAt(left++);
-                tMap.put(cl, tMap.get(cl) + 1);
-                if (tMap.get(cl) >= 1) count--;
-            }
-            right++;
-        }
-        return minStart == -1 ? "" : s.substring(minStart, minStart + minLen);
-    }
-} */
