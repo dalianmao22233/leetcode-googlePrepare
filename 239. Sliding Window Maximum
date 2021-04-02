@@ -1,5 +1,5 @@
 https://leetcode.com/problems/sliding-window-maximum/discuss/65884/Java-O(n)-solution-using-deque-with-explanation comment:
-public class Solution {
+1. public class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
         if (n == 0) {
@@ -22,3 +22,32 @@ public class Solution {
         return result;
     }
    }
+   
+   2. awing: 思路一样，就是用数组实现了一个queue. 保证单调减的序列，那么队头（窗口最左边）一定是最大的。
+   class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int n = nums.length;
+        List<Integer> res = new ArrayList<>();
+        int[] q = new int[n];
+        int hh = 0, tt = -1;
+        for (int i = 0; i < n; i++) {
+            while (hh <= tt && i-k+1 > q[hh]) {
+                hh++;
+            }
+            while (hh <= tt && nums[q[tt]] <= nums[i]) {
+                tt--;
+            }
+            q[++tt] = i;
+            if (i >= k-1) {
+                res.add(nums[q[hh]]);
+            }
+        }
+        int[] ans = new int[res.size()];
+        int m = 0;
+        for (Integer i:res) {
+            ans[m] = i;
+            m++;
+        }
+        return ans;
+    }
+}
