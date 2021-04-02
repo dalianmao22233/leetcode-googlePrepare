@@ -1,0 +1,75 @@
+完全类似trie那个题
+class TrieNode {
+    char val;
+    TrieNode[] children = new TrieNode[26]; 
+    int countS;
+    int countE;
+    TrieNode(char val) {
+        this.val = val;
+        countS = 0;
+        countE = 0;
+    }
+}
+class Trie {
+    TrieNode root;
+    public Trie() {
+        root = new TrieNode(' ');
+    }
+    
+    public void insert(String word) {
+        TrieNode cur = root;
+        for (Character c: word.toCharArray()) {
+            if (cur.children[c-'a'] == null) {
+                cur.children[c-'a'] = new TrieNode(c);
+            }
+            cur.children[c-'a'].countS++;
+            cur = cur.children[c-'a'];
+        }
+        cur.countE++;
+    }
+    
+    public int countWordsEqualTo(String word) {
+        TrieNode cur = root;
+        for (Character c: word.toCharArray()) {
+            if (cur.children[c-'a'] == null) {
+                return 0;
+            }
+            cur = cur.children[c-'a'];
+        }
+        return cur.countE;
+    }
+    
+    public int countWordsStartingWith(String prefix) {
+        TrieNode cur = root;
+        for (Character c: prefix.toCharArray()) {
+            if (cur.children[c-'a'] == null) {
+                return 0;
+            }
+            cur = cur.children[c-'a'];
+        }
+        return cur.countS;
+    }
+    
+    public void erase(String word) {
+        TrieNode cur = root;
+        for (Character c: word.toCharArray()) {
+            if (cur.children[c-'a'] == null) {
+                return;
+            }
+            
+            cur = cur.children[c-'a'];
+            cur.countS--; 
+
+        }
+        cur.countE--;
+    }
+}
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie obj = new Trie();
+ * obj.insert(word);
+ * int param_2 = obj.countWordsEqualTo(word);
+ * int param_3 = obj.countWordsStartingWith(prefix);
+ * obj.erase(word);
+ */
