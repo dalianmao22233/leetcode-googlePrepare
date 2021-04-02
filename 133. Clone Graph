@@ -1,57 +1,53 @@
-// 1. my method, 用hashmap, recursive, same as copy list with random pointer, 138
-/**
- * Definition for undirected graph.
- * class UndirectedGraphNode {
- *     int label;
- *     List<UndirectedGraphNode> neighbors;
- *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
- * };
- */
-public class Solution {
-    HashMap<UndirectedGraphNode, UndirectedGraphNode> map = new HashMap<>();
-    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
-        if (node == null) {
-            return node;
-        }
-        if (map.containsKey(node)) {
+1. dfs
+
+class Solution {
+    HashMap<Node, Node> map = new HashMap<>();
+    public Node cloneGraph(Node node) {
+        if (node == null) return node;
+        if (map.containsKey(node)) 
             return map.get(node);
+        
+        Node newNode = new Node(node.val, new ArrayList<>());
+        // old. new
+        map.put(node, newNode);
+         
+        for (Node neighbor: node.neighbors) {
+            Node newNeighbor = cloneGraph(neighbor);
+            newNode.neighbors.add(newNeighbor);
         }
-        UndirectedGraphNode copyNode = new UndirectedGraphNode(node.label);
-        map.put(node, copyNode);  // 这句必须放在这，如果放在最后，每次call function的时候map总是空的，会stackoverflow.
-        copyNode.neighbors = new ArrayList<>();
-        for (int i = 0; i < node.neighbors.size(); i++) {
-            UndirectedGraphNode item = cloneGraph(node.neighbors.get(i));
-            copyNode.neighbors.add(item);
-        }
-        return copyNode;
+   
+        return newNode;
+         
     }
-  
 }
 
-// 2. iterative, BFS, hashmap+queue: Use HashMap to look up nodes and add connection to them while performing BFS.
-public class Solution {
-    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
-        if (node == null) return null;
-        
-        UndirectedGraphNode newNode = new UndirectedGraphNode(node.label); //new node for return
-        HashMap<Integer, UndirectedGraphNode> map = new HashMap(); //store visited nodes
-        
-        map.put(newNode.label, newNode); //add first node to HashMap
-        
-        LinkedList<UndirectedGraphNode> queue = new LinkedList(); //to store **original** nodes need to be visited
-        queue.add(node); //add first **original** node to queue
-        
-        while (!queue.isEmpty()) { //if more nodes need to be visited
-            UndirectedGraphNode n = queue.pop(); //search first node in the queue
-            for (UndirectedGraphNode neighbor : n.neighbors) {
-                if (!map.containsKey(neighbor.label)) { //add to map and queue if this node hasn't been searched before
-                    map.put(neighbor.label, new UndirectedGraphNode(neighbor.label));
+2. iterative, BFS, hashmap+queue: Use HashMap to look up nodes and add connection to them while performing BFS.
+class Solution {
+    
+    public Node cloneGraph(Node node) {
+        if (node == null) return node;
+        HashMap<Node, Node> map = new HashMap<>();
+         
+        Node newNode = new Node(node.val, new ArrayList<>());
+        map.put(node, newNode); 
+        Queue<Node> queue  =new LinkedList<>();
+        queue.offer(node);
+        // old. new
+        while (!queue.isEmpty()) {
+            Node cur = queue.poll();
+            for (Node neighbor: cur.neighbors) {
+                if (!map.containsKey(neighbor)) {
+                    Node newNeighbor = new Node(neighbor.val, new ArrayList<>());
+                    map.put(neighbor, newNeighbor);
                     queue.add(neighbor);
-                }
-                map.get(n.label).neighbors.add(map.get(neighbor.label)); //add neighbor to new created nodes
+                }  
+                map.get(cur).neighbors.add(map.get(neighbor));
+                
+                 
             }
         }
         
-        return newNode;
+        return map.get(node);
+         
     }
 }
