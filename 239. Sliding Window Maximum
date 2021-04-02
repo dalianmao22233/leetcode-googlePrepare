@@ -1,31 +1,36 @@
 Time： O(n)
 https://leetcode.com/problems/sliding-window-maximum/discuss/65884/Java-O(n)-solution-using-deque-with-explanation comment:
-1. public class Solution {
+1. 
+class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
-        if (n == 0) {
-            return nums;
-        }
-        int[] result = new int[n - k + 1];
-        LinkedList<Integer> dq = new LinkedList<>();
+        int[] res = new int[n-k+1];
+        
+        int r = 0;
+        // q 存储 index
+        Deque<Integer> q = new ArrayDeque<>();
+        
         for (int i = 0; i < n; i++) {
-            if (!dq.isEmpty() && dq.peek() < i - k + 1) {
-                dq.poll();
+            // 每个窗口的下标[i-(k-1), i]， 长度为k
+            // 移除窗口起点以前的index
+            if (!q.isEmpty() && i-k+1 > q.peek()) {
+                q.poll();
             }
-            while (!dq.isEmpty() && nums[i] >= nums[dq.peekLast()]) {
-                dq.pollLast();
+            // nums[i]是更合适的candidate. 删除队尾.
+            while (!q.isEmpty() && nums[i] >= nums[q.peekLast()]) {
+                q.pollLast();
             }
-            dq.offer(i);
-            if (i - k + 1 >= 0) {
-                result[i - k + 1] = nums[dq.peek()];
+            q.offer(i);
+            if (i >= k-1) { 
+                res[i-k+1] = nums[q.peek()];
             }
         }
-        return result;
+        return res;
     }
-   }
+}
    
-   2. awing: 思路一样，就是用数组实现了一个queue. 保证单调减的序列，那么队头（窗口最左边）一定是最大的。
-   class Solution {
+2. awing: 思路一样，就是用数组实现了一个queue. 保证单调减的序列，那么队头（窗口最左边）一定是最大的。
+class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
         List<Integer> res = new ArrayList<>();
