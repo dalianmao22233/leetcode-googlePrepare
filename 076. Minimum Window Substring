@@ -1,6 +1,6 @@
 acwing: 2个hashmap, hs存储s中的字符-出现次数，ht存储t中的字符-出现次数, count 存储计数，如果是有效的字符（满足t中出现的）就++
 考虑窗口左右两个端点j, i
-i: if     hs[s[i]] < ht[s[i]]， 说明此时的字符是有效的，count++
+i: if     hs[s[i]] <= ht[s[i]]， 说明此时的字符是有效的，count++
 j: while  hs[s[j]] > ht[s[j]], 说明此时s[j]多余，hs[s[j]]--, j++.
 
 2个hashmap能做，就是在移动j的时候需要考虑非常多的条件，麻烦，我没跑过，
