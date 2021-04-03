@@ -1,46 +1,11 @@
 acwing: 2个hashmap, hs存储s中的字符-出现次数，ht存储t中的字符-出现次数, count 存储计数，如果是有效的字符（满足t中出现的）就++
 考虑窗口左右两个端点j, i
-i: 如果hs[s[i]] < ht[s[i]]， 说明此时的字符是有效的，count++
-j: 如果hs[s[j]] > ht[s[j]], 说明此时s[j]多余，hs[s[j]]--, j++.
+i: if     hs[s[i]] < ht[s[i]]， 说明此时的字符是有效的，count++
+j: while  hs[s[j]] > ht[s[j]], 说明此时s[j]多余，hs[s[j]]--, j++.
 
-1. hashmap写法：
-class Solution {
-    public String minWindow(String s, String t) {
-        HashMap<Character, Integer> hs = new HashMap<>();
-        HashMap<Character, Integer> ht = new HashMap<>();
-        
-        for (Character c: t.toCharArray()) {
-            ht.put(c, ht.getOrDefault(c, 0)+1);
-        }
-                  
-        String res = "";
-        int cnt = 0;
-        for (int i = 0, j = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            hs.put(c, hs.getOrDefault(c, 0)+1);
-                       
-            if (ht.containsKey(c) && hs.get(c) <= ht.get(c)) {
-                cnt++;
-            }
-            
-             
-            while (j <= i && ht.containsKey(s.charAt(j)) && hs.get(s.charAt(j)) > ht.get(s.charAt(j))) {
-                
-                hs.put(s.charAt(j), hs.get(s.charAt(j))-1);
-                System.out.println(hs);
-                j++;
-                
-            }   
-            if (cnt == t.length()) {
-                if (res.isEmpty() || i-j+1 < res.length()) {
-                    res = s.substring(j, i+1);
-                }
-            }
-        }
-        return res;
-    }
-    
-    2. 更清楚， 两个int[128] 因为有大写字母，思想一样
+2个hashmap能做，就是在移动j的时候需要考虑非常多的条件，麻烦，我没跑过，
+
+这个更清楚， 两个int[128] 因为有大写字母，思想一样，而且数组不需要考虑containsKey问题：
     public String minWindow2(String s, String t) {
         int[] hs = new int[128];
         int[] ht = new int[128];
