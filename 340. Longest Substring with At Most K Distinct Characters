@@ -1,14 +1,29 @@
-public class Solution {
+和159完全相同
+
+class Solution {
     public int lengthOfLongestSubstringKDistinct(String s, int k) {
-        int[] count = new int[256];
-        int num = 0, i = 0, res = 0;
-        for (int j = 0; j < s.length(); j++) {
-            if (count[s.charAt(j)]++ == 0) num++;
-            if (num > k) {
-                while (--count[s.charAt(i++)] > 0);
-                num--;
+        int count = 0;
+        int[] st = new int[128];
+        int res = 0;
+        int n = s.length();
+        for (int i = 0, j = 0; i < n; i++) {
+            char c = s.charAt(i);
+            if (st[c] == 0){
+                count++;
             }
-            res = Math.max(res, j - i + 1);
+            st[c]++;
+            
+            // left point
+            while (j <= i && count > k) {
+                st[s.charAt(j)]--;
+                if (st[s.charAt(j)] == 0) {
+                    count--;
+                }
+                j++;
+            }
+            if (count <= k) {
+                res = Math.max(res, i-j+1);
+            }
         }
         return res;
     }
