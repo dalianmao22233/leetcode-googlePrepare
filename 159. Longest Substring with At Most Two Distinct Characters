@@ -1,33 +1,39 @@
+类似于其他滑动窗口题，76
+用一个数组st存储当前窗口出现的字符次数
+用count来存储当前有多少个不同字符出现
+1. 窗口右端点：首先判断如果是新字符，那么count++, 然后更新st
+2. 窗口左端点：判断如果count>2,应该缩短左边，先更新st, 然后判断如果st[s(j)]=0,说明不同字符少一个，count可以更新，j++.
+
 class Solution {
-  public int lengthOfLongestSubstringTwoDistinct(String s) {
-    int n = s.length();
-    if (n < 3) return n;
-
-    // sliding window left and right pointers
-    int left = 0;
-    int right = 0;
-    // hashmap character -> its rightmost position 
-    // in the sliding window
-    HashMap<Character, Integer> hashmap = new HashMap<Character, Integer>();
-
-    int max_len = 2;
-
-    while (right < n) {
-      // slidewindow contains less than 3 characters
-      if (hashmap.size() < 3)
-        hashmap.put(s.charAt(right), right++);
-
-      // slidewindow contains 3 characters
-      if (hashmap.size() == 3) {
-        // delete the leftmost character
-        int del_idx = Collections.min(hashmap.values());
-        hashmap.remove(s.charAt(del_idx));
-        // move left pointer of the slidewindow
-        left = del_idx + 1;
-      }
-
-      max_len = Math.max(max_len, right - left);
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        int count  = 0;
+        
+        int n = s.length();
+         
+        int[] st = new int[128];
+        int res = 0;
+        for (int i = 0, j = 0; i < n; i++) {
+            char c = s.charAt(i);
+            if (st[c] == 0) {
+                count++;
+            }
+            st[c]++;
+            
+            while (j <= i && count > 2) {
+                st[s.charAt(j)]--;
+                if (st[s.charAt(j)] == 0) {
+                    count--;
+                }
+                j++;
+                
+            }
+            
+            if (count <= 2) {
+                res = Math.max(res, i-j+1);
+            }
+            
+        }
+        return res;
+        
     }
-    return max_len;
-  }
 }
