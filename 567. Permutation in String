@@ -1,4 +1,95 @@
-// sliding window: 
+// acwing: 滑动窗口，用hashmap做我就过不了，不知道什么原因，我写在下面了
+1. 首先填充hs1，每种字符出现的次数， count_s1记录当前s1中不同字符种数 数量。 count记录当前窗口中满足条件的不同的字符种数 数量。当count==count_s1,则true。
+2. 滑动窗口，对于i, 先看是否已经满足了hs1[c] == hs2[c] （hs1中必须有c出现）, 如果满足，说明当前i对应的字符c是多余的，不满足s1中c的数量，因为马上就要变成不相等的了 （hs1[c]++）则count--. 
+    然后更新hs2[c]++. 
+    更新之后如果满足相等，则说明满足条件了，count++.  
+    如果i-j >= s1.length(), 说明j要向前移动一位。
+    为啥： s2 = "eced", s1 = "ab"
+    i=2, j=0, 此时i-j=2, 2=s1.length()， 但是此时窗口长度是3， 说明需要缩短窗口，j++, 如果是i-j+1>=s1.length()就不对了，就会变成窗口长度=s1.length(), 那么就不应该缩短，应该继续扩张右端点
+    
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+        int[] hs1 = new int[128];
+        int[] hs2 = new int[128];
+        int count = 0;
+        int count_s1 = 0;
+        
+        for (Character c: s1.toCharArray()) {
+            if (hs1[c] == 0) count_s1++;
+            hs1[c]++;
+        }
+         
+        for(int i = 0, j = 0; i < s2.length(); i++) {
+            char c = s2.charAt(i);
+            if (hs1[c] != 0 && hs2[c] == hs1[c]) count--;
+            hs2[c]++;
+            if (hs1[c] != 0 && hs2[c] == hs1[c]) count++;
+            
+            char t = s2.charAt(j);
+            
+            if (i-j >= s1.length()) {
+                if (hs1[t] != 0 &&  hs2[t] == hs1[t]) count--;
+                hs2[t]--;
+                if (hs1[t] != 0 && hs2[t] == hs1[t]) count++;
+                j++;
+                 
+            }
+            
+            if (count == count_s1) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+//大数据集过不了的hashmap写法：
+class Solution {
+    HashMap<Character, Integer> hs1 = new HashMap<>();
+    HashMap<Character, Integer> hs2 = new HashMap<>();
+    public boolean check(char c) {
+        if (hs1.containsKey(c) && hs1.get(c) == hs2.get(c)) 
+            return true;
+        return false;
+    }
+    public boolean checkInclusion(String s1, String s2) {
+        for (Character c: s1.toCharArray()) {
+            hs1.put(c, hs1.getOrDefault(c, 0)+1);
+        }
+        
+         
+        for(int i = 0, j = 0, count = 0; i < s2.length(); i++) {
+            char c = s2.charAt(i);
+            if (check(c)) count--;
+            hs2.put(c, hs2.getOrDefault(c, 0)+1);
+            if (check(c)) count++;
+            
+            char t = s2.charAt(j);
+            
+        
+            if (i-j >= s1.length()) {
+                if (check(t)) count--;
+                hs2.put(t, hs2.getOrDefault(t, 0)-1);
+                if (check(t)) count++;
+                j++;
+            }
+           
+            if (count == hs1.size()) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+
+
+
+
+
+
+
+// sliding window: 看不懂
 public class Solution {
     public boolean checkInclusion(String s1, String s2) {
         if (s1.length() > s2.length())
