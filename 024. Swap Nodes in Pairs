@@ -1,0 +1,32 @@
+1. recursive: 很好理解，相当于reverse linkedlist 思想
+public ListNode swapPairs(ListNode head) {
+    if (head == null || head.next == null) {
+        return head;
+    }
+    ListNode next = head.next;
+    head.next = swapPairs(head.next.next);
+    next.next = head;
+    return next;
+}
+
+2. iterative:
+acwing:
+1. 存储头指针， dummy.next即为头结点
+2. 注意顺序
+
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode p = dummy;  // 要交换的两个点的前一个点。 比如3->4, 那么p就是1
+        while (p.next != null && p.next.next != null) {
+            ListNode a = p.next;
+            ListNode b = a.next;
+            p.next = b;
+            a.next = b.next;
+            b.next = a;
+            p = a;
+        }
+        return dummy.next;
+    }
+}
