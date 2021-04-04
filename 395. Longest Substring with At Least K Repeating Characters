@@ -1,0 +1,50 @@
+acwing: 滑动窗口, 没有单调性的时候增加枚举一些条件，来凑成单调性，继续使用滑动窗口双指针做法。
+class Solution {
+    int x = 0;
+    int y = 0;
+    int[] cnt = new int[128];
+    public void add(char c, int m) {
+        if (cnt[c] == 0) {
+            x++;
+        }
+        cnt[c]++;
+        if (cnt[c] == m) {
+            y++;
+        }
+    }
+    public void delete(char c, int m) {
+        if (cnt[c] == m) {
+            y--;
+        }
+        cnt[c]--;
+        if (cnt[c] == 0) {
+            x--;
+        }
+    }
+    public int longestSubstring(String s, int m) {
+        // 枚举区间中最多包含的不同字符的数量,促成单调性，才能用双指针
+        // 维护 不同字符的数量  x
+        // 维护 满足要求的字符 种数 数量  y
+        // 当前区间每个字符出现的次数 map cnt
+         
+        int res = 0;
+        int n = s.length();
+        // 枚举当前区间出现的不同字符 种数 数量
+        for (int k = 1; k <= 26; k++)  {
+            Arrays.fill(cnt, 0);
+            int i = 0, j = 0;
+            for (i = 0, j = 0, x = 0, y = 0; i < n; i++) {
+                add(s.charAt(i), m);
+                while (x > k) {
+                    delete(s.charAt(j), m);
+                    j++;
+                }
+                if (x == y) {
+                    res = Math.max(res, i-j+1);
+                }
+            } 
+         
+        }
+        return res;
+    }
+}
