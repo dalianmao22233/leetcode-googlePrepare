@@ -1,29 +1,24 @@
-1. 基本思想是设置三个指针：遍历mid指针，当遇到2号球时，便和right指针进行交换；遇到1号球时，继续前进；与到0号球时，便和left指针进行交换。  
+1. acwing: 荷兰国旗问题， 分三个区间， 0-j, j-i, i-k,分情况讨论
 class Solution {
     public void sortColors(int[] nums) {
-        if (nums.length == 1) {
-            return;
-        }
-        int l = 0;
-        int h = nums.length-1;
-        int mid = 0;
-        while (mid <= h) {
-            if (nums[mid] == 2) {
-                // swap(nums, h, mid);
-                nums[mid] = nums[h];
-                nums[h] = 2;
-                h--;
-                // 这里不能mid++;需要把mid指针保留在原地，因为从右指针换过来的数可能还需要进行比较（比如换来的是0），如果jump到下一个了，那么会错过这个数。
-            } else if (nums[mid] == 1) {
-                mid++;
-            } else if (nums[mid] == 0) {
-                // swap(nums, l, mid);
-                nums[mid] = nums[l];
-                nums[l] = 0;
-                l++;
-                mid++;
+        for (int i = 0, j = 0, k = nums.length-1; i <= k; ) {
+            if (nums[i] == 0) {
+                swap(nums, i, j);
+                i++;
+                j++;
+            } else if (nums[i] == 2) {
+                swap(nums, i, k);
+                k--;
+            } else {
+                i++;
             }
         }
+        
+    }
+    public void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 }
 
