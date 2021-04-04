@@ -9,6 +9,7 @@ class Solution {
             } else if (nums[i] == 2) {
                 swap(nums, i, k);
                 k--;
+                //此时不用i++,因为不知道换过来的是什么数，还需要继续判断。
             } else {
                 i++;
             }
