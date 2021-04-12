@@ -1,15 +1,7 @@
 1. 
-// best solution:
-Actually we don't care about the "value" of difference, 
-we just want to make sure two pointers reach the intersection node at the same time.
+这题的例子1就是说a和b不是两个独立的list， 有共同指向的点，就是从8开始的点，之前的两个1是不同的Listnode object. 所以不用纠结为什么1不是结果。而且input表明了Intersetval=8.
 
-We can use two iterations to do that. 
-In the first iteration, we will reset the pointer of one linkedlist to the head of another linkedlist after it reaches the tail node. 
-In the second iteration, we will move two pointers until they points to the same node. 
-Our operations in first iteration will help us counteract the difference. 
-So if two linkedlist intersects, the meeting point in second iteration must be the intersection point. 
-If the two linked lists have no intersection at all, 
-then the meeting pointer in second iteration must be the tail node of both lists, which is null
+acwing
 
 虽然题目中强调了链表中不存在环，但是我们可以用环的思想来做，我们让两条链表分别从各自的开头开始往后遍历，
 当其中一条遍历到末尾时，我们跳到另一个条链表的开头继续遍历。两个指针最终会相等，
