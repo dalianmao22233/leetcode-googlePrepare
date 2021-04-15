@@ -8,7 +8,7 @@ class Solution {
         int res = 0;
         for (int i = 0, j = 0; i < n; i++) {
             st[a[i]]++;
-            while (st[a[i]] > 1) {
+            while (st[a[i]] > 1) {  // 注意这里是a[i]，不是a[j]. 因为是判断当前新加入的元素是否重复了。
                 st[a[j]]--;
                 j++;
             }
