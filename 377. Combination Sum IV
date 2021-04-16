@@ -18,7 +18,7 @@ class Solution {
     }
 }
 
-2. 从上到下，recursion:也很简单，分解成子问题，base case: target=0, 方法多一种。
+2. 从上到下，recursion:也很简单，分解成子问题，base case: target=0, 方法多一种。  TLE!!
 
 class Solution {
     public int combinationSum4(int[] nums, int target) {
