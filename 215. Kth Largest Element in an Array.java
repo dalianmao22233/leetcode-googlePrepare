@@ -88,13 +88,29 @@ class Solution {
     }
 }
 
-3. 海量数据
+3. 小顶堆：O(nlogk), space: O(k)
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        
+        PriorityQueue<Integer> pq = new PriorityQueue<>(); // 小顶堆
+        for (int val : nums) {
+            pq.add(val);
+            if (pq.size() > k) {
+                //具体过程画图理解，最后一步是4,5,6， 移除堆顶4，还剩5作为堆顶，就是结果。
+                pq.poll();
+            }
+        } 
+        return pq.peek();
+    }
+}
+
+4. 海量数据
 在这种场景下，单机通常不能存放下所有数据。
 
 拆分，可以按照哈希取模方式拆分到多台机器上，并在每个机器上维护最大堆；
 整合，将每台机器得到的最大堆合并成最终的最大堆。
 
-4. 频率统计
+5. 频率统计
 
 a. hashmap 进行频率统计，然后使用快速选择或者堆的方式找出频率 TopK。在海量数据场景下，也是使用先拆分再整合的方式来解决空间问题。
 b. trie, 在词汇对应节点保存出现的频率。它很好地适应海量数据场景，因为 Trie 树通常不高，需要的空间不会很大。
