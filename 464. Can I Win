@@ -1,0 +1,64 @@
+// public class Solution {
+//     Map<Integer, Boolean> map;
+//     boolean[] used;
+//     public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+//         int sum = (1+maxChoosableInteger)*maxChoosableInteger/2;
+//         if(sum < desiredTotal) return false;
+//         if(desiredTotal <= 0) return true;
+        
+//         map = new HashMap();
+//         used = new boolean[maxChoosableInteger+1];
+//         return helper(desiredTotal);
+//     }
+    
+//     public boolean helper(int desiredTotal){
+//         if(desiredTotal <= 0) return false;
+//         int key = format(used);
+//         if(!map.containsKey(key)){
+//     // try every unchosen number as next step
+//             for(int i=1; i<used.length; i++){
+//                 if(!used[i]){
+//                     used[i] = true;
+//      // check whether this lead to a win (i.e. the other player lose)
+//                     if(!helper(desiredTotal-i)){
+//                         map.put(key, true);
+//                         used[i] = false;
+//                         return true;
+//                     }
+//                     used[i] = false;
+//                 }
+//             }
+//             map.put(key, false);
+//         }
+//         return map.get(key);
+//     }
+   
+// // transfer boolean[] to an Integer 
+//     public int format(boolean[] used){
+//         int num = 0;
+//         for(boolean b: used){
+//             num <<= 1;
+//             if(b) num |= 1;
+//         }
+//         return num;
+//     }
+// }
+public class Solution {
+    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+        if (desiredTotal<=0) return true;
+        if (maxChoosableInteger*(maxChoosableInteger+1)/2<desiredTotal) return false;
+        return canIWin(desiredTotal, maxChoosableInteger, 0, new HashMap<>());
+    }
+    private boolean canIWin(int total, int n, int state, HashMap<Integer, Boolean> hashMap) {
+        if (hashMap.containsKey(state)) return hashMap.get(state);
+        for (int i=0;i<n;i++) {
+            if ((state&(1<<i))!=0) continue;
+            if (total<=i+1 || !canIWin(total-(i+1), n, state|(1<<i), hashMap)) {
+                hashMap.put(state, true);
+                return true;
+            }
+        }
+        hashMap.put(state, false);
+        return false;
+    }
+}
