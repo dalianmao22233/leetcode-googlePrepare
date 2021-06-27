@@ -31,7 +31,7 @@ class Solution {
     }
 }
 
-or 加一个visited 数组来记录是否用过:  适用于有重复元素的数组，比1快，contains是遍历一遍数组，但是这种方法不用遍历。
+or 加一个visited 数组来记录是否用过当前数字:  适用于有重复元素的数组，比1快，contains是遍历一遍数组，但是这种方法不用遍历。用不用Level当参数都一样。
 
 class Solution {
     public List<List<Integer>> permute(int[] nums) {
