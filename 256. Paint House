@@ -11,7 +11,7 @@ class Solution {
         int curG = 0; 
         int curB = 0;
         for (int i = 1; i < costs.length; i++) {
-            curR = Math.min(lastG, lastB) + costs[i][0];
+            curR = Math.min(lastG, lastB) + costs[i][0]; // 当前行比如选了红色，那么要加上上一行最小的颜色不同的值
             curG = Math.min(lastR, lastB) + costs[i][1];
             curB = Math.min(lastR, lastG) + costs[i][2];
             lastR = curR; // sum of all houses cost, if first one using R
